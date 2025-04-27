@@ -9,15 +9,11 @@ import { AIChatAssistant } from '@/components/Dashboard/AIChatAssistant';
 
 const Index = () => {
   return (
-    <DashboardLayout>
+    <DashboardLayout
+      title="Dashboard"
+      description="Welcome to your RV warranty analysis dashboard"
+    >
       <div className="space-y-4 lg:space-y-6">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-sm sm:text-base text-muted-foreground">
-            Welcome to your RV warranty analysis dashboard.
-          </p>
-        </div>
-        
         <section className="grid gap-4">
           <OverviewCards />
         </section>

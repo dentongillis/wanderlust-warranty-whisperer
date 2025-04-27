@@ -8,9 +8,11 @@ import { HelpSheet } from '../Help/HelpSheet';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
+  title?: string;
+  description?: string;
 }
 
-export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
+export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title, description }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   
   return (
@@ -30,7 +32,14 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
                 <Menu size={20} />
                 <span className="sr-only">Toggle menu</span>
               </Button>
-              <h1 className="text-xl font-semibold text-foreground hidden sm:block">RV Warranty Analysis</h1>
+              {title && (
+                <div>
+                  <h1 className="text-xl font-semibold text-foreground">{title}</h1>
+                  {description && (
+                    <p className="text-sm text-muted-foreground">{description}</p>
+                  )}
+                </div>
+              )}
             </div>
             <div className="flex items-center gap-2">
               <HelpSheet />
