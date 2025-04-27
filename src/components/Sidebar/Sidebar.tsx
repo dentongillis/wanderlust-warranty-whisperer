@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { 
   HomeIcon, 
@@ -8,10 +8,14 @@ import {
   BarChartIcon, 
   TruckIcon, 
   UsersIcon, 
-  CalendarIcon, 
+  DollarSign, 
   SettingsIcon, 
   HelpCircleIcon,
-  DatabaseIcon
+  DatabaseIcon,
+  MapIcon,
+  LineChart,
+  PieChart,
+  Store
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -48,6 +52,8 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({
 };
 
 export const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
+  const location = useLocation();
+  
   return (
     <div 
       className={cn(
@@ -67,13 +73,55 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
       </div>
       
       <nav className="flex-1 py-4 px-2 space-y-1 overflow-y-auto">
-        <SidebarLink href="/" icon={HomeIcon} label="Dashboard" collapsed={collapsed} active={true} />
-        <SidebarLink href="/claims" icon={FileTextIcon} label="Claims" collapsed={collapsed} />
-        <SidebarLink href="/analytics" icon={BarChartIcon} label="Analytics" collapsed={collapsed} />
-        <SidebarLink href="/models" icon={TruckIcon} label="RV Models" collapsed={collapsed} />
-        <SidebarLink href="/customers" icon={UsersIcon} label="Customers" collapsed={collapsed} />
-        <SidebarLink href="/schedule" icon={CalendarIcon} label="Schedule" collapsed={collapsed} />
-        <SidebarLink href="/data" icon={DatabaseIcon} label="Data Sources" collapsed={collapsed} />
+        <SidebarLink 
+          href="/" 
+          icon={HomeIcon} 
+          label="Dashboard" 
+          collapsed={collapsed} 
+          active={location.pathname === '/'} 
+        />
+        <SidebarLink 
+          href="/root-cause" 
+          icon={PieChart} 
+          label="Root Cause Analysis" 
+          collapsed={collapsed} 
+          active={location.pathname === '/root-cause'} 
+        />
+        <SidebarLink 
+          href="/predictive" 
+          icon={LineChart} 
+          label="Predictive Analytics" 
+          collapsed={collapsed} 
+          active={location.pathname === '/predictive'} 
+        />
+        <SidebarLink 
+          href="/dealer-performance" 
+          icon={Store} 
+          label="Dealer Performance" 
+          collapsed={collapsed} 
+          active={location.pathname === '/dealer-performance'} 
+        />
+        <SidebarLink 
+          href="/customer-impact" 
+          icon={UsersIcon} 
+          label="Customer Impact" 
+          collapsed={collapsed} 
+          active={location.pathname === '/customer-impact'} 
+        />
+        <SidebarLink 
+          href="/financial-impact" 
+          icon={DollarSign} 
+          label="Financial Impact" 
+          collapsed={collapsed} 
+          active={location.pathname === '/financial-impact'} 
+        />
+        <SidebarLink 
+          href="/claims-report" 
+          icon={DatabaseIcon} 
+          label="Claims Report" 
+          collapsed={collapsed} 
+          active={location.pathname === '/claims-report'} 
+        />
       </nav>
       
       <div className="mt-auto py-4 px-2 space-y-1 border-t border-sidebar-border">

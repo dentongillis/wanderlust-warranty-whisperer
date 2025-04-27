@@ -31,7 +31,6 @@ const recentClaimsData = [
     model: 'Nomad 1800',
     issue: 'Refrigerator not cooling',
     date: '2025-04-08',
-    status: 'in-review',
     status: 'in-progress',
     amount: '$680'
   },
