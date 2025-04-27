@@ -12,11 +12,11 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex h-screen bg-background overflow-hidden">
       <Sidebar collapsed={sidebarCollapsed} />
       
-      <div className="flex flex-col flex-1 overflow-hidden">
-        <header className="bg-white border-b border-border shadow-sm z-10">
+      <div className="flex flex-col flex-1 w-full">
+        <header className="bg-white border-b border-border shadow-sm z-10 flex-shrink-0">
           <div className="flex items-center justify-between p-4">
             <div className="flex items-center">
               <Button 
@@ -28,23 +28,25 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
                 <Menu size={20} />
                 <span className="sr-only">Toggle menu</span>
               </Button>
-              <h1 className="text-xl font-semibold text-gray-800">RV Warranty Analysis</h1>
+              <h1 className="text-xl font-semibold text-gray-800 hidden sm:block">RV Warranty Analysis</h1>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4">
               <Button variant="outline" size="sm">Help</Button>
               <Button variant="outline" size="sm">Settings</Button>
             </div>
           </div>
         </header>
         
-        <main className="flex-1 overflow-y-auto p-4 md:p-6">
-          {children}
+        <main className="flex-1 overflow-y-auto p-2 sm:p-4 md:p-6">
+          <div className="container mx-auto max-w-7xl">
+            {children}
+          </div>
         </main>
         
-        <footer className="py-3 px-6 border-t bg-white text-sm text-gray-500">
+        <footer className="py-2 px-4 border-t bg-white text-sm text-gray-500 flex-shrink-0">
           <div className="flex justify-between items-center">
-            <span>RV Warranty Dashboard</span>
-            <span>© {new Date().getFullYear()} All rights reserved</span>
+            <span className="hidden sm:inline">RV Warranty Dashboard</span>
+            <span>© {new Date().getFullYear()}</span>
           </div>
         </footer>
       </div>

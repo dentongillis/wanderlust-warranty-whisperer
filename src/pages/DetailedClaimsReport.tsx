@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { DashboardLayout } from '@/components/Layout/DashboardLayout';
 import { FilterCard } from '@/components/Filters/FilterCard';
@@ -12,19 +11,10 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import { Button } from '@/components/ui/button';
-import { 
-  Download,
-  Eye, 
-  ChevronLeft, 
-  ChevronRight, 
-  ChevronDown, 
-  Check, 
-  X 
-} from 'lucide-react';
+import { Download, Eye, ChevronDown, ChevronRight, Check, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 
-// Sample data for claims
 const claimsData = [
   {
     id: 'CLM-1208',
@@ -166,7 +156,6 @@ const getStatusBadge = (status: string) => {
 };
 
 const DetailedClaimsReport = () => {
-  // Filter state
   const [model, setModel] = useState('');
   const [floorplan, setFloorplan] = useState('');
   const [dealer, setDealer] = useState('');
@@ -174,19 +163,15 @@ const DetailedClaimsReport = () => {
   const [status, setStatus] = useState('');
   const [dateRange, setDateRange] = useState('last-30-days');
   
-  // Search state
   const [searchTerm, setSearchTerm] = useState('');
   
-  // Pagination state
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   
-  // Selected claim for detail view (null means no claim is selected)
   const [selectedClaim, setSelectedClaim] = useState<string | null>(null);
 
   const handleApplyFilters = () => {
     console.log("Applying filters:", { model, floorplan, dealer, component, status, dateRange });
-    // In a real app, this would update the table with filtered data
   };
 
   const handleResetFilters = () => {
@@ -200,19 +185,17 @@ const DetailedClaimsReport = () => {
   
   const handleExportCSV = () => {
     console.log("Exporting data to CSV...");
-    // In a real app, this would generate a CSV export
   };
   
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    setPage(1); // Reset to first page when searching
+    setPage(1);
   };
   
   const handleViewDetails = (claimId: string) => {
     setSelectedClaim(selectedClaim === claimId ? null : claimId);
   };
 
-  // Filter data based on search term
   const filteredData = claimsData.filter((claim) => {
     return (
       claim.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -224,10 +207,10 @@ const DetailedClaimsReport = () => {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
+      <div className="space-y-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Detailed Claims Report</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight">Detailed Claims Report</h1>
+          <p className="text-sm sm:text-base text-muted-foreground">
             Comprehensive list of all warranty claims with detailed information and export options.
           </p>
         </div>
@@ -308,126 +291,127 @@ const DetailedClaimsReport = () => {
         />
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
+          <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0 pb-2">
             <CardTitle className="text-lg font-medium">Claims Database</CardTitle>
-            <Button onClick={handleExportCSV} className="flex items-center gap-2">
+            <Button onClick={handleExportCSV} className="flex items-center gap-2 w-full sm:w-auto">
               <Download size={16} />
               Export to CSV
             </Button>
           </CardHeader>
           <CardContent>
-            <div className="mb-4">
-              <Input
-                placeholder="Search claims by ID, model, component or dealer..."
-                value={searchTerm}
-                onChange={handleSearch}
-                className="max-w-sm"
-              />
-            </div>
-            
-            <div className="rounded-md border">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[80px]">Claim ID</TableHead>
-                    <TableHead>Model</TableHead>
-                    <TableHead>Floorplan</TableHead>
-                    <TableHead>Component</TableHead>
-                    <TableHead>Dealer</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Claim Date</TableHead>
-                    <TableHead className="text-right">Cost</TableHead>
-                    <TableHead className="text-center">Action</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredData.map((claim) => (
-                    <React.Fragment key={claim.id}>
+            <div className="space-y-4">
+              <div>
+                <Input
+                  placeholder="Search claims by ID, model, component or dealer..."
+                  value={searchTerm}
+                  onChange={handleSearch}
+                  className="max-w-sm"
+                />
+              </div>
+              
+              <div className="rounded-md border overflow-hidden">
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
                       <TableRow>
-                        <TableCell className="font-medium">{claim.id}</TableCell>
-                        <TableCell>{claim.model}</TableCell>
-                        <TableCell>{claim.floorplan}</TableCell>
-                        <TableCell>{claim.component}</TableCell>
-                        <TableCell>{claim.dealer}</TableCell>
-                        <TableCell>{getStatusBadge(claim.status)}</TableCell>
-                        <TableCell>{claim.claimDate}</TableCell>
-                        <TableCell className="text-right">{claim.cost}</TableCell>
-                        <TableCell className="text-center">
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            onClick={() => handleViewDetails(claim.id)}
-                          >
-                            {selectedClaim === claim.id ? (
-                              <ChevronDown size={16} className="mr-1" />
-                            ) : (
-                              <ChevronRight size={16} className="mr-1" />
-                            )}
-                            Details
-                          </Button>
-                        </TableCell>
+                        <TableHead className="w-[80px]">Claim ID</TableHead>
+                        <TableHead className="hidden sm:table-cell">Model</TableHead>
+                        <TableHead className="hidden lg:table-cell">Floorplan</TableHead>
+                        <TableHead>Component</TableHead>
+                        <TableHead className="hidden md:table-cell">Dealer</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead className="hidden sm:table-cell">Claim Date</TableHead>
+                        <TableHead className="text-right hidden sm:table-cell">Cost</TableHead>
+                        <TableHead className="text-center">Action</TableHead>
                       </TableRow>
-                      
-                      {/* Detailed view row - shown when claim is selected */}
-                      {selectedClaim === claim.id && (
-                        <TableRow className="bg-muted/50">
-                          <TableCell colSpan={9} className="p-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                              <div>
-                                <h4 className="font-semibold mb-2">Claim Details</h4>
-                                <p className="text-sm mb-1"><span className="font-medium">Date Filed:</span> {claim.claimDate}</p>
-                                <p className="text-sm mb-1"><span className="font-medium">Approval Date:</span> {claim.approvalDate || 'Pending'}</p>
-                                <p className="text-sm mb-1"><span className="font-medium">Days to Resolution:</span> {claim.daysToResolution}</p>
-                                <p className="text-sm mb-1"><span className="font-medium">Total Cost:</span> {claim.cost}</p>
-                              </div>
-                              <div>
-                                <h4 className="font-semibold mb-2">RV Information</h4>
-                                <p className="text-sm mb-1"><span className="font-medium">Model:</span> {claim.model}</p>
-                                <p className="text-sm mb-1"><span className="font-medium">Floorplan:</span> {claim.floorplan}</p>
-                                <p className="text-sm mb-1"><span className="font-medium">Component:</span> {claim.component}</p>
-                                <p className="text-sm mb-1"><span className="font-medium">Serial #:</span> RV-{claim.id.substring(4)}-XYZ</p>
-                              </div>
-                              <div>
-                                <h4 className="font-semibold mb-2">Status</h4>
-                                <div className="flex items-center mb-2">
-                                  {claim.status === 'Approved' ? (
-                                    <Check className="h-4 w-4 mr-2 text-green-600" />
-                                  ) : claim.status === 'Declined' ? (
-                                    <X className="h-4 w-4 mr-2 text-red-600" />
-                                  ) : (
-                                    <div className="h-4 w-4 rounded-full bg-yellow-400 mr-2" />
-                                  )}
-                                  <span>{claim.status}</span>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredData.map((claim) => (
+                        <React.Fragment key={claim.id}>
+                          <TableRow>
+                            <TableCell className="font-medium">{claim.id}</TableCell>
+                            <TableCell className="hidden sm:table-cell">{claim.model}</TableCell>
+                            <TableCell className="hidden lg:table-cell">{claim.floorplan}</TableCell>
+                            <TableCell className="max-w-[150px] truncate">{claim.component}</TableCell>
+                            <TableCell className="hidden md:table-cell">{claim.dealer}</TableCell>
+                            <TableCell>{getStatusBadge(claim.status)}</TableCell>
+                            <TableCell className="hidden sm:table-cell">{claim.claimDate}</TableCell>
+                            <TableCell className="text-right hidden sm:table-cell">{claim.cost}</TableCell>
+                            <TableCell className="text-center">
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                onClick={() => handleViewDetails(claim.id)}
+                              >
+                                {selectedClaim === claim.id ? (
+                                  <ChevronDown size={16} className="mr-1" />
+                                ) : (
+                                  <ChevronRight size={16} className="mr-1" />
+                                )}
+                                <span className="hidden sm:inline">Details</span>
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                          
+                          {selectedClaim === claim.id && (
+                            <TableRow className="bg-muted/50">
+                              <TableCell colSpan={9} className="p-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                  <div>
+                                    <h4 className="font-semibold mb-2">Claim Details</h4>
+                                    <p className="text-sm mb-1"><span className="font-medium">Date Filed:</span> {claim.claimDate}</p>
+                                    <p className="text-sm mb-1"><span className="font-medium">Approval Date:</span> {claim.approvalDate || 'Pending'}</p>
+                                    <p className="text-sm mb-1"><span className="font-medium">Days to Resolution:</span> {claim.daysToResolution}</p>
+                                    <p className="text-sm mb-1"><span className="font-medium">Total Cost:</span> {claim.cost}</p>
+                                  </div>
+                                  <div>
+                                    <h4 className="font-semibold mb-2">RV Information</h4>
+                                    <p className="text-sm mb-1"><span className="font-medium">Model:</span> {claim.model}</p>
+                                    <p className="text-sm mb-1"><span className="font-medium">Floorplan:</span> {claim.floorplan}</p>
+                                    <p className="text-sm mb-1"><span className="font-medium">Component:</span> {claim.component}</p>
+                                    <p className="text-sm mb-1"><span className="font-medium">Serial #:</span> RV-{claim.id.substring(4)}-XYZ</p>
+                                  </div>
+                                  <div>
+                                    <h4 className="font-semibold mb-2">Status</h4>
+                                    <div className="flex items-center mb-2">
+                                      {claim.status === 'Approved' ? (
+                                        <Check className="h-4 w-4 mr-2 text-green-600" />
+                                      ) : claim.status === 'Declined' ? (
+                                        <X className="h-4 w-4 mr-2 text-red-600" />
+                                      ) : (
+                                        <div className="h-4 w-4 rounded-full bg-yellow-400 mr-2" />
+                                      )}
+                                      <span>{claim.status}</span>
+                                    </div>
+                                    <div className="mt-4 space-x-2">
+                                      <Button size="sm">View Full Details</Button>
+                                      <Button size="sm" variant="outline">Download PDF</Button>
+                                    </div>
+                                  </div>
                                 </div>
-                                <div className="mt-4">
-                                  <Button size="sm" className="mr-2">View Full Details</Button>
-                                  <Button size="sm" variant="outline">Download PDF</Button>
-                                </div>
-                              </div>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </React.Fragment>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-            
-            <div className="flex items-center justify-between mt-4">
-              <p className="text-sm text-muted-foreground">
-                Showing <span className="font-medium">{Math.min(filteredData.length, 10)}</span> of{" "}
-                <span className="font-medium">{filteredData.length}</span> claims
-              </p>
-              <div className="flex items-center space-x-2">
-                <Button variant="outline" size="sm" onClick={() => setPage(Math.max(1, page - 1))}>
-                  <ChevronLeft className="h-4 w-4" />
-                  <span className="sr-only">Previous Page</span>
-                </Button>
-                <Button variant="outline" size="sm" onClick={() => setPage(page + 1)}>
-                  <ChevronRight className="h-4 w-4" />
-                  <span className="sr-only">Next Page</span>
-                </Button>
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </React.Fragment>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row items-center justify-between space-y-2 sm:space-y-0">
+                <p className="text-sm text-muted-foreground order-2 sm:order-1">
+                  Showing <span className="font-medium">{Math.min(filteredData.length, 10)}</span> of{" "}
+                  <span className="font-medium">{filteredData.length}</span> claims
+                </p>
+                <div className="flex items-center space-x-2 order-1 sm:order-2">
+                  <Button variant="outline" size="sm" onClick={() => setPage(Math.max(1, page - 1))}>
+                    Previous
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={() => setPage(page + 1)}>
+                    Next
+                  </Button>
+                </div>
               </div>
             </div>
           </CardContent>
