@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { DashboardLayout } from '@/components/Layout/DashboardLayout';
 import { ChartCard } from '@/components/Charts/ChartCard';
@@ -70,15 +69,11 @@ const RootCauseAnalysis = () => {
   };
 
   return (
-    <DashboardLayout>
+    <DashboardLayout
+      title="Root Cause Analysis"
+      description="Analyze warranty issues, components, and root causes"
+    >
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Root Cause Analysis</h1>
-          <p className="text-muted-foreground">
-            Analyze warranty issues, components, and root causes.
-          </p>
-        </div>
-
         <FilterCard 
           filters={[
             {

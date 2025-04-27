@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { DashboardLayout } from '@/components/Layout/DashboardLayout';
 import { ChartCard } from '@/components/Charts/ChartCard';
@@ -88,15 +87,11 @@ const DealerPerformance = () => {
   };
 
   return (
-    <DashboardLayout>
+    <DashboardLayout
+      title="Dealer Performance"
+      description="Analyze dealer-specific warranty handling and metrics"
+    >
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Dealer Performance</h1>
-          <p className="text-muted-foreground">
-            Analyze dealer-specific warranty handling and metrics.
-          </p>
-        </div>
-
         <FilterCard 
           filters={[
             {

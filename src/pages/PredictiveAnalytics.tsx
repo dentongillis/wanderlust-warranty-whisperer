@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { DashboardLayout } from '@/components/Layout/DashboardLayout';
 import { ChartCard } from '@/components/Charts/ChartCard';
@@ -73,15 +72,11 @@ const claimLikelihoodData = [
 
 const PredictiveAnalytics = () => {
   return (
-    <DashboardLayout>
+    <DashboardLayout
+      title="Predictive Analytics"
+      description="AI-powered forecasting and predictive insights for warranty trends"
+    >
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Predictive Analytics</h1>
-          <p className="text-muted-foreground">
-            AI-powered forecasting and predictive insights for warranty trends.
-          </p>
-        </div>
-        
         <Card className="bg-yellow-50 border-yellow-200">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg font-medium flex items-center">
