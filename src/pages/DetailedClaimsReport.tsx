@@ -206,15 +206,11 @@ const DetailedClaimsReport = () => {
   });
 
   return (
-    <DashboardLayout>
+    <DashboardLayout
+      title="Detailed Claims Report"
+      description="Comprehensive list of all warranty claims with detailed information and export options"
+    >
       <div className="space-y-4">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight">Detailed Claims Report</h1>
-          <p className="text-sm sm:text-base text-muted-foreground">
-            Comprehensive list of all warranty claims with detailed information and export options.
-          </p>
-        </div>
-
         <FilterCard 
           filters={[
             {

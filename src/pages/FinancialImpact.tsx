@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { DashboardLayout } from '@/components/Layout/DashboardLayout';
 import { ChartCard } from '@/components/Charts/ChartCard';
@@ -84,15 +83,11 @@ const FinancialImpact = () => {
   };
 
   return (
-    <DashboardLayout>
+    <DashboardLayout
+      title="Financial Impact"
+      description="Analyze warranty costs, trends, and financial impact"
+    >
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Financial Impact</h1>
-          <p className="text-muted-foreground">
-            Analyze warranty costs, trends, and financial impact.
-          </p>
-        </div>
-
         <FilterCard 
           filters={[
             {
