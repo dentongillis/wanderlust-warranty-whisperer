@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { Settings } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -12,16 +11,17 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from '@/contexts/ThemeContext';
 import { Switch } from "@/components/ui/switch";
 
-export function SettingsSheet() {
+interface SettingsSheetProps {
+  children: React.ReactNode;
+}
+
+export function SettingsSheet({ children }: SettingsSheetProps) {
   const { theme, toggleTheme } = useTheme();
   
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-2">
-          <Settings size={16} />
-          <span className="hidden sm:inline">Settings</span>
-        </Button>
+        {children}
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>

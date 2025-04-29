@@ -1,47 +1,56 @@
 
 import React from 'react';
-import { HelpCircle } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
+  SheetDescription,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
 
-export function HelpSheet() {
+interface HelpSheetProps {
+  children: React.ReactNode;
+}
+
+export function HelpSheet({ children }: HelpSheetProps) {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-2">
-          <HelpCircle size={16} />
-          <span className="hidden sm:inline">Help</span>
-        </Button>
+        {children}
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
           <SheetTitle>Help & Support</SheetTitle>
+          <SheetDescription>
+            Get help with using the RV Warranty Analysis Dashboard
+          </SheetDescription>
         </SheetHeader>
-        <div className="py-6 space-y-6">
-          <section>
-            <h3 className="font-medium mb-2">Quick Start Guide</h3>
-            <p className="text-sm text-muted-foreground">
-              This dashboard provides comprehensive warranty analysis for RV components and claims.
-              Use the sidebar to navigate between different analysis views.
+        <div className="py-6">
+          <h3 className="text-base font-medium mb-2">Common Questions</h3>
+          <ul className="space-y-2 text-sm">
+            <li className="p-2 bg-gray-50 rounded-md hover:bg-gray-100 cursor-pointer">
+              How do I filter data by date range?
+            </li>
+            <li className="p-2 bg-gray-50 rounded-md hover:bg-gray-100 cursor-pointer">
+              Can I export reports to PDF?
+            </li>
+            <li className="p-2 bg-gray-50 rounded-md hover:bg-gray-100 cursor-pointer">
+              How to compare warranty claims across different dealers?
+            </li>
+            <li className="p-2 bg-gray-50 rounded-md hover:bg-gray-100 cursor-pointer">
+              Setting up automated reports
+            </li>
+          </ul>
+          
+          <div className="mt-6">
+            <h3 className="text-base font-medium mb-2">Contact Support</h3>
+            <p className="text-sm text-gray-600">
+              Email: support@rv-analytics.com<br />
+              Phone: (555) 123-4567<br />
+              Hours: Monday-Friday, 9am-5pm EST
             </p>
-          </section>
-          <section>
-            <h3 className="font-medium mb-2">Navigation</h3>
-            <ul className="text-sm text-muted-foreground space-y-2">
-              <li>• Dashboard - Overview of key metrics</li>
-              <li>• Root Cause Analysis - Identify common issues</li>
-              <li>• Predictive Analytics - Future trends and forecasts</li>
-              <li>• Dealer Performance - Dealer-specific metrics</li>
-              <li>• Customer Impact - Regional and demographic data</li>
-              <li>• Financial Impact - Cost analysis and projections</li>
-            </ul>
-          </section>
+          </div>
         </div>
       </SheetContent>
     </Sheet>
