@@ -19,19 +19,17 @@ const Index = () => {
         {/* Top Stats Cards */}
         <TopStats />
         
+        {/* Overview Section */}
+        <Card className="border border-gray-200 dark:border-gray-700 shadow-sm">
+          <CardHeader className="py-3 px-4 border-b border-gray-200 dark:border-gray-700">
+            <CardTitle className="text-base font-medium">Overview</CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <ModelsTable />
+          </CardContent>
+        </Card>
+        
         <div className="grid grid-cols-12 gap-6">
-          {/* Overview Section */}
-          <div className="col-span-12">
-            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm">
-              <CardHeader className="py-3 px-4 border-b border-gray-200 dark:border-gray-700">
-                <CardTitle className="text-base font-medium">Overview</CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                <ModelsTable />
-              </CardContent>
-            </Card>
-          </div>
-          
           {/* Charts Section */}
           <div className="col-span-12 md:col-span-6">
             <Card className="border border-gray-200 dark:border-gray-700 shadow-sm h-[300px]">
@@ -70,34 +68,32 @@ const Index = () => {
               </CardContent>
             </Card>
           </div>
-          
-          {/* Recent Claims Table */}
-          <div className="col-span-12">
-            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm">
-              <CardHeader className="py-3 px-4 border-b border-gray-200 dark:border-gray-700">
-                <div className="flex justify-between items-center">
-                  <CardTitle className="text-base font-medium">Recent Claims</CardTitle>
-                  <div className="flex items-center gap-2">
-                    <input 
-                      type="text" 
-                      placeholder="Search" 
-                      className="border rounded px-2 py-1 text-xs border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200" 
-                    />
-                    <button className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded text-xs flex items-center text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600">
-                      Filter
-                    </button>
-                    <button className="text-blue-600 dark:text-blue-400 text-xs hover:underline">
-                      View All Claims
-                    </button>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="p-0">
-                <RecentClaimsTable />
-              </CardContent>
-            </Card>
-          </div>
         </div>
+          
+        {/* Recent Claims Table */}
+        <Card className="border border-gray-200 dark:border-gray-700 shadow-sm">
+          <CardHeader className="py-3 px-4 border-b border-gray-200 dark:border-gray-700">
+            <div className="flex justify-between items-center">
+              <CardTitle className="text-base font-medium">Recent Claims</CardTitle>
+              <div className="flex items-center gap-2">
+                <input 
+                  type="text" 
+                  placeholder="Search" 
+                  className="border rounded px-2 py-1 text-xs border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200" 
+                />
+                <button className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded text-xs flex items-center text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600">
+                  Filter
+                </button>
+                <button className="text-blue-600 dark:text-blue-400 text-xs hover:underline">
+                  View All Claims
+                </button>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="p-0">
+            <RecentClaimsTable />
+          </CardContent>
+        </Card>
       </div>
     </DashboardLayout>
   );
