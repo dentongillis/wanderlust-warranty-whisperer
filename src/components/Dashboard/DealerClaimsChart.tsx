@@ -18,26 +18,28 @@ const data = [
 
 export const DealerClaimsChart: React.FC = () => {
   return (
-    <div className="h-full">
+    <div className="h-[175px]">
       <ResponsiveContainer width="100%" height="100%">
         <ScatterChart
-          margin={{ top: 5, right: 5, left: 0, bottom: 5 }}
+          margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
           <XAxis 
             dataKey="x" 
             type="number" 
-            name="Claims"
+            name="Total Number of Claims"
             tick={{ fontSize: 10 }}
             axisLine={false}
             tickLine={false}
+            label={{ value: 'Total Number of Claims', position: 'insideBottom', offset: -5, fontSize: 10 }}
           />
           <YAxis 
             dataKey="y" 
-            name="Cost" 
+            name="Total Number of Claims" 
             tick={{ fontSize: 10 }}
             axisLine={false}
             tickLine={false}
+            label={{ value: 'Total Number of Claims', angle: -90, position: 'insideLeft', offset: 10, fontSize: 10 }}
           />
           <Tooltip 
             cursor={{ strokeDasharray: '3 3' }}

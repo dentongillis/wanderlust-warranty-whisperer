@@ -19,7 +19,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900 overflow-hidden">
       <Sidebar collapsed={sidebarCollapsed} />
       
-      <div className="flex flex-col flex-1 w-full overflow-hidden">
+      <div className="flex flex-col flex-1 w-full">
         <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm z-10 flex-shrink-0">
           <div className="flex items-center justify-between p-4">
             <div className="flex items-center">
@@ -70,7 +70,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
           </div>
         </header>
         
-        <main className="flex-1 overflow-hidden p-2 sm:p-4">
+        <main className="flex-1 overflow-auto p-2 sm:p-4 md:p-6">
           {children}
         </main>
       </div>

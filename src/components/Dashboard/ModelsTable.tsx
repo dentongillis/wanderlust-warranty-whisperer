@@ -42,30 +42,30 @@ const modelsData = [
 
 export const ModelsTable: React.FC = () => {
   return (
-    <Card className="shadow-sm border border-gray-200 dark:border-gray-700 h-full flex flex-col">
-      <CardHeader className="pb-0 pt-2">
+    <Card className="shadow-sm border border-gray-200 dark:border-gray-700">
+      <CardHeader className="pb-2">
         <CardTitle className="text-lg font-medium">Model Overview</CardTitle>
       </CardHeader>
-      <CardContent className="p-0 flex-1 overflow-auto">
-        <div className="h-full overflow-auto">
+      <CardContent className="p-0">
+        <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-gray-50 dark:bg-gray-800 sticky top-0">
-                <th className="px-3 py-2 text-left font-medium text-gray-600 dark:text-gray-300">Model</th>
-                <th className="px-3 py-2 text-left font-medium text-gray-600 dark:text-gray-300">Claims</th>
-                <th className="px-3 py-2 text-left font-medium text-gray-600 dark:text-gray-300">Avg. Cost</th>
-                <th className="px-3 py-2 text-left font-medium text-gray-600 dark:text-gray-300">Trend</th>
-                <th className="px-3 py-2 text-left font-medium text-gray-600 dark:text-gray-300">Risk Level</th>
-                <th className="px-3 py-2 text-right font-medium text-gray-600 dark:text-gray-300">Actions</th>
+              <tr className="bg-gray-50 dark:bg-gray-800">
+                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300">Model</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300">Claims</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300">Avg. Cost</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300">Trend</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300">Risk Level</th>
+                <th className="px-4 py-3 text-right font-medium text-gray-600 dark:text-gray-300">Actions</th>
               </tr>
             </thead>
             <tbody>
               {modelsData.map((model) => (
                 <tr key={model.id} className="border-t border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
-                  <td className="px-3 py-2 font-medium text-gray-800 dark:text-gray-200">{model.model}</td>
-                  <td className="px-3 py-2 text-gray-600 dark:text-gray-300">{model.claims}</td>
-                  <td className="px-3 py-2 text-gray-600 dark:text-gray-300">{model.avgCost}</td>
-                  <td className="px-3 py-2">
+                  <td className="px-4 py-3 font-medium text-gray-800 dark:text-gray-200">{model.model}</td>
+                  <td className="px-4 py-3 text-gray-600 dark:text-gray-300">{model.claims}</td>
+                  <td className="px-4 py-3 text-gray-600 dark:text-gray-300">{model.avgCost}</td>
+                  <td className="px-4 py-3">
                     {model.trend === 'up' ? (
                       <div className="flex items-center text-red-500 text-xs">
                         <TrendingUp size={14} className="mr-1" /> Increasing
@@ -76,7 +76,7 @@ export const ModelsTable: React.FC = () => {
                       </div>
                     )}
                   </td>
-                  <td className="px-3 py-2">
+                  <td className="px-4 py-3">
                     {model.risk === 'high' ? (
                       <Badge variant="outline" className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 border-red-200 dark:border-red-800">
                         High Risk
@@ -91,8 +91,8 @@ export const ModelsTable: React.FC = () => {
                       </Badge>
                     )}
                   </td>
-                  <td className="px-3 py-2 text-right">
-                    <Button variant="ghost" size="sm" className="text-blue-600 dark:text-blue-400 h-7 px-2">
+                  <td className="px-4 py-3 text-right">
+                    <Button variant="ghost" size="sm" className="text-blue-600 dark:text-blue-400 h-8 px-2">
                       <Eye size={14} className="mr-1" /> Details
                     </Button>
                   </td>
