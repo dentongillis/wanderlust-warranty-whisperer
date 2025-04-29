@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Sidebar } from '../Sidebar/Sidebar';
-import { Menu } from 'lucide-react';
+import { Menu, Search, Settings, Bell, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SettingsSheet } from '../Settings/SettingsSheet';
 import { HelpSheet } from '../Help/HelpSheet';
@@ -16,11 +16,11 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   
   return (
-    <div className="flex h-screen bg-background overflow-hidden">
+    <div className="flex h-screen bg-gray-50 overflow-hidden">
       <Sidebar collapsed={sidebarCollapsed} />
       
       <div className="flex flex-col flex-1 w-full">
-        <header className="bg-background border-b border-border shadow-sm z-10 flex-shrink-0">
+        <header className="bg-white border-b shadow-sm z-10 flex-shrink-0">
           <div className="flex items-center justify-between p-4">
             <div className="flex items-center">
               <Button 
@@ -34,32 +34,45 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
               </Button>
               {title && (
                 <div>
-                  <h1 className="text-xl font-semibold text-foreground">{title}</h1>
+                  <h1 className="text-xl font-semibold text-gray-800">{title}</h1>
                   {description && (
-                    <p className="text-sm text-muted-foreground">{description}</p>
+                    <p className="text-sm text-gray-500">{description}</p>
                   )}
                 </div>
               )}
             </div>
-            <div className="flex items-center gap-2">
-              <HelpSheet />
-              <SettingsSheet />
+            <div className="flex items-center gap-3">
+              <div className="relative hidden sm:block">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+                <input
+                  type="search"
+                  placeholder="Search..."
+                  className="w-48 rounded-md border border-gray-200 py-2 pl-8 text-sm outline-none focus:border-gray-300 focus:ring-0"
+                />
+              </div>
+              <Button variant="outline" className="hidden sm:flex">
+                Ask AI
+              </Button>
+              <Button variant="ghost" size="icon">
+                <Bell size={20} />
+              </Button>
+              <HelpSheet>
+                <Button variant="ghost" size="icon">
+                  <HelpCircle size={20} />
+                </Button>
+              </HelpSheet>
+              <SettingsSheet>
+                <Button variant="ghost" size="icon">
+                  <Settings size={20} />
+                </Button>
+              </SettingsSheet>
             </div>
           </div>
         </header>
         
-        <main className="flex-1 overflow-y-auto p-2 sm:p-4 md:p-6">
-          <div className="container mx-auto max-w-7xl">
-            {children}
-          </div>
+        <main className="flex-1 overflow-hidden p-2 sm:p-4 md:p-6">
+          {children}
         </main>
-        
-        <footer className="py-2 px-4 border-t text-sm text-muted-foreground flex-shrink-0">
-          <div className="flex justify-between items-center">
-            <span className="hidden sm:inline">RV Warranty Dashboard</span>
-            <span>© {new Date().getFullYear()}</span>
-          </div>
-        </footer>
       </div>
     </div>
   );

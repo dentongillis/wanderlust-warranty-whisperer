@@ -12,8 +12,6 @@ import {
   SettingsIcon, 
   HelpCircleIcon,
   DatabaseIcon,
-  MapIcon,
-  LineChart,
   PieChart,
   Store
 } from 'lucide-react';
@@ -41,12 +39,12 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({
     <Link 
       to={href}
       className={cn(
-        "flex items-center gap-3 px-3 py-2 rounded-md text-sidebar-foreground transition-colors",
-        active ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium" : "hover:bg-sidebar-accent/50"
+        "flex items-center gap-3 px-3 py-2 rounded-md text-white/80 transition-colors",
+        active ? "bg-blue-700 text-white font-medium" : "hover:bg-blue-800/50 hover:text-white"
       )}
     >
-      <Icon size={20} />
-      {!collapsed && <span>{label}</span>}
+      <Icon size={18} />
+      {!collapsed && <span className="text-sm">{label}</span>}
     </Link>
   );
 };
@@ -57,17 +55,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
   return (
     <div 
       className={cn(
-        "bg-sidebar h-screen flex flex-col border-r border-sidebar-border transition-all duration-300",
+        "bg-gradient-to-b from-gray-900 to-blue-900 h-screen flex flex-col transition-all duration-300",
         collapsed ? "w-[60px]" : "w-[240px]"
       )}
     >
-      <div className="p-4 flex items-center justify-center border-b border-sidebar-border">
+      <div className="p-4 flex items-center justify-center border-b border-blue-800/50">
         {collapsed ? (
-          <TruckIcon size={28} className="text-sidebar-primary" />
+          <span className="text-white font-bold text-xl">RV</span>
         ) : (
           <div className="flex items-center gap-2">
-            <TruckIcon size={24} className="text-sidebar-primary" />
-            <h1 className="text-xl font-bold text-sidebar-foreground">RV Warranty</h1>
+            <span className="text-white font-bold text-xl">RV AI</span>
           </div>
         )}
       </div>
@@ -89,7 +86,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
         />
         <SidebarLink 
           href="/predictive" 
-          icon={LineChart} 
+          icon={BarChartIcon} 
           label="Predictive Analytics" 
           collapsed={collapsed} 
           active={location.pathname === '/predictive'} 
@@ -124,7 +121,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
         />
       </nav>
       
-      <div className="mt-auto py-4 px-2 space-y-1 border-t border-sidebar-border">
+      <div className="mt-auto py-4 px-2 space-y-1 border-t border-blue-800/50">
         <SidebarLink href="/settings" icon={SettingsIcon} label="Settings" collapsed={collapsed} />
         <SidebarLink href="/help" icon={HelpCircleIcon} label="Help & Support" collapsed={collapsed} />
       </div>
