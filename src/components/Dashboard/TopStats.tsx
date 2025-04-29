@@ -42,16 +42,16 @@ export const TopStats: React.FC = () => {
             <div className="mb-1">
               <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Approval Rating</span>
             </div>
-            <div className="text-xl font-bold text-gray-900 dark:text-gray-100">89%</div>
-            <div className="mt-1 text-xs">
-              <div className="flex items-center mb-1 text-green-600 dark:text-green-500 font-medium">
-                <TrendingUp size={14} className="mr-1 inline" />
-                1.9% Last month
+            <div className="flex items-start justify-between">
+              <div className="text-xl font-bold text-gray-900 dark:text-gray-100">89%</div>
+              <div className="text-xs ml-2">
+                <div className="text-green-600 dark:text-green-500 text-right">Approved: <strong>2,087</strong></div>
+                <div className="text-red-600 dark:text-red-500 text-right">Denied: <strong>258</strong></div>
               </div>
-              <div className="flex flex-col gap-0.5">
-                <span className="text-green-600 dark:text-green-500">Approved: <strong>2,087</strong></span>
-                <span className="text-red-600 dark:text-red-500">Denied: <strong>258</strong></span>
-              </div>
+            </div>
+            <div className="flex items-center mt-1 text-xs text-green-600 dark:text-green-500 font-medium">
+              <TrendingUp size={14} className="mr-1" />
+              <span>1.9% Last month</span>
             </div>
           </div>
         </CardContent>
