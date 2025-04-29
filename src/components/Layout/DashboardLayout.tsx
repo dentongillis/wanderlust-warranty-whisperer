@@ -21,7 +21,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
       
       <div className="flex flex-col flex-1 w-full">
         <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm z-10 flex-shrink-0">
-          <div className="flex items-center justify-between p-4">
+          <div className="flex items-center justify-between p-2 sm:p-3">
             <div className="flex items-center">
               <Button 
                 variant="ghost" 
@@ -34,43 +34,43 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
               </Button>
               {title && (
                 <div>
-                  <h1 className="text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h1>
+                  <h1 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h1>
                   {description && (
-                    <p className="text-sm text-gray-500 dark:text-gray-400">{description}</p>
+                    <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{description}</p>
                   )}
                 </div>
               )}
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <div className="relative hidden sm:block">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400" />
                 <input
                   type="search"
                   placeholder="Search..."
-                  className="w-48 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 py-2 pl-8 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                  className="w-48 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 py-1 sm:py-2 pl-8 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                 />
               </div>
-              <Button variant="outline" className="hidden sm:flex">
+              <Button variant="outline" className="hidden sm:flex text-sm py-1 px-3 h-auto">
                 Ask AI
               </Button>
               <Button variant="ghost" size="icon" className="hover:bg-gray-100 dark:hover:bg-gray-700">
-                <Bell size={20} />
+                <Bell size={18} />
               </Button>
               <HelpSheet>
                 <Button variant="ghost" size="icon" className="hover:bg-gray-100 dark:hover:bg-gray-700">
-                  <HelpCircle size={20} />
+                  <HelpCircle size={18} />
                 </Button>
               </HelpSheet>
               <SettingsSheet>
                 <Button variant="ghost" size="icon" className="hover:bg-gray-100 dark:hover:bg-gray-700">
-                  <Settings size={20} />
+                  <Settings size={18} />
                 </Button>
               </SettingsSheet>
             </div>
           </div>
         </header>
         
-        <main className="flex-1 overflow-auto p-2 sm:p-4 md:p-6">
+        <main className="flex-1 overflow-auto p-2 sm:p-3">
           {children}
         </main>
       </div>

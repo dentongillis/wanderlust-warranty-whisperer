@@ -83,56 +83,77 @@ const Index = () => {
       title="Dashboard"
       description="RV warranty analysis overview"
     >
-      <FilterCard 
-        filters={filterOptions} 
-        onApply={handleApplyFilters} 
-        onReset={handleResetFilters}
-      />
+      <div className="pb-2">
+        <FilterCard 
+          filters={filterOptions} 
+          onApply={handleApplyFilters} 
+          onReset={handleResetFilters}
+        />
+      </div>
       
-      <div className="space-y-4">
+      <div className="space-y-3">
         <TopStats />
         
-        <div className="grid grid-cols-12 gap-4">
+        <div className="grid grid-cols-12 gap-3">
           {/* Models table */}
           <div className="col-span-12 lg:col-span-8">
-            <ModelsTable />
-          </div>
-          
-          {/* Warranty trends chart */}
-          <div className="col-span-12 lg:col-span-4">
-            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm h-full">
-              <CardHeader className="pb-2">
-                <div className="flex justify-between items-center">
-                  <CardTitle className="text-lg font-medium">Warranty Trends</CardTitle>
-                  <select className="border rounded px-2 py-1 text-xs border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200">
-                    <option>Monthly</option>
-                    <option>Quarterly</option>
-                    <option>Yearly</option>
-                  </select>
-                </div>
-                
-                <div className="mt-2">
-                  <Tabs defaultValue="totalClaims">
-                    <TabsList className="grid grid-cols-3 h-7 text-xs">
-                      <TabsTrigger value="totalClaims">Total Claims</TabsTrigger>
-                      <TabsTrigger value="totalCosts">Total Costs</TabsTrigger>
-                      <TabsTrigger value="byModel">By Model</TabsTrigger>
-                    </TabsList>
-                  </Tabs>
-                </div>
+            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm h-[300px] overflow-hidden">
+              <CardHeader className="py-2 px-3">
+                <CardTitle className="text-base font-medium">Model Overview</CardTitle>
               </CardHeader>
-              <CardContent className="p-4 pt-0">
-                <WarrantyTrendsChart />
+              <CardContent className="p-0">
+                <ModelsTable />
               </CardContent>
             </Card>
           </div>
           
+          {/* Charts */}
+          <div className="col-span-12 lg:col-span-4">
+            <div className="grid grid-rows-2 gap-3 h-[300px]">
+              {/* Warranty trends chart */}
+              <Card className="border border-gray-200 dark:border-gray-700 shadow-sm">
+                <CardHeader className="py-2 px-3">
+                  <div className="flex justify-between items-center">
+                    <CardTitle className="text-base font-medium">Warranty Trends</CardTitle>
+                    <select className="border rounded px-1 py-0.5 text-xs border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200">
+                      <option>Monthly</option>
+                      <option>Quarterly</option>
+                      <option>Yearly</option>
+                    </select>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-0 px-2">
+                  <WarrantyTrendsChart />
+                </CardContent>
+              </Card>
+              
+              {/* Dealer claims chart */}
+              <Card className="border border-gray-200 dark:border-gray-700 shadow-sm">
+                <CardHeader className="py-2 px-3">
+                  <div className="flex justify-between items-center">
+                    <CardTitle className="text-base font-medium">Dealer Claims</CardTitle>
+                    <Tabs defaultValue="dealer">
+                      <TabsList className="grid grid-cols-3 h-6 text-xs">
+                        <TabsTrigger value="dealer" className="text-xs px-2">Dealer</TabsTrigger>
+                        <TabsTrigger value="component" className="text-xs px-2">Component</TabsTrigger>
+                        <TabsTrigger value="model" className="text-xs px-2">Model</TabsTrigger>
+                      </TabsList>
+                    </Tabs>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-0 px-2">
+                  <DealerClaimsChart />
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+          
           {/* Recent claims table */}
-          <div className="col-span-12 lg:col-span-8">
+          <div className="col-span-12">
             <Card className="border border-gray-200 dark:border-gray-700 shadow-sm">
-              <CardHeader className="pb-2">
+              <CardHeader className="py-2 px-3">
                 <div className="flex justify-between items-center">
-                  <CardTitle className="text-lg font-medium">Recent Claims</CardTitle>
+                  <CardTitle className="text-base font-medium">Recent Claims</CardTitle>
                   <div className="flex gap-2">
                     <input 
                       type="text" 
@@ -148,27 +169,6 @@ const Index = () => {
               </CardHeader>
               <CardContent className="p-0">
                 <RecentClaimsTable />
-              </CardContent>
-            </Card>
-          </div>
-          
-          {/* Dealer claims chart */}
-          <div className="col-span-12 lg:col-span-4">
-            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm h-full">
-              <CardHeader className="pb-2">
-                <div className="flex justify-between items-center">
-                  <CardTitle className="text-lg font-medium">Dealer Claims</CardTitle>
-                  <Tabs defaultValue="dealer">
-                    <TabsList className="grid grid-cols-3 h-7 text-xs">
-                      <TabsTrigger value="dealer" className="text-xs px-2">Dealer</TabsTrigger>
-                      <TabsTrigger value="component" className="text-xs px-2">Component</TabsTrigger>
-                      <TabsTrigger value="model" className="text-xs px-2">Model</TabsTrigger>
-                    </TabsList>
-                  </Tabs>
-                </div>
-              </CardHeader>
-              <CardContent className="p-4">
-                <DealerClaimsChart />
               </CardContent>
             </Card>
           </div>

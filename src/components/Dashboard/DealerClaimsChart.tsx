@@ -18,7 +18,7 @@ const data = [
 
 export const DealerClaimsChart: React.FC = () => {
   return (
-    <div className="h-[175px]">
+    <div className="h-[160px]">
       <ResponsiveContainer width="100%" height="100%">
         <ScatterChart
           margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
@@ -28,24 +28,24 @@ export const DealerClaimsChart: React.FC = () => {
             dataKey="x" 
             type="number" 
             name="Total Number of Claims"
-            tick={{ fontSize: 10 }}
+            tick={{ fontSize: 9 }}
             axisLine={false}
             tickLine={false}
-            label={{ value: 'Total Number of Claims', position: 'insideBottom', offset: -5, fontSize: 10 }}
+            label={{ value: 'Claims', position: 'insideBottom', offset: -5, fontSize: 9 }}
           />
           <YAxis 
             dataKey="y" 
             name="Total Number of Claims" 
-            tick={{ fontSize: 10 }}
+            tick={{ fontSize: 9 }}
             axisLine={false}
             tickLine={false}
-            label={{ value: 'Total Number of Claims', angle: -90, position: 'insideLeft', offset: 10, fontSize: 10 }}
+            label={{ value: 'Claims', angle: -90, position: 'insideLeft', offset: 5, fontSize: 9 }}
           />
           <Tooltip 
             cursor={{ strokeDasharray: '3 3' }}
             formatter={(value) => [`${value}`, '']}
             labelFormatter={() => ''}
-            contentStyle={{ fontSize: '12px', padding: '8px', borderRadius: '4px' }}
+            contentStyle={{ fontSize: '11px', padding: '6px', borderRadius: '4px' }}
           />
           <Scatter 
             name="Claims" 
