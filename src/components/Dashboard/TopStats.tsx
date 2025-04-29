@@ -43,14 +43,14 @@ export const TopStats: React.FC = () => {
               <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Approval Rating</span>
             </div>
             <div className="text-xl font-bold text-gray-900 dark:text-gray-100">89%</div>
-            <div className="flex items-center justify-between mt-1 text-xs">
-              <span className="text-green-600 dark:text-green-500 font-medium">
+            <div className="mt-1 text-xs">
+              <div className="flex items-center mb-1 text-green-600 dark:text-green-500 font-medium">
                 <TrendingUp size={14} className="mr-1 inline" />
                 1.9% Last month
-              </span>
-              <div className="flex gap-1">
-                <span className="text-green-600 dark:text-green-500 whitespace-nowrap">Approved: <strong>2,087</strong></span>
-                <span className="text-red-600 dark:text-red-500 whitespace-nowrap">Denied: <strong>258</strong></span>
+              </div>
+              <div className="flex flex-col gap-0.5">
+                <span className="text-green-600 dark:text-green-500">Approved: <strong>2,087</strong></span>
+                <span className="text-red-600 dark:text-red-500">Denied: <strong>258</strong></span>
               </div>
             </div>
           </div>
