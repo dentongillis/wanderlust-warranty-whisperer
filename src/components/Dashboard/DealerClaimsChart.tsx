@@ -43,7 +43,7 @@ export const DealerClaimsChart: React.FC = () => {
           />
           <Tooltip 
             cursor={{ strokeDasharray: '3 3' }}
-            formatter={(value) => [`${value}`, '']) }
+            formatter={(value) => [`${value}`, '']}
             labelFormatter={() => ''}
             contentStyle={{ fontSize: '12px', padding: '8px', borderRadius: '4px' }}
           />
