@@ -3,6 +3,7 @@ import React from 'react';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 import { WideBarChart } from './WideBarChart';
 import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 export const TopStats: React.FC = () => {
   const modelData = [
