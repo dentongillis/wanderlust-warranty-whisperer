@@ -1,10 +1,11 @@
 
 import React, { useState } from 'react';
 import { Sidebar } from '../Sidebar/Sidebar';
-import { Menu, Search, Settings, Bell, HelpCircle } from 'lucide-react';
+import { Menu, Search, Settings, HelpCircle, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SettingsSheet } from '../Settings/SettingsSheet';
 import { HelpSheet } from '../Help/HelpSheet';
+import { FiltersSheet } from '../Filters/FiltersSheet';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -53,9 +54,11 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
               <Button variant="outline" className="hidden sm:flex text-sm py-1 px-3 h-auto">
                 Ask AI
               </Button>
-              <Button variant="ghost" size="icon" className="hover:bg-gray-100 dark:hover:bg-gray-700">
-                <Bell size={18} />
-              </Button>
+              <FiltersSheet>
+                <Button variant="ghost" size="icon" className="hover:bg-gray-100 dark:hover:bg-gray-700">
+                  <Filter size={18} />
+                </Button>
+              </FiltersSheet>
               <HelpSheet>
                 <Button variant="ghost" size="icon" className="hover:bg-gray-100 dark:hover:bg-gray-700">
                   <HelpCircle size={18} />
