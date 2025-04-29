@@ -25,15 +25,21 @@ export const WarrantyTrendsChart: React.FC = () => {
             dataKey="day" 
             axisLine={false}
             tickLine={false}
-            tick={{ fontSize: 10 }}
+            tick={{ fontSize: 10, fill: '#6B7280' }}
           />
           <YAxis 
             axisLine={false}
             tickLine={false}
-            tick={{ fontSize: 10 }}
+            tick={{ fontSize: 10, fill: '#6B7280' }}
           />
           <Tooltip 
-            contentStyle={{ fontSize: '12px', padding: '8px', borderRadius: '4px' }} 
+            contentStyle={{ 
+              fontSize: '12px', 
+              padding: '8px', 
+              borderRadius: '4px',
+              boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
+              border: '1px solid #e2e8f0'
+            }} 
           />
           <Line 
             type="monotone" 
@@ -45,7 +51,7 @@ export const WarrantyTrendsChart: React.FC = () => {
           />
         </LineChart>
       </ResponsiveContainer>
-      <div className="text-right text-xs text-green-600 font-medium">
+      <div className="text-right text-xs text-green-600 dark:text-green-500 font-medium mt-1">
         <span>4.8% Growth</span>
       </div>
     </div>

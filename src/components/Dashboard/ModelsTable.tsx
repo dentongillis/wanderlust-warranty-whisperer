@@ -1,6 +1,9 @@
 
 import React from 'react';
 import { TrendingUp, TrendingDown, Eye } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const modelsData = [
   { 
@@ -39,59 +42,66 @@ const modelsData = [
 
 export const ModelsTable: React.FC = () => {
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="text-left text-xs">
-            <th className="pb-2 font-medium text-gray-600">Model</th>
-            <th className="pb-2 font-medium text-gray-600">Claims</th>
-            <th className="pb-2 font-medium text-gray-600">Avg. Cost</th>
-            <th className="pb-2 font-medium text-gray-600">Trend</th>
-            <th className="pb-2 font-medium text-gray-600">Risk Level</th>
-            <th className="pb-2 font-medium text-gray-600"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {modelsData.map((model) => (
-            <tr key={model.id} className="border-t border-gray-100">
-              <td className="py-2 font-medium">{model.model}</td>
-              <td className="py-2">{model.claims}</td>
-              <td className="py-2">{model.avgCost}</td>
-              <td className="py-2">
-                {model.trend === 'up' ? (
-                  <div className="flex items-center text-red-500 text-xs">
-                    <TrendingUp size={14} className="mr-1" /> Increasing
-                  </div>
-                ) : (
-                  <div className="flex items-center text-green-500 text-xs">
-                    <TrendingDown size={14} className="mr-1" /> Decreasing
-                  </div>
-                )}
-              </td>
-              <td className="py-2">
-                {model.risk === 'high' ? (
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                    High Risk
-                  </span>
-                ) : model.risk === 'normal' ? (
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                    Normal
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    Low Risk
-                  </span>
-                )}
-              </td>
-              <td className="py-2 text-right">
-                <button className="text-blue-600 flex items-center text-xs">
-                  <Eye size={14} className="mr-1" /> Details
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <Card className="shadow-sm border border-gray-200 dark:border-gray-700">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-lg font-medium">Model Overview</CardTitle>
+      </CardHeader>
+      <CardContent className="p-0">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-gray-50 dark:bg-gray-800">
+                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300">Model</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300">Claims</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300">Avg. Cost</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300">Trend</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300">Risk Level</th>
+                <th className="px-4 py-3 text-right font-medium text-gray-600 dark:text-gray-300">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {modelsData.map((model) => (
+                <tr key={model.id} className="border-t border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+                  <td className="px-4 py-3 font-medium text-gray-800 dark:text-gray-200">{model.model}</td>
+                  <td className="px-4 py-3 text-gray-600 dark:text-gray-300">{model.claims}</td>
+                  <td className="px-4 py-3 text-gray-600 dark:text-gray-300">{model.avgCost}</td>
+                  <td className="px-4 py-3">
+                    {model.trend === 'up' ? (
+                      <div className="flex items-center text-red-500 text-xs">
+                        <TrendingUp size={14} className="mr-1" /> Increasing
+                      </div>
+                    ) : (
+                      <div className="flex items-center text-green-500 text-xs">
+                        <TrendingDown size={14} className="mr-1" /> Decreasing
+                      </div>
+                    )}
+                  </td>
+                  <td className="px-4 py-3">
+                    {model.risk === 'high' ? (
+                      <Badge variant="outline" className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 border-red-200 dark:border-red-800">
+                        High Risk
+                      </Badge>
+                    ) : model.risk === 'normal' ? (
+                      <Badge variant="outline" className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 border-blue-200 dark:border-blue-800">
+                        Normal
+                      </Badge>
+                    ) : (
+                      <Badge variant="outline" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 border-green-200 dark:border-green-800">
+                        Low Risk
+                      </Badge>
+                    )}
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    <Button variant="ghost" size="sm" className="text-blue-600 dark:text-blue-400 h-8 px-2">
+                      <Eye size={14} className="mr-1" /> Details
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </CardContent>
+    </Card>
   );
 };

@@ -1,11 +1,13 @@
 
 import React from 'react';
 import { Eye } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
 const recentClaimsData = [
   { 
     date: '04/07/25',
-    claimId: '04/07/25',
+    claimId: 'CLM-2567',
     model: 'Model I',
     dealer: 'Camping World',
     status: 'pending',
@@ -13,7 +15,7 @@ const recentClaimsData = [
   },
   { 
     date: '04/07/25',
-    claimId: '04/07/25',
+    claimId: 'CLM-2566',
     model: 'Model Z Air',
     dealer: 'General RV',
     status: 'pending',
@@ -21,7 +23,7 @@ const recentClaimsData = [
   },
   { 
     date: '04/07/25',
-    claimId: '04/07/25',
+    claimId: 'CLM-2565',
     model: 'Model G',
     dealer: "Pete's RV Center",
     status: 'approved',
@@ -29,7 +31,7 @@ const recentClaimsData = [
   },
   { 
     date: '04/07/25',
-    claimId: '04/07/25',
+    claimId: 'CLM-2564',
     model: 'Model Z',
     dealer: 'General RV',
     status: 'pending',
@@ -37,7 +39,7 @@ const recentClaimsData = [
   },
   { 
     date: '04/07/25',
-    claimId: '04/07/25',
+    claimId: 'CLM-2563',
     model: 'Model I',
     dealer: 'Camping World',
     status: 'in-progress',
@@ -45,7 +47,7 @@ const recentClaimsData = [
   },
   { 
     date: '04/06/25',
-    claimId: '04/06/25',
+    claimId: 'CLM-2562',
     model: 'Model G',
     dealer: 'Funtown RV',
     status: 'denied',
@@ -53,51 +55,55 @@ const recentClaimsData = [
   }
 ];
 
-const getStatusBadge = (status: string) => {
-  switch (status) {
-    case 'approved':
-      return <span className="px-2 py-0.5 text-xs bg-green-100 text-green-800 rounded-full">Approved</span>;
-    case 'pending':
-      return <span className="px-2 py-0.5 text-xs bg-yellow-100 text-yellow-800 rounded-full">Pending</span>;
-    case 'denied':
-      return <span className="px-2 py-0.5 text-xs bg-red-100 text-red-800 rounded-full">Denied</span>;
-    case 'in-progress':
-      return <span className="px-2 py-0.5 text-xs bg-blue-100 text-blue-800 rounded-full">In Progress</span>;
-    default:
-      return <span className="px-2 py-0.5 text-xs bg-gray-100 text-gray-800 rounded-full">{status}</span>;
-  }
-};
-
 export const RecentClaimsTable: React.FC = () => {
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="text-left text-xs text-gray-600">
-            <th className="pr-4 pb-2 font-medium">Date</th>
-            <th className="pr-4 pb-2 font-medium">Claim ID</th>
-            <th className="pr-4 pb-2 font-medium">Model</th>
-            <th className="pr-4 pb-2 font-medium">Dealer</th>
-            <th className="pr-4 pb-2 font-medium">Status</th>
-            <th className="pr-4 pb-2 font-medium">Total</th>
-            <th className="pb-2 font-medium"></th>
+          <tr className="bg-gray-50 dark:bg-gray-800">
+            <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300">Date</th>
+            <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300">Claim ID</th>
+            <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300">Model</th>
+            <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300">Dealer</th>
+            <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300">Status</th>
+            <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300">Total</th>
+            <th className="px-4 py-3 text-right font-medium text-gray-600 dark:text-gray-300">Actions</th>
           </tr>
         </thead>
         <tbody>
           {recentClaimsData.map((claim, index) => (
-            <tr key={index} className="border-t border-gray-100">
-              <td className="py-2 text-xs pr-4">{claim.date}</td>
-              <td className="py-2 text-xs pr-4">{claim.claimId}</td>
-              <td className="py-2 text-xs pr-4">{claim.model}</td>
-              <td className="py-2 text-xs pr-4">{claim.dealer}</td>
-              <td className="py-2 text-xs pr-4">
-                {getStatusBadge(claim.status)}
+            <tr key={index} className="border-t border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+              <td className="px-4 py-3 text-gray-600 dark:text-gray-300">{claim.date}</td>
+              <td className="px-4 py-3 font-medium text-gray-800 dark:text-gray-200">{claim.claimId}</td>
+              <td className="px-4 py-3 text-gray-600 dark:text-gray-300">{claim.model}</td>
+              <td className="px-4 py-3 text-gray-600 dark:text-gray-300">{claim.dealer}</td>
+              <td className="px-4 py-3">
+                {claim.status === 'approved' && (
+                  <Badge variant="outline" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 border-green-200 dark:border-green-800">
+                    Approved
+                  </Badge>
+                )}
+                {claim.status === 'pending' && (
+                  <Badge variant="outline" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 border-yellow-200 dark:border-yellow-800">
+                    Pending
+                  </Badge>
+                )}
+                {claim.status === 'denied' && (
+                  <Badge variant="outline" className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 border-red-200 dark:border-red-800">
+                    Denied
+                  </Badge>
+                )}
+                {claim.status === 'in-progress' && (
+                  <Badge variant="outline" className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 border-blue-200 dark:border-blue-800">
+                    In Progress
+                  </Badge>
+                )}
               </td>
-              <td className="py-2 text-xs pr-4">{claim.total}</td>
-              <td className="py-2 text-right">
-                <button className="text-blue-600 flex items-center text-xs">
+              <td className="px-4 py-3 font-medium text-gray-800 dark:text-gray-200">{claim.total}</td>
+              <td className="px-4 py-3 text-right">
+                <Button variant="ghost" size="sm" className="text-blue-600 dark:text-blue-400 h-8 px-2">
                   <Eye size={14} className="mr-1" /> Details
-                </button>
+                </Button>
               </td>
             </tr>
           ))}

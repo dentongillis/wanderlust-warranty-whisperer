@@ -22,13 +22,13 @@ interface FilterCardProps {
 export const FilterCard: React.FC<FilterCardProps> = ({ 
   title = "Filters", 
   filters, 
-  onApply, 
-  onReset 
+  onApply = () => {}, 
+  onReset = () => {} 
 }) => {
   return (
-    <Card className="mb-6">
+    <Card className="mb-6 border border-gray-200 dark:border-gray-700">
       <CardHeader className="pb-2 flex flex-row items-center justify-between">
-        <CardTitle className="text-lg font-medium flex items-center">
+        <CardTitle className="text-lg font-medium flex items-center text-gray-800 dark:text-gray-200">
           <Filter className="mr-2" size={18} />
           {title}
         </CardTitle>
@@ -37,6 +37,7 @@ export const FilterCard: React.FC<FilterCardProps> = ({
             variant="outline" 
             size="sm" 
             onClick={onReset}
+            className="border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300"
           >
             <RefreshCcw size={14} className="mr-1" /> Reset
           </Button>
@@ -53,11 +54,11 @@ export const FilterCard: React.FC<FilterCardProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {filters.map((filter, index) => (
             <div key={index}>
-              <label className="block text-sm font-medium mb-1 text-muted-foreground">
+              <label className="block text-sm font-medium mb-1 text-gray-600 dark:text-gray-400">
                 {filter.label}
               </label>
               <Select value={filter.value} onValueChange={filter.onChange}>
-                <SelectTrigger>
+                <SelectTrigger className="w-full bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                   <SelectValue placeholder={`Select ${filter.label}`} />
                 </SelectTrigger>
                 <SelectContent>
