@@ -16,12 +16,16 @@ const Index = () => {
       description="RV warranty analysis overview"
     >
       <div className="space-y-3">
-        <TopStats />
-        
         <div className="grid grid-cols-12 gap-3">
-          {/* Models table */}
+          {/* Left column - 2/3 width */}
           <div className="col-span-12 lg:col-span-8">
-            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm h-[300px] overflow-hidden">
+            {/* Top stats */}
+            <div className="mb-3">
+              <TopStats />
+            </div>
+            
+            {/* Models table */}
+            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm h-[300px] overflow-hidden mb-3">
               <CardHeader className="py-2 px-3">
                 <CardTitle className="text-base font-medium">Model Overview</CardTitle>
               </CardHeader>
@@ -29,11 +33,34 @@ const Index = () => {
                 <ModelsTable />
               </CardContent>
             </Card>
+            
+            {/* Recent claims table */}
+            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm">
+              <CardHeader className="py-2 px-3">
+                <div className="flex justify-between items-center">
+                  <CardTitle className="text-base font-medium">Recent Claims</CardTitle>
+                  <div className="flex gap-2">
+                    <input 
+                      type="text" 
+                      placeholder="Search" 
+                      className="border rounded px-2 py-1 text-xs border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200" 
+                    />
+                    <button className="bg-gray-100 dark:bg-gray-700 px-2 rounded text-xs flex items-center text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600">
+                      Filter
+                    </button>
+                    <button className="text-blue-600 dark:text-blue-400 text-xs hover:underline">View All Claims</button>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="p-0">
+                <RecentClaimsTable />
+              </CardContent>
+            </Card>
           </div>
           
-          {/* Charts */}
+          {/* Right column - 1/3 width with charts */}
           <div className="col-span-12 lg:col-span-4">
-            <div className="grid grid-rows-2 gap-3 h-[300px]">
+            <div className="grid grid-rows-2 gap-3 h-full">
               {/* Warranty trends chart */}
               <Card className="border border-gray-200 dark:border-gray-700 shadow-sm">
                 <CardHeader className="py-2 px-3">
@@ -70,31 +97,6 @@ const Index = () => {
                 </CardContent>
               </Card>
             </div>
-          </div>
-          
-          {/* Recent claims table */}
-          <div className="col-span-12">
-            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm">
-              <CardHeader className="py-2 px-3">
-                <div className="flex justify-between items-center">
-                  <CardTitle className="text-base font-medium">Recent Claims</CardTitle>
-                  <div className="flex gap-2">
-                    <input 
-                      type="text" 
-                      placeholder="Search" 
-                      className="border rounded px-2 py-1 text-xs border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200" 
-                    />
-                    <button className="bg-gray-100 dark:bg-gray-700 px-2 rounded text-xs flex items-center text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600">
-                      Filter
-                    </button>
-                    <button className="text-blue-600 dark:text-blue-400 text-xs hover:underline">View All Claims</button>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="p-0">
-                <RecentClaimsTable />
-              </CardContent>
-            </Card>
           </div>
         </div>
       </div>
