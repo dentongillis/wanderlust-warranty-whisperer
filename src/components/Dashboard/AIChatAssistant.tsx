@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Send, Bot, RefreshCw } from 'lucide-react';
+import { Send, Bot } from 'lucide-react';
 
 type Message = {
   role: "user" | "assistant";
@@ -97,25 +97,8 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({ onClose, reset
     }, 1500);
   };
 
-  const handleNewChat = () => {
-    setMessages(initialMessages);
-    persistedMessages = [...initialMessages];
-  };
-
   return (
     <div className="flex flex-col h-full">
-      <div className="flex justify-between items-center mb-2">
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          className="h-7 px-2 text-xs flex items-center gap-1 hover:bg-blue-50 dark:hover:bg-gray-700"
-          onClick={handleNewChat}
-        >
-          <RefreshCw size={12} />
-          New Chat
-        </Button>
-      </div>
-      
       <div className="flex-1 overflow-y-auto mb-4 pr-1 custom-scrollbar">
         <div className="space-y-4">
           {messages.map((message, index) => (
