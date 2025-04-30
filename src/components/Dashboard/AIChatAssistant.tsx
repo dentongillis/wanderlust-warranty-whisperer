@@ -1,9 +1,17 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Send, Bot, MessageSquarePlus, SidebarIcon } from 'lucide-react';
+import { Send, Bot, MessageSquarePlus, SidebarIcon, Share2 } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { Separator } from '@/components/ui/separator';
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  TooltipProvider
+} from '@/components/ui/tooltip';
+import { useToast } from "@/hooks/use-toast";
 
 type Message = {
   role: "user" | "assistant";
@@ -65,6 +73,7 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
   const [isThinking, setIsThinking] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [showThreads, setShowThreads] = useState(true);
+  const { toast } = useToast();
   
   // Get chats from storage or initialize
   const getStoredChats = (): Chat[] => {
@@ -236,48 +245,113 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
     return chat.name;
   };
 
+  // Handle sharing/downloading the conversation
+  const handleShareConversation = () => {
+    // Format the conversation
+    const formattedConversation = activeChat.messages.map(msg => {
+      const role = msg.role === 'assistant' ? 'Warranty AI' : 'You';
+      const time = new Date(msg.timestamp).toLocaleString();
+      return `${role} (${time}):\n${msg.content}\n\n`;
+    }).join('');
+    
+    const header = `Warranty AI Conversation - ${new Date(activeChat.lastUpdated).toLocaleDateString()}\n`;
+    const pageInfo = `Page: ${activeChat.page}\n\n`;
+    const fullText = header + pageInfo + formattedConversation;
+    
+    // Create blob and download
+    const blob = new Blob([fullText], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `warranty-conversation-${new Date().toISOString().slice(0,10)}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    
+    // Show success toast
+    toast({
+      title: "Conversation Downloaded",
+      description: "Your conversation has been saved as a text file.",
+      duration: 3000,
+    });
+  };
+
   return (
     <div className="flex h-full">
       {/* Left sidebar for chat threads */}
       <div className={`bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transition-all duration-300 ${showThreads ? 'w-1/3' : 'w-0'}`}>
         {showThreads && (
-          <div className="p-3">
-            <div className="flex items-center gap-1 mb-3">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="flex-1 flex items-center justify-center gap-1 new-chat-button chat-button-gradient"
-                onClick={handleCreateNewChat}
-              >
-                <MessageSquarePlus size={14} />
-                <span className="text-xs">New Chat</span>
-              </Button>
-            </div>
-            
-            <div className="mt-3 space-y-1 max-h-[calc(100vh-150px)] overflow-y-auto custom-scrollbar">
-              {chats.map((chat) => (
-                <button
-                  key={chat.id}
-                  className={`w-full text-left px-2 py-1.5 rounded-md text-sm transition-colors ${
-                    chat.id === activeChat.id 
-                      ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300' 
-                      : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'
-                  }`}
-                  onClick={() => handleSwitchChat(chat)}
-                >
-                  <div className="flex items-start">
-                    <Bot size={14} className="mt-0.5 mr-2 flex-shrink-0" />
-                    <div className="overflow-hidden">
-                      <p className="truncate font-medium">{getChatName(chat)}</p>
-                      <div className="flex items-center text-xs text-gray-500 mt-0.5">
-                        <span>{new Date(chat.lastUpdated).toLocaleDateString()}</span>
-                        <span className="mx-1">·</span>
-                        <span>{chat.page}</span>
+          <div className="flex flex-col h-full">
+            <div className="p-3">
+              <div className="flex items-center gap-1 mb-3">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="flex-1 flex items-center justify-center gap-1 new-chat-button chat-button-gradient"
+                        onClick={handleCreateNewChat}
+                      >
+                        <MessageSquarePlus size={14} />
+                        <span className="text-xs">New Chat</span>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">
+                      <p>Start a new chat</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+              
+              <div className="mt-3 space-y-1 overflow-y-auto custom-scrollbar" style={{ maxHeight: 'calc(100vh - 220px)' }}>
+                {chats.map((chat) => (
+                  <button
+                    key={chat.id}
+                    className={`w-full text-left px-2 py-1.5 rounded-md text-sm transition-colors ${
+                      chat.id === activeChat.id 
+                        ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300' 
+                        : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'
+                    }`}
+                    onClick={() => handleSwitchChat(chat)}
+                  >
+                    <div className="flex items-start">
+                      <Bot size={14} className="mt-0.5 mr-2 flex-shrink-0" />
+                      <div className="overflow-hidden">
+                        <p className="truncate font-medium">{getChatName(chat)}</p>
+                        <div className="flex items-center text-xs text-gray-500 mt-0.5">
+                          <span>{new Date(chat.lastUpdated).toLocaleDateString()}</span>
+                          <span className="mx-1">·</span>
+                          <span>{chat.page}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </button>
-              ))}
+                  </button>
+                ))}
+              </div>
+            </div>
+            
+            {/* Share button at the bottom */}
+            <div className="mt-auto p-3 border-t border-gray-200 dark:border-gray-800">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleShareConversation}
+                      className="w-full flex items-center justify-center gap-2"
+                    >
+                      <Share2 size={14} />
+                      <span className="text-xs">Share Conversation</span>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top">
+                    <p>Download this conversation as a text file</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </div>
         )}
@@ -337,23 +411,41 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
         <div className="px-3 py-2 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
           <div className="flex gap-2">
             <div className="flex gap-1">
-              <Button 
-                variant="outline"
-                size="icon"
-                className="flex-shrink-0 bg-transparent border-gray-200 dark:border-gray-800"
-                onClick={() => setShowThreads(!showThreads)}
-              >
-                <SidebarIcon size={18} />
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button 
+                      variant="outline"
+                      size="icon"
+                      className="flex-shrink-0 bg-transparent border-gray-200 dark:border-gray-800"
+                      onClick={() => setShowThreads(!showThreads)}
+                    >
+                      <SidebarIcon size={18} />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top">
+                    <p>{showThreads ? 'Hide threads' : 'Show threads'}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
               
-              <Button 
-                variant="outline"
-                size="icon"
-                className="flex-shrink-0 bg-transparent border-gray-200 dark:border-gray-800"
-                onClick={handleCreateNewChat}
-              >
-                <MessageSquarePlus size={18} />
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button 
+                      variant="outline"
+                      size="icon"
+                      className="flex-shrink-0 bg-transparent border-gray-200 dark:border-gray-800"
+                      onClick={handleCreateNewChat}
+                    >
+                      <MessageSquarePlus size={18} />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top">
+                    <p>New chat</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
             
             <Input 

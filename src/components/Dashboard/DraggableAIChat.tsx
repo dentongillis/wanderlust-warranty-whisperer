@@ -1,7 +1,8 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { X, Minimize2, Maximize, SidebarIcon, MessageSquarePlus } from 'lucide-react';
+import { X, Minimize, Maximize, SidebarIcon, MessageSquarePlus } from 'lucide-react';
 import { AIChatAssistant } from './AIChatAssistant';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
@@ -25,10 +26,12 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
   chatId,
   onChatChange
 }) => {
-  const [position, setPosition] = useState({ x: window.innerWidth / 2 - 200, y: window.innerHeight / 4 });
+  // Initial position centered in the viewport
+  const [position, setPosition] = useState({ x: window.innerWidth / 2 - 350, y: window.innerHeight / 4 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [dimensions, setDimensions] = useState({ width: 320, height: 500 });
+  // Increased initial dimensions for better usability
+  const [dimensions, setDimensions] = useState({ width: 700, height: 600 });
   const [isMaximized, setIsMaximized] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
   const previousDimensions = useRef({ position: { x: 0, y: 0 }, dimensions: { width: 0, height: 0 } });
@@ -225,7 +228,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
                     className="h-6 w-6 text-white hover:bg-white/20 hover:text-white" 
                     onClick={onMinimize}
                   >
-                    <Minimize2 size={14} />
+                    <Minimize size={14} />
                     <span className="sr-only">Minimize</span>
                   </Button>
                 </TooltipTrigger>
@@ -279,8 +282,9 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
         </ResizablePanel>
       </ResizablePanelGroup>
       
-      {/* Resize handles */}
-      <div className="absolute bottom-0 right-0 w-4 h-4 cursor-nwse-resize resize-handle resize-handle-br" 
+      {/* Corner resize handles */}
+      {/* Bottom-right corner */}
+      <div className="absolute bottom-0 right-0 w-8 h-8 cursor-nwse-resize resize-handle resize-handle-br" 
            onMouseDown={(e) => {
              e.stopPropagation();
              e.preventDefault();
@@ -311,7 +315,139 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
              document.addEventListener('mouseup', handleMouseUp);
            }}
       >
-        <div className="w-0 h-0 border-b-4 border-r-4 border-gray-400 absolute bottom-0 right-0"></div>
+        <div className="w-0 h-0 border-b-8 border-r-8 border-gray-400 absolute bottom-0 right-0"></div>
+      </div>
+
+      {/* Bottom-left corner */}
+      <div className="absolute bottom-0 left-0 w-8 h-8 cursor-nesw-resize resize-handle resize-handle-bl"
+           onMouseDown={(e) => {
+             e.stopPropagation();
+             e.preventDefault();
+             const startX = e.clientX;
+             const startY = e.clientY;
+             const startLeft = position.x;
+             const startWidth = dimensions.width;
+             const startHeight = dimensions.height;
+             
+             const handleMouseMove = (e: MouseEvent) => {
+               e.preventDefault();
+               const dx = startX - e.clientX;
+               const newWidth = Math.max(320, startWidth + dx);
+               const newLeft = startLeft - (newWidth - startWidth);
+               const newHeight = Math.max(300, startHeight + (e.clientY - startY));
+               
+               setPosition({
+                 ...position,
+                 x: newLeft
+               });
+               
+               setDimensions({
+                 width: newWidth,
+                 height: newHeight
+               });
+             };
+             
+             const handleMouseUp = () => {
+               document.removeEventListener('mousemove', handleMouseMove);
+               document.removeEventListener('mouseup', handleMouseUp);
+               document.body.classList.remove('select-none');
+             };
+             
+             document.body.classList.add('select-none');
+             document.addEventListener('mousemove', handleMouseMove, { passive: false });
+             document.addEventListener('mouseup', handleMouseUp);
+           }}
+      >
+        <div className="w-0 h-0 border-b-8 border-l-8 border-gray-400 absolute bottom-0 left-0"></div>
+      </div>
+
+      {/* Top-right corner */}
+      <div className="absolute top-0 right-0 w-8 h-8 cursor-nesw-resize resize-handle resize-handle-tr"
+           onMouseDown={(e) => {
+             e.stopPropagation();
+             e.preventDefault();
+             const startX = e.clientX;
+             const startY = e.clientY;
+             const startTop = position.y;
+             const startWidth = dimensions.width;
+             const startHeight = dimensions.height;
+             
+             const handleMouseMove = (e: MouseEvent) => {
+               e.preventDefault();
+               const dy = startY - e.clientY;
+               const newWidth = Math.max(320, startWidth + (e.clientX - startX));
+               const newHeight = Math.max(300, startHeight + dy);
+               const newTop = startTop - (newHeight - startHeight);
+               
+               setPosition({
+                 ...position,
+                 y: newTop
+               });
+               
+               setDimensions({
+                 width: newWidth,
+                 height: newHeight
+               });
+             };
+             
+             const handleMouseUp = () => {
+               document.removeEventListener('mousemove', handleMouseMove);
+               document.removeEventListener('mouseup', handleMouseUp);
+               document.body.classList.remove('select-none');
+             };
+             
+             document.body.classList.add('select-none');
+             document.addEventListener('mousemove', handleMouseMove, { passive: false });
+             document.addEventListener('mouseup', handleMouseUp);
+           }}
+      >
+        <div className="w-0 h-0 border-t-8 border-r-8 border-gray-400 absolute top-0 right-0"></div>
+      </div>
+
+      {/* Top-left corner */}
+      <div className="absolute top-0 left-0 w-8 h-8 cursor-nwse-resize resize-handle resize-handle-tl"
+           onMouseDown={(e) => {
+             e.stopPropagation();
+             e.preventDefault();
+             const startX = e.clientX;
+             const startY = e.clientY;
+             const startTop = position.y;
+             const startLeft = position.x;
+             const startWidth = dimensions.width;
+             const startHeight = dimensions.height;
+             
+             const handleMouseMove = (e: MouseEvent) => {
+               e.preventDefault();
+               const dx = startX - e.clientX;
+               const dy = startY - e.clientY;
+               const newWidth = Math.max(320, startWidth + dx);
+               const newHeight = Math.max(300, startHeight + dy);
+               const newLeft = startLeft - (newWidth - startWidth);
+               const newTop = startTop - (newHeight - startHeight);
+               
+               setPosition({
+                 x: newLeft,
+                 y: newTop
+               });
+               
+               setDimensions({
+                 width: newWidth,
+                 height: newHeight
+               });
+             };
+             
+             const handleMouseUp = () => {
+               document.removeEventListener('mousemove', handleMouseMove);
+               document.removeEventListener('mouseup', handleMouseUp);
+               document.body.classList.remove('select-none');
+             };
+             
+             document.body.classList.add('select-none');
+             document.addEventListener('mousemove', handleMouseMove, { passive: false });
+             document.addEventListener('mouseup', handleMouseUp);
+           }}
+      >
+        <div className="w-0 h-0 border-t-8 border-l-8 border-gray-400 absolute top-0 left-0"></div>
       </div>
 
       {/* Bottom resize handle */}

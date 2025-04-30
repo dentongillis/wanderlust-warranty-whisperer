@@ -4,6 +4,12 @@ import { Button } from '@/components/ui/button';
 import { useToast } from "@/hooks/use-toast";
 import { DraggableAIChat } from './DraggableAIChat';
 import { MessageSquarePlus, SidebarIcon, Bot } from 'lucide-react';
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  TooltipProvider
+} from '@/components/ui/tooltip';
 
 interface AIChatSheetProps {
   children: React.ReactNode;
@@ -71,26 +77,53 @@ export function AIChatSheet({ children }: AIChatSheetProps) {
       {/* Minimized Chat Bubble */}
       {minimized && (
         <div className="fixed bottom-4 right-4 flex space-x-2 z-50">
-          <div 
-            className="bg-gradient-to-r from-sidebar to-sidebar-accent text-white rounded-full p-2.5 shadow-lg cursor-pointer hover:from-sidebar-accent hover:to-sidebar transition-all"
-            onClick={toggleThreads}
-          >
-            <SidebarIcon size={20} />
-          </div>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div 
+                  className="bg-gradient-to-r from-sidebar to-sidebar-accent text-white rounded-full p-2.5 shadow-lg cursor-pointer hover:from-sidebar-accent hover:to-sidebar transition-all"
+                  onClick={toggleThreads}
+                >
+                  <SidebarIcon size={20} />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="left">
+                <p>Toggle chat threads</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           
-          <div 
-            className="bg-gradient-to-r from-sidebar to-sidebar-accent text-white rounded-full p-2.5 shadow-lg cursor-pointer hover:from-sidebar-accent hover:to-sidebar transition-all"
-            onClick={handleNewChat}
-          >
-            <MessageSquarePlus size={20} />
-          </div>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div 
+                  className="bg-gradient-to-r from-sidebar to-sidebar-accent text-white rounded-full p-2.5 shadow-lg cursor-pointer hover:from-sidebar-accent hover:to-sidebar transition-all"
+                  onClick={handleNewChat}
+                >
+                  <MessageSquarePlus size={20} />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="left">
+                <p>New chat</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           
-          <div 
-            className="bg-gradient-to-r from-sidebar to-sidebar-accent text-white rounded-full p-2.5 shadow-lg cursor-pointer hover:from-sidebar-accent hover:to-sidebar transition-all"
-            onClick={toggleChat}
-          >
-            <Bot size={20} />
-          </div>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div 
+                  className="bg-gradient-to-r from-sidebar to-sidebar-accent text-white rounded-full p-2.5 shadow-lg cursor-pointer hover:from-sidebar-accent hover:to-sidebar transition-all"
+                  onClick={toggleChat}
+                >
+                  <Bot size={20} />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="left">
+                <p>Open chat</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       )}
       
