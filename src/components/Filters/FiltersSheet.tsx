@@ -9,6 +9,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { FilterCard } from './FilterCard';
+import { useToast } from "@/hooks/use-toast";
 
 interface FiltersSheetProps {
   children: React.ReactNode;
@@ -29,7 +30,8 @@ const modelOptions = [
   { value: 'skyline-5000', label: 'Skyline 5000' },
   { value: 'pathfinder-x', label: 'Pathfinder X' },
   { value: 'venture-elite', label: 'Venture Elite' },
-  { value: 'nomad-trail', label: 'Nomad Trail' }
+  { value: 'nomad-trail', label: 'Nomad Trail' },
+  { value: 'freedom-deluxe', label: 'Freedom Deluxe 3200' }
 ];
 
 const dealerOptions = [
@@ -46,7 +48,9 @@ const componentOptions = [
   { value: 'transmission', label: 'Transmission' },
   { value: 'electrical', label: 'Electrical System' },
   { value: 'plumbing', label: 'Plumbing' },
-  { value: 'chassis', label: 'Chassis' }
+  { value: 'chassis', label: 'Chassis' },
+  { value: 'hvac', label: 'HVAC System' },
+  { value: 'refrigerator', label: 'Refrigerator' }
 ];
 
 export function FiltersSheet({ children }: FiltersSheetProps) {
@@ -54,6 +58,7 @@ export function FiltersSheet({ children }: FiltersSheetProps) {
   const [model, setModel] = useState('all');
   const [dealer, setDealer] = useState('all');
   const [component, setComponent] = useState('all');
+  const { toast } = useToast();
   
   const filters = [
     {
@@ -83,8 +88,12 @@ export function FiltersSheet({ children }: FiltersSheetProps) {
   ];
   
   const handleApplyFilters = () => {
+    toast({
+      title: "Filters Applied",
+      description: `Showing data for: ${dateRangeOptions.find(d => d.value === dateRange)?.label || dateRange}, ${modelOptions.find(m => m.value === model)?.label || model}`,
+      duration: 3000,
+    });
     console.log("Applied filters:", { dateRange, model, dealer, component });
-    // Here we would typically update some global state or context
   };
   
   const handleResetFilters = () => {
@@ -92,6 +101,11 @@ export function FiltersSheet({ children }: FiltersSheetProps) {
     setModel('all');
     setDealer('all');
     setComponent('all');
+    toast({
+      title: "Filters Reset",
+      description: "All filters have been reset to default values",
+      duration: 2000,
+    });
   };
   
   return (
@@ -99,16 +113,15 @@ export function FiltersSheet({ children }: FiltersSheetProps) {
       <SheetTrigger asChild>
         {children}
       </SheetTrigger>
-      <SheetContent>
+      <SheetContent className="sm:max-w-md">
         <SheetHeader>
-          <SheetTitle>Filters</SheetTitle>
+          <SheetTitle>Dashboard Filters</SheetTitle>
           <SheetDescription>
-            Filter dashboard data by various criteria
+            Filter dashboard data to focus on specific insights
           </SheetDescription>
         </SheetHeader>
-        <div className="py-6">
+        <div className="py-4">
           <FilterCard 
-            title="Dashboard Filters" 
             filters={filters}
             onApply={handleApplyFilters}
             onReset={handleResetFilters}
