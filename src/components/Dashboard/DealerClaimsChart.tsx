@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 
@@ -79,13 +79,9 @@ export const DealerClaimsChart: React.FC = () => {
     }
   };
 
-  // Get the title based on active tab
-  const getTitle = () => {
-    return activeTab.charAt(0).toUpperCase() + activeTab.slice(1);
-  };
-
   return (
-    <div className="h-[160px]">
+    <div className="h-full flex flex-col">
+      {/* Chart Header */}
       <div className="flex justify-between items-center mb-1">
         <div>
           <h3 className="text-sm font-medium">Claims</h3>
@@ -99,19 +95,19 @@ export const DealerClaimsChart: React.FC = () => {
           <TabsList className="h-7 bg-gray-50 dark:bg-gray-800 p-0.5">
             <TabsTrigger 
               value="dealer" 
-              className="text-xs h-6 px-3 data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700"
+              className="text-xs h-6 px-3 data-[state=active]:bg-black data-[state=active]:text-white"
             >
               Dealer
             </TabsTrigger>
             <TabsTrigger 
               value="component" 
-              className="text-xs h-6 px-3 data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700"
+              className="text-xs h-6 px-3 data-[state=active]:bg-black data-[state=active]:text-white"
             >
               Component
             </TabsTrigger>
             <TabsTrigger 
               value="model" 
-              className="text-xs h-6 px-3 data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700"
+              className="text-xs h-6 px-3 data-[state=active]:bg-black data-[state=active]:text-white"
             >
               Model
             </TabsTrigger>
@@ -119,57 +115,64 @@ export const DealerClaimsChart: React.FC = () => {
         </Tabs>
       </div>
 
-      <ChartContainer 
-        config={{
-          [activeTab]: { color: getDotColor() }
-        }}
-        className="h-[130px]"
-      >
-        <ResponsiveContainer width="100%" height="100%">
-          <ScatterChart
-            margin={{ top: 5, right: 15, left: 0, bottom: 5 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-            <XAxis 
-              dataKey="x" 
-              type="number" 
-              name="Hour of Day"
-              tick={{ fontSize: 9 }}
-              axisLine={false}
-              tickLine={false}
-              label={{ value: 'Hour', position: 'insideBottom', offset: -5, fontSize: 9 }}
-              domain={[7, 18]} // Set fixed domain
-            />
-            <YAxis 
-              dataKey="y" 
-              name="Number of Claims" 
-              tick={{ fontSize: 9 }}
-              axisLine={false}
-              tickLine={false}
-              label={{ value: 'Claims', angle: -90, position: 'insideLeft', offset: 5, fontSize: 9 }}
-              domain={['dataMin - 1', 'dataMax + 1']} // Dynamic domain based on data
-            />
-            <ChartTooltip
-              content={
-                <ChartTooltipContent 
-                  formatter={(value, name, props) => {
-                    if (name === 'Number of Claims') return [`${value} claims`, 'Claims'];
-                    if (name === 'Hour of Day') return [`${value}:00`, 'Hour'];
-                    return [value, name];
-                  }}
-                  labelFormatter={() => getActiveData()[0]?.name || ''}
-                />
-              }
-            />
-            <Scatter 
-              name={getTitle()} 
-              data={getActiveData()} 
-              fill={getDotColor()}
-              shape="circle"
-            />
-          </ScatterChart>
-        </ResponsiveContainer>
-      </ChartContainer>
+      {/* Chart Container */}
+      <div className="flex-1 min-h-0">
+        <ChartContainer 
+          config={{
+            [activeTab]: { color: getDotColor() }
+          }}
+          className="h-full w-full"
+        >
+          <ResponsiveContainer width="100%" height="100%">
+            <ScatterChart
+              margin={{ top: 10, right: 20, left: 0, bottom: 10 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis 
+                dataKey="x" 
+                type="number" 
+                name="Hour of Day"
+                tick={{ fontSize: 9 }}
+                axisLine={false}
+                tickLine={false}
+                label={{ value: 'Hour', position: 'insideBottom', offset: -5, fontSize: 9 }}
+                domain={[7, 18]} // Set fixed domain
+              />
+              <YAxis 
+                dataKey="y" 
+                name="Claims" 
+                tick={{ fontSize: 9 }}
+                axisLine={false}
+                tickLine={false}
+                label={{ value: 'Claims', angle: -90, position: 'insideLeft', offset: 5, fontSize: 9 }}
+                domain={['dataMin - 1', 'dataMax + 1']} // Dynamic domain based on data
+                allowDataOverflow={false}
+              />
+              <ChartTooltip
+                content={
+                  <ChartTooltipContent 
+                    formatter={(value, name, props) => {
+                      if (name === 'Claims') return [`${value} claims`, 'Claims'];
+                      if (name === 'Hour of Day') return [`${value}:00`, 'Hour'];
+                      return [value, name];
+                    }}
+                    labelFormatter={(label) => {
+                      const item = getActiveData().find(item => item.x === label);
+                      return item?.name || '';
+                    }}
+                  />
+                }
+              />
+              <Scatter 
+                name={activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} 
+                data={getActiveData()} 
+                fill={getDotColor()}
+                shape="circle"
+              />
+            </ScatterChart>
+          </ResponsiveContainer>
+        </ChartContainer>
+      </div>
     </div>
   );
 };
