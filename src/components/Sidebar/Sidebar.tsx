@@ -61,7 +61,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
         collapsed ? "w-[60px]" : "w-[240px]"
       )}
     >
-      <div className="p-4 flex items-center justify-end border-b border-blue-800/50">
+      <div className="p-4 flex items-center justify-start border-b border-blue-800/50">
         <img 
           src="/lovable-uploads/5193ca6f-3c8a-4506-a10d-65db7d531983.png" 
           alt="RVAI Logo" 
