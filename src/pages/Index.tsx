@@ -18,8 +18,8 @@ const Index = () => {
     >
       <div className="space-y-3">
         <div className="grid grid-cols-12 gap-3">
-          {/* Left column - adjusted to be wider */}
-          <div className="col-span-12 lg:col-span-8">
+          {/* Left column */}
+          <div className="col-span-12 lg:col-span-7">
             {/* Top stats */}
             <div className="mb-3">
               <TopStats />
@@ -71,8 +71,8 @@ const Index = () => {
             </Card>
           </div>
           
-          {/* Right column - adjusted to be narrower */}
-          <div className="col-span-12 lg:col-span-4">
+          {/* Right column - adjusted to be a medium width (5/12 columns) */}
+          <div className="col-span-12 lg:col-span-5">
             <div className="grid grid-rows-2 gap-3 h-full">
               {/* Models Table */}
               <Card className="border border-gray-200 dark:border-gray-700 shadow-sm h-[280px] overflow-hidden">
