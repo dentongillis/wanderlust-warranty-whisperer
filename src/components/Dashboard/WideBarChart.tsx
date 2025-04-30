@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface WideBarChartProps {
@@ -36,7 +36,7 @@ export const WideBarChart: React.FC<WideBarChartProps> = ({
   return (
     <TooltipProvider>
       <div className="flex h-full items-center">
-        <div className="flex-1 flex bg-transparent rounded-md overflow-hidden">
+        <div className="flex-1 flex bg-transparent rounded-full overflow-hidden">
           {data.map((item, index) => {
             const percentage = (item.value / total) * 100;
             const color = getColorClasses(index);
