@@ -1,16 +1,8 @@
 
-import React, { useState, useRef, useEffect } from 'react';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Send } from 'lucide-react';
-import { AIChatAssistant } from './AIChatAssistant';
 import { useToast } from "@/hooks/use-toast";
+import { DraggableAIChat } from './DraggableAIChat';
 
 interface AIChatSheetProps {
   children: React.ReactNode;
@@ -31,19 +23,19 @@ export function AIChatSheet({ children }: AIChatSheetProps) {
     }
   };
 
+  const toggleChat = () => {
+    handleOpenChange(!open);
+  };
+
   return (
-    <Sheet open={open} onOpenChange={handleOpenChange}>
-      <SheetTrigger asChild>
+    <>
+      <div onClick={toggleChat}>
         {children}
-      </SheetTrigger>
-      <SheetContent className="sm:max-w-md w-[90%]">
-        <SheetHeader>
-          <SheetTitle>Warranty AI Assistant</SheetTitle>
-        </SheetHeader>
-        <div className="h-full py-4 flex flex-col">
-          <AIChatAssistant onClose={() => setOpen(false)} />
-        </div>
-      </SheetContent>
-    </Sheet>
+      </div>
+      <DraggableAIChat 
+        isOpen={open} 
+        onClose={() => handleOpenChange(false)}
+      />
+    </>
   );
 }
