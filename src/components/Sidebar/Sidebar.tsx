@@ -57,16 +57,21 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
   return (
     <div 
       className={cn(
-        "bg-gradient-to-b from-gray-900 to-blue-900 h-screen flex flex-col transition-all duration-300 relative",
+        "bg-gradient-to-b from-gray-900 to-blue-900 h-screen flex flex-col transition-all duration-300 ease-in-out",
         collapsed ? "w-[60px]" : "w-[240px]"
       )}
     >
       <div className="p-4 flex items-center border-b border-blue-800/50">
-        <img 
-          src="/lovable-uploads/5193ca6f-3c8a-4506-a10d-65db7d531983.png" 
-          alt="RVAI Logo" 
-          className="h-6 w-auto ml-0"
-        />
+        <div className={cn(
+          "flex items-center transition-all duration-300 ease-in-out",
+          collapsed ? "justify-center w-full" : "justify-start"
+        )}>
+          <img 
+            src="/lovable-uploads/5193ca6f-3c8a-4506-a10d-65db7d531983.png" 
+            alt="RVAI Logo" 
+            className="h-6 w-auto"
+          />
+        </div>
       </div>
       
       <nav className="flex-1 py-4 px-2 space-y-1 overflow-y-auto">
@@ -125,7 +130,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
         <SettingsDialog>
           <button className={cn(
             "w-full flex items-center gap-3 px-3 py-2 rounded-md text-white/80 transition-colors",
-            "hover:bg-blue-800/50 hover:text-white focus:outline-none"
+            "hover:bg-blue-800/50 hover:text-white focus:outline-none",
+            collapsed && "justify-center"
           )}>
             <SettingsIcon size={18} />
             {!collapsed && <span className="text-sm">Settings</span>}
@@ -135,7 +141,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
         <HelpDialog>
           <button className={cn(
             "w-full flex items-center gap-3 px-3 py-2 rounded-md text-white/80 transition-colors",
-            "hover:bg-blue-800/50 hover:text-white focus:outline-none"
+            "hover:bg-blue-800/50 hover:text-white focus:outline-none",
+            collapsed && "justify-center"
           )}>
             <HelpCircleIcon size={18} />
             {!collapsed && <span className="text-sm">Help & Support</span>}

@@ -17,11 +17,11 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
   
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900 overflow-hidden">
-      <div className="flex-shrink-0">
+      <div className="flex-shrink-0 transition-all duration-300 ease-in-out">
         <Sidebar collapsed={sidebarCollapsed} />
       </div>
       
-      <div className="flex flex-col flex-1 w-full min-w-0">
+      <div className="flex flex-col flex-1 w-full min-w-0 transition-all duration-300 ease-in-out">
         <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm z-10 flex-shrink-0">
           <div className="flex items-center justify-between p-2 sm:p-3">
             <div className="flex items-center">
