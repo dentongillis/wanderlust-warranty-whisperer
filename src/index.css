@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -180,7 +181,6 @@
     z-index: 20;
   }
   
-  /* Make sure resize handles don't interfere with UI controls */
   .resize-handle-br {
     right: 0;
     bottom: 0;
@@ -235,3 +235,4 @@
     @apply bg-blue-50 dark:bg-gray-700;
   }
 }
+

@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,7 +27,6 @@ interface AIChatAssistantProps {
   resetConversation?: boolean;
   chatId?: string;
   onNewChat?: () => void;
-  onChatChange?: (chatId: string) => void;
 }
 
 // Create a chat storage for persisting chats
@@ -40,6 +40,12 @@ interface Chat {
   createdAt: Date;
   page?: string;
 }
+
+const generateInitialMessage = (pageName: string): Message => ({
+  role: "assistant",
+  content: `Hello! I'm your RV warranty assistant. I see you're on the ${pageName} page. Ask me anything about warranty claims, trends, or statistics related to what you're viewing.`,
+  timestamp: new Date(),
+});
 
 // Helper to get page name from path
 const getPageNameFromPath = (pathname: string): string => {
@@ -96,22 +102,12 @@ const groupChatsByDate = (chats: Chat[]) => {
   return grouped;
 };
 
-// Generate initial assistant message based on the current page
-const generateInitialMessage = (pageName: string): Message => {
-  return {
-    role: "assistant",
-    content: `👋 Welcome to the ${pageName}! How can I help you analyze your warranty data today?`,
-    timestamp: new Date()
-  };
-};
-
 export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({ 
   onClose, 
   onMinimize, 
   resetConversation = false, 
   chatId,
-  onNewChat,
-  onChatChange 
+  onNewChat 
 }) => {
   const location = useLocation();
   const pageName = getPageNameFromPath(location.pathname);
@@ -181,17 +177,6 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
       
       setActiveChat(newChat);
       setChats(prev => [...prev, newChat]);
-      
-      // Notify parent about the new active chat
-      if (onChatChange) {
-        onChatChange(newChat.id);
-      }
-    } else if (chatId !== undefined && chatId !== activeChat.id) {
-      // A specific chat is requested - find it in existing chats
-      const existingChat = chats.find(c => c.id === chatId);
-      if (existingChat) {
-        setActiveChat(existingChat);
-      }
     } else {
       // Update active chat's page if it changed
       if (activeChat.page !== pageName) {
@@ -207,7 +192,7 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
         ));
       }
     }
-  }, [resetConversation, pageName, chatId, chats]);
+  }, [resetConversation, pageName]);
 
   // Auto scroll to bottom of messages
   useEffect(() => {
@@ -233,11 +218,6 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
       
       setActiveChat(newChat);
       setChats(prev => [...prev, newChat]);
-      
-      // Notify parent about the new active chat
-      if (onChatChange) {
-        onChatChange(newChat.id);
-      }
     }
   };
 
@@ -300,11 +280,6 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
 
   const handleSwitchChat = (chat: Chat) => {
     setActiveChat(chat);
-    
-    // Notify parent about the chat change
-    if (onChatChange) {
-      onChatChange(chat.id);
-    }
   };
 
   // Create a better chat name based on first user message
@@ -613,3 +588,4 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
     </div>
   );
 };
+
