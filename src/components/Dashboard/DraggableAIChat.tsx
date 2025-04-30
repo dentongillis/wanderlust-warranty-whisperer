@@ -1,8 +1,7 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { X, Minimize, Maximize } from 'lucide-react';
+import { X, Minimize2, Maximize, SidebarIcon, MessageSquarePlus } from 'lucide-react';
 import { AIChatAssistant } from './AIChatAssistant';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
@@ -226,7 +225,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
                     className="h-6 w-6 text-white hover:bg-white/20 hover:text-white" 
                     onClick={onMinimize}
                   >
-                    <Minimize size={14} />
+                    <Minimize2 size={14} />
                     <span className="sr-only">Minimize</span>
                   </Button>
                 </TooltipTrigger>

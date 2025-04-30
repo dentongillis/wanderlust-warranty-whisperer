@@ -1,8 +1,7 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Send, Bot, RefreshCw, Sidebar as SidebarIcon } from 'lucide-react';
+import { Send, Bot, MessageSquarePlus, SidebarIcon } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { Separator } from '@/components/ui/separator';
 
@@ -243,15 +242,17 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
       <div className={`bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transition-all duration-300 ${showThreads ? 'w-1/3' : 'w-0'}`}>
         {showThreads && (
           <div className="p-3">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="w-full flex items-center justify-center gap-1 new-chat-button mb-3 chat-button-gradient"
-              onClick={handleCreateNewChat}
-            >
-              <RefreshCw size={14} />
-              <span className="text-xs">New Chat</span>
-            </Button>
+            <div className="flex items-center gap-1 mb-3">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="flex-1 flex items-center justify-center gap-1 new-chat-button chat-button-gradient"
+                onClick={handleCreateNewChat}
+              >
+                <MessageSquarePlus size={14} />
+                <span className="text-xs">New Chat</span>
+              </Button>
+            </div>
             
             <div className="mt-3 space-y-1 max-h-[calc(100vh-150px)] overflow-y-auto custom-scrollbar">
               {chats.map((chat) => (
@@ -335,14 +336,25 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
         
         <div className="px-3 py-2 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
           <div className="flex gap-2">
-            <Button 
-              variant="outline"
-              size="icon"
-              className="flex-shrink-0 bg-transparent border-gray-200 dark:border-gray-800"
-              onClick={() => setShowThreads(!showThreads)}
-            >
-              <SidebarIcon size={18} />
-            </Button>
+            <div className="flex gap-1">
+              <Button 
+                variant="outline"
+                size="icon"
+                className="flex-shrink-0 bg-transparent border-gray-200 dark:border-gray-800"
+                onClick={() => setShowThreads(!showThreads)}
+              >
+                <SidebarIcon size={18} />
+              </Button>
+              
+              <Button 
+                variant="outline"
+                size="icon"
+                className="flex-shrink-0 bg-transparent border-gray-200 dark:border-gray-800"
+                onClick={handleCreateNewChat}
+              >
+                <MessageSquarePlus size={18} />
+              </Button>
+            </div>
             
             <Input 
               value={input} 

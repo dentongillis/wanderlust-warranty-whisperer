@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from "@/hooks/use-toast";
 import { DraggableAIChat } from './DraggableAIChat';
-import { MessageSquarePlus } from 'lucide-react';
+import { MessageSquarePlus, SidebarIcon, Bot } from 'lucide-react';
 
 interface AIChatSheetProps {
   children: React.ReactNode;
@@ -14,6 +14,7 @@ export function AIChatSheet({ children }: AIChatSheetProps) {
   const [resetConversation, setResetConversation] = useState(false);
   const [minimized, setMinimized] = useState(false);
   const [activeChat, setActiveChat] = useState<string | undefined>(undefined);
+  const [showThreads, setShowThreads] = useState(true);
   const { toast } = useToast();
   
   const handleOpenChange = (open: boolean) => {
@@ -43,6 +44,22 @@ export function AIChatSheet({ children }: AIChatSheetProps) {
   const handleNewChat = () => {
     setResetConversation(true);
     setTimeout(() => setResetConversation(false), 100);
+    if (minimized) {
+      setMinimized(false);
+    }
+    if (!open) {
+      handleOpenChange(true);
+    }
+  };
+
+  const toggleThreads = () => {
+    setShowThreads(!showThreads);
+    if (minimized) {
+      setMinimized(false);
+    }
+    if (!open) {
+      handleOpenChange(true);
+    }
   };
 
   return (
@@ -53,11 +70,27 @@ export function AIChatSheet({ children }: AIChatSheetProps) {
       
       {/* Minimized Chat Bubble */}
       {minimized && (
-        <div 
-          className="fixed bottom-4 right-4 bg-gradient-to-r from-sidebar to-sidebar-accent text-white rounded-full p-3 shadow-lg cursor-pointer z-50 hover:from-sidebar-accent hover:to-sidebar transition-all"
-          onClick={() => setMinimized(false)}
-        >
-          <MessageSquarePlus size={24} />
+        <div className="fixed bottom-4 right-4 flex space-x-2 z-50">
+          <div 
+            className="bg-gradient-to-r from-sidebar to-sidebar-accent text-white rounded-full p-2.5 shadow-lg cursor-pointer hover:from-sidebar-accent hover:to-sidebar transition-all"
+            onClick={toggleThreads}
+          >
+            <SidebarIcon size={20} />
+          </div>
+          
+          <div 
+            className="bg-gradient-to-r from-sidebar to-sidebar-accent text-white rounded-full p-2.5 shadow-lg cursor-pointer hover:from-sidebar-accent hover:to-sidebar transition-all"
+            onClick={handleNewChat}
+          >
+            <MessageSquarePlus size={20} />
+          </div>
+          
+          <div 
+            className="bg-gradient-to-r from-sidebar to-sidebar-accent text-white rounded-full p-2.5 shadow-lg cursor-pointer hover:from-sidebar-accent hover:to-sidebar transition-all"
+            onClick={toggleChat}
+          >
+            <Bot size={20} />
+          </div>
         </div>
       )}
       
