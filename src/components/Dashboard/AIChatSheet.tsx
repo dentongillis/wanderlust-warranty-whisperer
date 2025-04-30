@@ -54,7 +54,7 @@ export function AIChatSheet({ children }: AIChatSheetProps) {
       {/* Minimized Chat Bubble */}
       {minimized && (
         <div 
-          className="fixed bottom-4 right-4 bg-gradient-to-r from-blue-700 to-blue-500 text-white rounded-full p-3 shadow-lg cursor-pointer z-50 hover:from-blue-800 hover:to-blue-600 transition-all"
+          className="fixed bottom-4 right-4 bg-gradient-to-r from-sidebar to-sidebar-accent text-white rounded-full p-3 shadow-lg cursor-pointer z-50 hover:from-sidebar-accent hover:to-sidebar transition-all"
           onClick={() => setMinimized(false)}
         >
           <MessageSquarePlus size={24} />

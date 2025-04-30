@@ -1,8 +1,8 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { X, Minimize, MessageSquarePlus } from 'lucide-react';
+import { X, Minimize, RefreshCw } from 'lucide-react';
 import { AIChatAssistant } from './AIChatAssistant';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
@@ -168,7 +168,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
       style={{ 
         left: `${position.x}px`, 
         top: `${position.y}px`,
-        minWidth: '280px',
+        minWidth: '320px',
         minHeight: '300px',
         width: `${dimensions.width}px`,
         height: `${dimensions.height}px`,
@@ -184,12 +184,24 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
         className="h-full rounded-lg overflow-hidden border-0"
       >
         <div
-          className="p-3 border-b flex flex-row items-center justify-between space-y-0 bg-gradient-to-r from-blue-700 to-blue-500 text-white rounded-t-lg"
+          className="p-3 border-b flex flex-row items-center justify-between space-y-0 bg-gradient-to-r from-sidebar to-sidebar-accent text-white rounded-t-lg"
           onMouseDown={handleMouseDown}
           onTouchStart={handleTouchStart}
         >
-          <CardTitle className="text-sm font-medium select-none">Warranty AI Assistant</CardTitle>
+          <div className="flex items-center gap-2">
+            <h3 className="text-sm font-medium select-none">Warranty AI Assistant</h3>
+          </div>
           <div className="flex items-center space-x-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-auto p-1 text-white hover:bg-white/20 hover:text-white"
+              onClick={onNewChat}
+            >
+              <RefreshCw size={15} className="mr-1" />
+              <span className="text-xs">New Chat</span>
+            </Button>
+            
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -222,7 +234,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
         </div>
         
         <ResizablePanel defaultSize={100} minSize={30} className="h-full">
-          <div className="flex-1 p-3 overflow-hidden backdrop-blur-md dark:bg-gray-800/90 h-full">
+          <div className="flex-1 p-0 overflow-hidden backdrop-blur-md dark:bg-gray-800/90 h-full">
             <AIChatAssistant 
               onClose={onClose} 
               onMinimize={onMinimize}
@@ -234,19 +246,19 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
         </ResizablePanel>
       </ResizablePanelGroup>
       
-      {/* Resize handles for all sides */}
+      {/* Resize handles */}
       <div className="absolute bottom-0 right-0 w-4 h-4 cursor-nwse-resize resize-handle resize-handle-br" 
            onMouseDown={(e) => {
              e.stopPropagation();
-             e.preventDefault(); // Prevent text selection
+             e.preventDefault();
              const startX = e.clientX;
              const startY = e.clientY;
              const startWidth = dimensions.width;
              const startHeight = dimensions.height;
              
              const handleMouseMove = (e: MouseEvent) => {
-               e.preventDefault(); // Prevent text selection
-               const newWidth = Math.max(280, startWidth + (e.clientX - startX));
+               e.preventDefault();
+               const newWidth = Math.max(320, startWidth + (e.clientX - startX));
                const newHeight = Math.max(300, startHeight + (e.clientY - startY));
                
                setDimensions({
@@ -261,7 +273,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
                document.body.classList.remove('select-none');
              };
              
-             document.body.classList.add('select-none'); // Prevent text selection during resize
+             document.body.classList.add('select-none');
              document.addEventListener('mousemove', handleMouseMove, { passive: false });
              document.addEventListener('mouseup', handleMouseUp);
            }}

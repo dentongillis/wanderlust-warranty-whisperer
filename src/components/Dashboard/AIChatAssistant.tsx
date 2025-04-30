@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Send, Bot, RefreshCw } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
+import { Separator } from '@/components/ui/separator';
 
 type Message = {
   role: "user" | "assistant";
@@ -64,6 +65,7 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
   const [input, setInput] = useState('');
   const [isThinking, setIsThinking] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [showThreads, setShowThreads] = useState(true);
   
   // Get chats from storage or initialize
   const getStoredChats = (): Chat[] => {
@@ -225,110 +227,139 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
     setActiveChat(chat);
   };
 
+  // Create a better chat name based on first user message
+  const getChatName = (chat: Chat): string => {
+    const firstUserMessage = chat.messages.find(m => m.role === 'user');
+    if (firstUserMessage) {
+      const content = firstUserMessage.content;
+      return content.length > 25 ? content.substring(0, 25) + '...' : content;
+    }
+    return chat.name;
+  };
+
   return (
-    <div className="flex flex-col h-full">
-      {/* New Chat Button */}
-      <div className="mb-3">
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          className="w-full flex items-center justify-center text-xs font-medium text-white hover:text-blue-300 hover:bg-white/10 transition-colors"
-          onClick={handleCreateNewChat}
-        >
-          <RefreshCw size={14} className="mr-2" />
-          New Chat
-        </Button>
+    <div className="flex h-full">
+      {/* Left sidebar for chat threads */}
+      <div className={`bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 ${showThreads ? 'w-1/3' : 'w-0 hidden'}`}>
+        <div className="p-3">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="w-full flex items-center justify-center gap-1 bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800 shadow-sm"
+            onClick={handleCreateNewChat}
+          >
+            <RefreshCw size={14} />
+            <span className="text-xs">New Chat</span>
+          </Button>
+          
+          <div className="mt-3 space-y-1 max-h-[calc(100vh-150px)] overflow-y-auto custom-scrollbar">
+            {chats.map((chat) => (
+              <button
+                key={chat.id}
+                className={`w-full text-left px-2 py-1.5 rounded-md text-sm transition-colors ${
+                  chat.id === activeChat.id 
+                    ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300' 
+                    : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'
+                }`}
+                onClick={() => handleSwitchChat(chat)}
+              >
+                <div className="flex items-start">
+                  <Bot size={14} className="mt-0.5 mr-2 flex-shrink-0" />
+                  <div className="overflow-hidden">
+                    <p className="truncate font-medium">{getChatName(chat)}</p>
+                    <div className="flex items-center text-xs text-gray-500 mt-0.5">
+                      <span>{new Date(chat.lastUpdated).toLocaleDateString()}</span>
+                      <span className="mx-1">·</span>
+                      <span>{chat.page}</span>
+                    </div>
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
       
-      {/* Chat Threads Selection - if more than 1 chat exists */}
-      {chats.length > 1 && (
-        <div className="mb-3 max-h-24 overflow-y-auto border-b border-gray-700 pb-2 custom-scrollbar">
-          <p className="text-xs text-gray-400 mb-1 px-1">Your chats</p>
-          {chats.map((chat) => (
-            <div 
-              key={chat.id} 
-              className={`flex items-center justify-between text-xs p-1 rounded cursor-pointer truncate ${
-                chat.id === activeChat.id ? 'bg-white/10' : 'hover:bg-white/5'
-              }`}
-              onClick={() => handleSwitchChat(chat)}
-            >
-              <div className="flex items-center space-x-1 overflow-hidden">
-                <Bot size={12} />
-                <span className="truncate">{chat.name}</span>
-              </div>
-              <span className="text-[10px] text-gray-400">
-                {new Date(chat.lastUpdated).toLocaleDateString()}
-              </span>
-            </div>
-          ))}
-        </div>
-      )}
-      
-      <div className="flex-1 overflow-y-auto mb-4 pr-1 custom-scrollbar">
-        <div className="space-y-4">
-          {activeChat.messages.map((message, index) => (
-            <div 
-              key={index} 
-              className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-            >
+      {/* Main chat area */}
+      <div className="flex-1 flex flex-col h-full overflow-hidden">
+        <div className="flex-1 overflow-y-auto p-3 custom-scrollbar">
+          <div className="space-y-4">
+            {activeChat.messages.map((message, index) => (
               <div 
-                className={`max-w-[85%] rounded-2xl px-4 py-2 ${
-                  message.role === 'user' 
-                    ? 'bg-sidebar text-white' 
-                    : 'bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700'
-                }`}
-                style={{
-                  boxShadow: message.role === 'user' ? '0 2px 8px rgba(0, 102, 255, 0.15)' : '0 2px 8px rgba(0, 0, 0, 0.05)'
-                }}
+                key={index} 
+                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
-                {message.role === 'assistant' && (
-                  <div className="flex items-center mb-1">
+                <div 
+                  className={`max-w-[85%] rounded-2xl px-4 py-2 ${
+                    message.role === 'user' 
+                      ? 'bg-sidebar text-white' 
+                      : 'bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700'
+                  }`}
+                  style={{
+                    boxShadow: message.role === 'user' ? '0 2px 8px rgba(0, 102, 255, 0.15)' : '0 2px 8px rgba(0, 0, 0, 0.05)'
+                  }}
+                >
+                  {message.role === 'assistant' && (
+                    <div className="flex items-center mb-1">
+                      <Bot size={16} className="mr-1 text-blue-500" />
+                      <span className="text-xs font-medium">Warranty AI</span>
+                    </div>
+                  )}
+                  <p className="text-sm">{message.content}</p>
+                  <div className="text-xs opacity-70 mt-1 text-right">
+                    {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </div>
+                </div>
+              </div>
+            ))}
+            {isThinking && (
+              <div className="flex justify-start">
+                <div className="max-w-[85%] rounded-2xl px-4 py-2 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                  <div className="flex items-center">
                     <Bot size={16} className="mr-1 text-blue-500" />
                     <span className="text-xs font-medium">Warranty AI</span>
                   </div>
-                )}
-                <p className="text-sm">{message.content}</p>
-                <div className="text-xs opacity-70 mt-1 text-right">
-                  {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  <div className="flex space-x-1 mt-2 items-center">
+                    <div className="w-2 h-2 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                    <div className="w-2 h-2 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                    <div className="w-2 h-2 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-          {isThinking && (
-            <div className="flex justify-start">
-              <div className="max-w-[85%] rounded-2xl px-4 py-2 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-                <div className="flex items-center">
-                  <Bot size={16} className="mr-1 text-blue-500" />
-                  <span className="text-xs font-medium">Warranty AI</span>
-                </div>
-                <div className="flex space-x-1 mt-2 items-center">
-                  <div className="w-2 h-2 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                  <div className="w-2 h-2 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                  <div className="w-2 h-2 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                </div>
-              </div>
-            </div>
-          )}
-          <div ref={messagesEndRef} />
+            )}
+            <div ref={messagesEndRef} />
+          </div>
         </div>
-      </div>
-      
-      <div className="mt-auto flex gap-2">
-        <Input 
-          value={input} 
-          onChange={(e) => setInput(e.target.value)} 
-          placeholder="Ask about warranty data..." 
-          onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-          className="flex-1 border-gray-300 dark:border-gray-600 focus:ring-blue-300 dark:focus:ring-blue-700"
-        />
-        <Button 
-          onClick={handleSend} 
-          size="icon" 
-          disabled={isThinking}
-          className="bg-gradient-to-r from-blue-700 to-blue-500 hover:from-blue-800 hover:to-blue-600"
-        >
-          <Send size={18} />
-        </Button>
+        
+        <div className="px-3 py-2 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
+          <div className="flex gap-2">
+            <Button 
+              variant="outline"
+              size="icon"
+              className="flex-shrink-0 bg-transparent border-gray-200 dark:border-gray-800"
+              onClick={() => setShowThreads(!showThreads)}
+            >
+              <Bot size={18} />
+            </Button>
+            
+            <Input 
+              value={input} 
+              onChange={(e) => setInput(e.target.value)} 
+              placeholder="Ask about warranty data..." 
+              onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+              className="flex-1 border-gray-200 dark:border-gray-800"
+            />
+            
+            <Button 
+              onClick={handleSend} 
+              size="icon" 
+              disabled={isThinking}
+              className="flex-shrink-0 bg-gradient-to-r from-sidebar to-sidebar-accent hover:from-sidebar-accent hover:to-sidebar"
+            >
+              <Send size={18} />
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );
