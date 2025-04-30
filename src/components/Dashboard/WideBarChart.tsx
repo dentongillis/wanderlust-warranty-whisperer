@@ -55,12 +55,10 @@ export const WideBarChart: React.FC<WideBarChartProps> = ({
                     className={`${color} relative transition-all duration-300 ease-in-out hover:opacity-90`} 
                     style={style}
                   >
-                    {showLabels && (
-                      <div className="absolute inset-0 flex items-center justify-center text-white text-xs font-medium flex-col">
-                        <span className="truncate px-1">{item.name}</span>
-                        <span>{item.value}</span>
-                      </div>
-                    )}
+                    {/* Always show model name in the segment with appropriate styling */}
+                    <div className="absolute inset-0 flex items-center justify-center text-white text-xs font-medium">
+                      <span className="truncate px-1 whitespace-nowrap overflow-hidden">{item.name}</span>
+                    </div>
                   </div>
                 </TooltipTrigger>
                 <TooltipContent className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg p-2 rounded-lg">

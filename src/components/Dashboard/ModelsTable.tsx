@@ -3,6 +3,14 @@ import React from 'react';
 import { TrendingUp, TrendingDown, Eye } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { 
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table';
 
 const modelsData = [
   { 
@@ -45,32 +53,32 @@ export const ModelsTable: React.FC = () => {
       <table className="w-full text-xs">
         <thead>
           <tr className="bg-gray-50 dark:bg-gray-800">
-            <th className="px-2 py-2 text-left font-medium text-gray-600 dark:text-gray-300">Model</th>
-            <th className="px-2 py-2 text-left font-medium text-gray-600 dark:text-gray-300">Claims</th>
-            <th className="px-2 py-2 text-left font-medium text-gray-600 dark:text-gray-300">Avg. Cost</th>
-            <th className="px-2 py-2 text-left font-medium text-gray-600 dark:text-gray-300">Trend</th>
-            <th className="px-2 py-2 text-left font-medium text-gray-600 dark:text-gray-300">Risk Level</th>
-            <th className="px-2 py-2 text-right font-medium text-gray-600 dark:text-gray-300">Actions</th>
+            <th className="px-2 py-2 text-center font-medium text-gray-600 dark:text-gray-300">Model</th>
+            <th className="px-2 py-2 text-center font-medium text-gray-600 dark:text-gray-300">Claims</th>
+            <th className="px-2 py-2 text-center font-medium text-gray-600 dark:text-gray-300">Avg. Cost</th>
+            <th className="px-2 py-2 text-center font-medium text-gray-600 dark:text-gray-300">Trend</th>
+            <th className="px-2 py-2 text-center font-medium text-gray-600 dark:text-gray-300">Risk Level</th>
+            <th className="px-2 py-2 text-center font-medium text-gray-600 dark:text-gray-300">Details</th>
           </tr>
         </thead>
         <tbody>
           {modelsData.map((model) => (
             <tr key={model.id} className="border-t border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
-              <td className="px-2 py-2 font-medium text-gray-800 dark:text-gray-200">{model.model}</td>
-              <td className="px-2 py-2 text-gray-600 dark:text-gray-300">{model.claims}</td>
-              <td className="px-2 py-2 text-gray-600 dark:text-gray-300">{model.avgCost}</td>
-              <td className="px-2 py-2">
+              <td className="px-2 py-2 text-center font-medium text-gray-800 dark:text-gray-200">{model.model}</td>
+              <td className="px-2 py-2 text-center text-gray-600 dark:text-gray-300">{model.claims}</td>
+              <td className="px-2 py-2 text-center text-gray-600 dark:text-gray-300">{model.avgCost}</td>
+              <td className="px-2 py-2 text-center">
                 {model.trend === 'up' ? (
-                  <div className="flex items-center text-red-500 text-xs">
+                  <div className="flex items-center justify-center text-red-500 text-xs">
                     <TrendingUp size={12} className="mr-1" /> Up
                   </div>
                 ) : (
-                  <div className="flex items-center text-green-500 text-xs">
+                  <div className="flex items-center justify-center text-green-500 text-xs">
                     <TrendingDown size={12} className="mr-1" /> Down
                   </div>
                 )}
               </td>
-              <td className="px-2 py-2">
+              <td className="px-2 py-2 text-center">
                 {model.risk === 'high' ? (
                   <Badge variant="outline" className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 border-red-200 dark:border-red-800 text-xs px-1 py-0">
                     High
@@ -85,7 +93,7 @@ export const ModelsTable: React.FC = () => {
                   </Badge>
                 )}
               </td>
-              <td className="px-2 py-2 text-right">
+              <td className="px-2 py-2 text-center">
                 <Button variant="ghost" size="sm" className="text-blue-600 dark:text-blue-400 h-6 px-1 py-0 text-xs">
                   <Eye size={12} className="mr-1" /> View
                 </Button>
