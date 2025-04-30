@@ -61,7 +61,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
         collapsed ? "w-[60px]" : "w-[240px]"
       )}
     >
-      <div className="p-4 flex items-center border-b border-blue-800/50">
+      <div className="py-5 px-4 flex items-center border-b border-blue-800/50 h-16">
         <div className={cn(
           "flex items-center transition-all duration-300 ease-in-out",
           collapsed ? "justify-center w-full" : "justify-start"
@@ -70,13 +70,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
             <img 
               src="/lovable-uploads/c22163aa-a5f1-416a-b31f-da18245e6f39.png" 
               alt="RVAI Truck Logo" 
-              className="h-6 w-auto transition-opacity duration-300"
+              className="h-8 w-auto transition-opacity duration-300"
             />
           ) : (
             <img 
               src="/lovable-uploads/5193ca6f-3c8a-4506-a10d-65db7d531983.png" 
               alt="RVAI Logo" 
-              className="h-6 w-auto transition-opacity duration-300"
+              className="h-8 w-auto transition-opacity duration-300"
             />
           )}
         </div>
