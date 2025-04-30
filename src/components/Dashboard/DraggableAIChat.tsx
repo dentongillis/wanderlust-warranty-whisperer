@@ -2,16 +2,23 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { X, Move } from 'lucide-react';
+import { X, Move, RefreshCw } from 'lucide-react';
 import { AIChatAssistant } from './AIChatAssistant';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface DraggableAIChatProps {
   isOpen: boolean;
   onClose: () => void;
   resetConversation?: boolean;
+  onNewChat?: () => void;
 }
 
-export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({ isOpen, onClose, resetConversation = false }) => {
+export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({ 
+  isOpen, 
+  onClose, 
+  resetConversation = false,
+  onNewChat 
+}) => {
   const [position, setPosition] = useState({ x: window.innerWidth / 2 - 200, y: window.innerHeight / 4 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -134,10 +141,36 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({ isOpen, onClos
           <Move size={16} className="mr-2 text-white/80" />
           <CardTitle className="text-sm font-medium">Warranty AI Assistant</CardTitle>
         </div>
-        <Button variant="ghost" size="sm" className="h-auto p-1 text-white hover:bg-white/20 hover:text-white" onClick={onClose}>
-          <X size={16} />
-          <span className="sr-only">Close</span>
-        </Button>
+        <div className="flex items-center space-x-1">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-auto p-1 text-white hover:bg-white/20 hover:text-white" 
+                  onClick={onNewChat}
+                >
+                  <RefreshCw size={16} />
+                  <span className="sr-only">New Chat</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                <p>New Chat</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="h-auto p-1 text-white hover:bg-white/20 hover:text-white" 
+            onClick={onClose}
+          >
+            <X size={16} />
+            <span className="sr-only">Close</span>
+          </Button>
+        </div>
       </CardHeader>
       <div className="flex-1 p-3 overflow-hidden backdrop-blur-md dark:bg-gray-800/90">
         <AIChatAssistant onClose={onClose} resetConversation={resetConversation} />
