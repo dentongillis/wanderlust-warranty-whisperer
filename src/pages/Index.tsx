@@ -7,7 +7,6 @@ import { DealerClaimsChart } from '@/components/Dashboard/DealerClaimsChart';
 import { ModelsTable } from '@/components/Dashboard/ModelsTable';
 import { RecentClaimsTable } from '@/components/Dashboard/RecentClaimsTable';
 import { ClaimsByModelBarChart } from '@/components/Dashboard/ClaimsByModelBarChart';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const Index = () => {
@@ -76,19 +75,7 @@ const Index = () => {
               
               {/* Dealer claims chart */}
               <Card className="border border-gray-200 dark:border-gray-700 shadow-sm">
-                <CardHeader className="py-2 px-3">
-                  <div className="flex justify-between items-center">
-                    <CardTitle className="text-base font-medium">Dealer Claims</CardTitle>
-                    <Tabs defaultValue="dealer">
-                      <TabsList className="grid grid-cols-3 h-6 text-xs">
-                        <TabsTrigger value="dealer" className="text-xs px-2">Dealer</TabsTrigger>
-                        <TabsTrigger value="component" className="text-xs px-2">Component</TabsTrigger>
-                        <TabsTrigger value="model" className="text-xs px-2">Model</TabsTrigger>
-                      </TabsList>
-                    </Tabs>
-                  </div>
-                </CardHeader>
-                <CardContent className="p-0 px-2">
+                <CardContent className="p-3">
                   <DealerClaimsChart />
                 </CardContent>
               </Card>
