@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { X, RefreshCw } from 'lucide-react';
+import { X, Minimize } from 'lucide-react';
 import { AIChatAssistant } from './AIChatAssistant';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
@@ -24,6 +24,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [dimensions, setDimensions] = useState({ width: 320, height: 500 });
+  const [minimized, setMinimized] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -109,6 +110,21 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
     document.body.classList.remove('select-none'); // Restore text selection
   };
 
+  // Toggle minimized state
+  const handleMinimize = () => {
+    setMinimized(true);
+    // Move chat window to bottom right corner when minimized
+    setPosition({
+      x: window.innerWidth - 200,
+      y: window.innerHeight - 40
+    });
+  };
+
+  // Restore chat window
+  const handleRestore = () => {
+    setMinimized(false);
+  };
+
   // Update dimensions when ResizablePanel is resized
   const handleResize = () => {
     if (chatRef.current) {
@@ -155,6 +171,25 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
 
   if (!isOpen) return null;
 
+  if (minimized) {
+    return (
+      <div
+        ref={chatRef}
+        className="absolute shadow-lg z-50 cursor-pointer"
+        style={{ 
+          left: `${position.x}px`, 
+          top: `${position.y}px`,
+          transition: "opacity 0.3s ease"
+        }}
+        onClick={handleRestore}
+      >
+        <div className="chat-header-gradient text-white px-4 py-2 rounded-full flex items-center gap-2">
+          <span className="text-sm font-medium">Warranty AI</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div 
       ref={chatRef}
@@ -178,7 +213,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
         className="h-full rounded-lg overflow-hidden border-0"
       >
         <div
-          className="p-3 border-b flex flex-row items-center justify-between space-y-0 bg-sidebar text-white rounded-t-lg"
+          className="p-3 border-b flex flex-row items-center justify-between space-y-0 chat-header-gradient text-white rounded-t-lg"
           onMouseDown={handleMouseDown}
           onTouchStart={handleTouchStart}
         >
@@ -191,14 +226,14 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
                     variant="ghost" 
                     size="sm" 
                     className="h-auto p-1 text-white hover:bg-white/20 hover:text-white" 
-                    onClick={onNewChat}
+                    onClick={handleMinimize}
                   >
-                    <RefreshCw size={16} />
-                    <span className="sr-only">New Chat</span>
+                    <Minimize size={16} />
+                    <span className="sr-only">Minimize</span>
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="bottom">
-                  <p>New Chat</p>
+                  <p>Minimize</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -217,12 +252,16 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
         
         <ResizablePanel defaultSize={100} minSize={30} className="h-full">
           <div className="flex-1 p-3 overflow-hidden backdrop-blur-md dark:bg-gray-800/90 h-full">
-            <AIChatAssistant onClose={onClose} resetConversation={resetConversation} />
+            <AIChatAssistant 
+              onClose={onClose} 
+              onMinimize={handleMinimize}
+              resetConversation={resetConversation} 
+            />
           </div>
         </ResizablePanel>
       </ResizablePanelGroup>
       
-      {/* Resize handles for all sides */}
+      {/* Resize handles */}
       <div className="absolute bottom-0 right-0 w-4 h-4 cursor-nwse-resize resize-handle resize-handle-br" 
            onMouseDown={(e) => {
              e.stopPropagation();
