@@ -47,7 +47,9 @@ export function AIChatSheet({ children }: AIChatSheetProps) {
     }
   };
 
+  // Update the new chat handler to preserve chats
   const handleNewChat = () => {
+    setActiveChat(undefined); // Clear active chat ID to create a new chat
     setResetConversation(true);
     setTimeout(() => setResetConversation(false), 100);
     if (minimized) {
@@ -66,6 +68,11 @@ export function AIChatSheet({ children }: AIChatSheetProps) {
     if (!open) {
       handleOpenChange(true);
     }
+  };
+
+  // Handle chat change
+  const handleChatChange = (chatId: string) => {
+    setActiveChat(chatId);
   };
 
   return (
@@ -134,7 +141,7 @@ export function AIChatSheet({ children }: AIChatSheetProps) {
         resetConversation={resetConversation}
         onNewChat={handleNewChat}
         chatId={activeChat}
-        onChatChange={setActiveChat}
+        onChatChange={handleChatChange}
       />
     </>
   );

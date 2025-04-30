@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { X, Minimize2, Maximize, SidebarIcon, MessageSquarePlus } from 'lucide-react';
+import { X, Minimize, Maximize, SidebarIcon, MessageSquarePlus } from 'lucide-react';
 import { AIChatAssistant } from './AIChatAssistant';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
@@ -217,17 +217,17 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
           <div className="flex items-center gap-2">
             <h3 className="text-sm font-medium select-none">Warranty AI Assistant</h3>
           </div>
-          <div className="flex items-center space-x-1 z-10">
+          <div className="flex items-center space-x-1 z-50">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button 
                     variant="ghost" 
                     size="icon"
-                    className="h-6 w-6 text-white hover:bg-white/20 hover:text-white" 
+                    className="h-6 w-6 text-white hover:bg-white/20 hover:text-white z-50" 
                     onClick={onMinimize}
                   >
-                    <Minimize2 size={14} />
+                    <Minimize size={14} />
                     <span className="sr-only">Minimize</span>
                   </Button>
                 </TooltipTrigger>
@@ -243,7 +243,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
                   <Button 
                     variant="ghost" 
                     size="icon"
-                    className="h-6 w-6 text-white hover:bg-white/20 hover:text-white" 
+                    className="h-6 w-6 text-white hover:bg-white/20 hover:text-white z-50" 
                     onClick={toggleMaximize}
                   >
                     <Maximize size={14} />
@@ -259,7 +259,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
             <Button 
               variant="ghost" 
               size="icon"
-              className="h-6 w-6 text-white hover:bg-white/20 hover:text-white z-10" 
+              className="h-6 w-6 text-white hover:bg-white/20 hover:text-white z-50" 
               onClick={onClose}
             >
               <X size={14} />
@@ -283,7 +283,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
       
       {/* Corner resize handles - invisible but functional */}
       {/* Bottom-right corner */}
-      <div className="absolute bottom-0 right-0 w-8 h-8 cursor-nwse-resize resize-handle resize-handle-br" 
+      <div className="absolute bottom-0 right-0 w-8 h-8 cursor-nwse-resize resize-handle resize-handle-br z-20" 
            onMouseDown={(e) => {
              e.stopPropagation();
              e.preventDefault();
@@ -316,7 +316,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
       />
 
       {/* Bottom-left corner */}
-      <div className="absolute bottom-0 left-0 w-8 h-8 cursor-nesw-resize resize-handle resize-handle-bl"
+      <div className="absolute bottom-0 left-0 w-8 h-8 cursor-nesw-resize resize-handle resize-handle-bl z-20"
            onMouseDown={(e) => {
              e.stopPropagation();
              e.preventDefault();
@@ -357,7 +357,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
       />
 
       {/* Top-right corner */}
-      <div className="absolute top-0 right-0 w-8 h-8 cursor-nesw-resize resize-handle resize-handle-tr"
+      <div className="absolute top-0 right-0 w-8 h-8 cursor-nesw-resize resize-handle resize-handle-tr z-20"
            onMouseDown={(e) => {
              e.stopPropagation();
              e.preventDefault();
@@ -398,7 +398,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
       />
 
       {/* Top-left corner */}
-      <div className="absolute top-0 left-0 w-8 h-8 cursor-nwse-resize resize-handle resize-handle-tl"
+      <div className="absolute top-0 left-0 w-8 h-8 cursor-nwse-resize resize-handle resize-handle-tl z-20"
            onMouseDown={(e) => {
              e.stopPropagation();
              e.preventDefault();
@@ -442,7 +442,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
       />
 
       {/* Edge resize handles - only keep the functionality, remove visual indicators */}
-      <div className="absolute bottom-0 left-8 right-8 h-1 cursor-ns-resize resize-handle resize-handle-b"
+      <div className="absolute bottom-0 left-8 right-8 h-1 cursor-ns-resize resize-handle resize-handle-b z-20"
         onMouseDown={(e) => {
           e.stopPropagation();
           e.preventDefault();
@@ -472,7 +472,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
       />
       
       {/* Right resize handle */}
-      <div className="absolute top-8 bottom-8 right-0 w-1 cursor-ew-resize resize-handle resize-handle-r"
+      <div className="absolute top-8 bottom-8 right-0 w-1 cursor-ew-resize resize-handle resize-handle-r z-20"
         onMouseDown={(e) => {
           e.stopPropagation();
           e.preventDefault();
@@ -502,7 +502,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
       />
       
       {/* Left resize handle */}
-      <div className="absolute top-8 bottom-8 left-0 w-1 cursor-ew-resize resize-handle resize-handle-l"
+      <div className="absolute top-8 bottom-8 left-0 w-1 cursor-ew-resize resize-handle resize-handle-l z-20"
         onMouseDown={(e) => {
           e.stopPropagation();
           e.preventDefault();
@@ -540,7 +540,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
       />
       
       {/* Top resize handle */}
-      <div className="absolute top-0 left-8 right-8 h-1 cursor-ns-resize resize-handle resize-handle-t"
+      <div className="absolute top-0 left-8 right-8 h-1 cursor-ns-resize resize-handle resize-handle-t z-20"
         onMouseDown={(e) => {
           e.stopPropagation();
           e.preventDefault();
