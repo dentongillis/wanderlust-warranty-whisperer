@@ -100,10 +100,6 @@
     @apply bg-gradient-to-br from-rv-blue-500 to-rv-teal-500;
   }
   
-  .chat-header-gradient {
-    @apply bg-gradient-to-r from-sidebar-primary to-sidebar-accent;
-  }
-  
   .stats-card {
     @apply rounded-xl shadow-md p-6 bg-white hover:shadow-lg transition-shadow;
   }
