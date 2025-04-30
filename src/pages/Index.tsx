@@ -62,7 +62,7 @@ const Index = () => {
           
           {/* Right column - adjusted to be a medium width (5/12 columns) */}
           <div className="col-span-12 lg:col-span-5 flex flex-col h-full">
-            <div className="grid grid-rows-1 lg:grid-rows-2 gap-3 h-full">
+            <div className="flex flex-col h-full gap-3">
               {/* Models Table */}
               <Card className="border border-gray-200 dark:border-gray-700 shadow-sm h-[280px] overflow-hidden">
                 <CardHeader className="py-2 px-3">
@@ -74,7 +74,7 @@ const Index = () => {
               </Card>
               
               {/* Dealer claims chart - positioned at bottom right */}
-              <Card className="border border-gray-200 dark:border-gray-700 shadow-sm h-[350px] lg:mt-auto">
+              <Card className="border border-gray-200 dark:border-gray-700 shadow-sm h-[350px] mt-auto">
                 <CardContent className="p-3 h-full">
                   <DealerClaimsChart />
                 </CardContent>

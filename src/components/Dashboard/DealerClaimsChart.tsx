@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
@@ -50,6 +50,27 @@ type TabType = 'dealer' | 'component' | 'model';
 
 export const DealerClaimsChart: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('dealer');
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Update dimensions on mount and window resize
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (containerRef.current) {
+        setDimensions({
+          width: containerRef.current.clientWidth,
+          height: containerRef.current.clientHeight
+        });
+      }
+    };
+
+    updateDimensions();
+    window.addEventListener('resize', updateDimensions);
+    
+    return () => {
+      window.removeEventListener('resize', updateDimensions);
+    };
+  }, []);
 
   // Function to get the appropriate data based on active tab
   const getActiveData = () => {
@@ -122,7 +143,7 @@ export const DealerClaimsChart: React.FC = () => {
   };
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col" ref={containerRef}>
       {/* Chart Header */}
       <div className="flex justify-between items-center mb-1">
         <div>
@@ -158,7 +179,7 @@ export const DealerClaimsChart: React.FC = () => {
       </div>
 
       {/* Chart Container */}
-      <div className="flex-1 min-h-0 pt-2">
+      <div className="flex-1 min-h-0 pt-2 w-full">
         <ChartContainer 
           config={{
             [activeTab]: { color: getDotColor() }
