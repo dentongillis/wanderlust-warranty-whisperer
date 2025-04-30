@@ -74,7 +74,7 @@ const Index = () => {
               </Card>
               
               {/* Dealer claims chart - increased height */}
-              <Card className="border border-gray-200 dark:border-gray-700 shadow-sm h-[290px]">
+              <Card className="border border-gray-200 dark:border-gray-700 shadow-sm h-[320px]">
                 <CardContent className="p-3 h-full">
                   <DealerClaimsChart />
                 </CardContent>
