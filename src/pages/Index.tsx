@@ -26,9 +26,11 @@ const Index = () => {
             </div>
             
             {/* Claims by Model Bar */}
-            <div className="mb-3">
-              <ClaimsByModelBarChart />
-            </div>
+            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm mb-3 bg-transparent">
+              <CardContent className="p-3 pt-2 pb-2">
+                <ClaimsByModelBarChart />
+              </CardContent>
+            </Card>
             
             {/* Models table */}
             <Card className="border border-gray-200 dark:border-gray-700 shadow-sm h-[300px] overflow-hidden mb-3">

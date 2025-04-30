@@ -12,10 +12,10 @@ const models = [
 
 export const ClaimsByModelBarChart: React.FC = () => {
   return (
-    <div className="h-[40px]">
+    <div className="h-[60px]">
       <WideBarChart 
         data={models} 
-        showLabels={false}
+        showLabels={true} 
         useCustomColors={true}
       />
     </div>
