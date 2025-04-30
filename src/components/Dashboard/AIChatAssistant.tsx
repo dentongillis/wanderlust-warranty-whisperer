@@ -96,6 +96,15 @@ const groupChatsByDate = (chats: Chat[]) => {
   return grouped;
 };
 
+// Generate initial assistant message based on the current page
+const generateInitialMessage = (pageName: string): Message => {
+  return {
+    role: "assistant",
+    content: `👋 Welcome to the ${pageName}! How can I help you analyze your warranty data today?`,
+    timestamp: new Date()
+  };
+};
+
 export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({ 
   onClose, 
   onMinimize, 
