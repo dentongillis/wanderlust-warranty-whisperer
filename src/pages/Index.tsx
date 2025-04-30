@@ -25,20 +25,25 @@ const Index = () => {
               <TopStats />
             </div>
             
-            {/* Claims by Model Bar */}
-            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm mb-3 bg-transparent">
-              <CardContent className="p-3 pt-2 pb-2">
-                <ClaimsByModelBarChart />
-              </CardContent>
-            </Card>
+            {/* Claims by Model Bar - no border */}
+            <div className="mb-3">
+              <ClaimsByModelBarChart />
+            </div>
             
-            {/* Models table */}
-            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm h-[300px] overflow-hidden mb-3">
+            {/* Warranty Trends Chart - moved from right column */}
+            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm mb-3">
               <CardHeader className="py-2 px-3">
-                <CardTitle className="text-base font-medium">Model Overview</CardTitle>
+                <div className="flex justify-between items-center">
+                  <CardTitle className="text-base font-medium">Warranty Trends</CardTitle>
+                  <select className="border rounded px-1 py-0.5 text-xs border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200">
+                    <option>Monthly</option>
+                    <option>Quarterly</option>
+                    <option>Yearly</option>
+                  </select>
+                </div>
               </CardHeader>
-              <CardContent className="p-0">
-                <ModelsTable />
+              <CardContent className="p-0 px-2">
+                <WarrantyTrendsChart />
               </CardContent>
             </Card>
             
@@ -69,20 +74,13 @@ const Index = () => {
           {/* Right column - 1/3 width with charts */}
           <div className="col-span-12 lg:col-span-4">
             <div className="grid grid-rows-2 gap-3 h-full">
-              {/* Warranty trends chart */}
-              <Card className="border border-gray-200 dark:border-gray-700 shadow-sm">
+              {/* Models Table - moved from left column */}
+              <Card className="border border-gray-200 dark:border-gray-700 shadow-sm h-[300px] overflow-hidden">
                 <CardHeader className="py-2 px-3">
-                  <div className="flex justify-between items-center">
-                    <CardTitle className="text-base font-medium">Warranty Trends</CardTitle>
-                    <select className="border rounded px-1 py-0.5 text-xs border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200">
-                      <option>Monthly</option>
-                      <option>Quarterly</option>
-                      <option>Yearly</option>
-                    </select>
-                  </div>
+                  <CardTitle className="text-base font-medium">Model Overview</CardTitle>
                 </CardHeader>
-                <CardContent className="p-0 px-2">
-                  <WarrantyTrendsChart />
+                <CardContent className="p-0">
+                  <ModelsTable />
                 </CardContent>
               </Card>
               
