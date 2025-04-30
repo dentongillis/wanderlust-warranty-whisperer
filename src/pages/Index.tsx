@@ -35,14 +35,9 @@ const Index = () => {
               <CardHeader className="py-2 px-3">
                 <div className="flex justify-between items-center">
                   <CardTitle className="text-base font-medium">Warranty Trends</CardTitle>
-                  <select className="border rounded px-1 py-0.5 text-xs border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200">
-                    <option>Monthly</option>
-                    <option>Quarterly</option>
-                    <option>Yearly</option>
-                  </select>
                 </div>
               </CardHeader>
-              <CardContent className="p-0 px-2">
+              <CardContent className="p-0 px-2 pb-2">
                 <WarrantyTrendsChart />
               </CardContent>
             </Card>
