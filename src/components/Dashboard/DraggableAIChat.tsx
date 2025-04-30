@@ -1,8 +1,7 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { X, Minimize, Maximize, SidebarIcon, MessageSquarePlus } from 'lucide-react';
+import { X, Minimize2, Maximize, SidebarIcon, MessageSquarePlus } from 'lucide-react';
 import { AIChatAssistant } from './AIChatAssistant';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
@@ -27,11 +26,11 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
   onChatChange
 }) => {
   // Initial position centered in the viewport
-  const [position, setPosition] = useState({ x: window.innerWidth / 2 - 350, y: window.innerHeight / 4 });
+  const [position, setPosition] = useState({ x: window.innerWidth / 2 - 400, y: window.innerHeight / 4 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   // Increased initial dimensions for better usability
-  const [dimensions, setDimensions] = useState({ width: 700, height: 600 });
+  const [dimensions, setDimensions] = useState({ width: 800, height: 650 });
   const [isMaximized, setIsMaximized] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
   const previousDimensions = useRef({ position: { x: 0, y: 0 }, dimensions: { width: 0, height: 0 } });
@@ -218,7 +217,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
           <div className="flex items-center gap-2">
             <h3 className="text-sm font-medium select-none">Warranty AI Assistant</h3>
           </div>
-          <div className="flex items-center space-x-1">
+          <div className="flex items-center space-x-1 z-10">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -228,7 +227,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
                     className="h-6 w-6 text-white hover:bg-white/20 hover:text-white" 
                     onClick={onMinimize}
                   >
-                    <Minimize size={14} />
+                    <Minimize2 size={14} />
                     <span className="sr-only">Minimize</span>
                   </Button>
                 </TooltipTrigger>
@@ -260,7 +259,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
             <Button 
               variant="ghost" 
               size="icon"
-              className="h-6 w-6 text-white hover:bg-white/20 hover:text-white" 
+              className="h-6 w-6 text-white hover:bg-white/20 hover:text-white z-10" 
               onClick={onClose}
             >
               <X size={14} />
@@ -282,7 +281,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
         </ResizablePanel>
       </ResizablePanelGroup>
       
-      {/* Corner resize handles */}
+      {/* Corner resize handles - invisible but functional */}
       {/* Bottom-right corner */}
       <div className="absolute bottom-0 right-0 w-8 h-8 cursor-nwse-resize resize-handle resize-handle-br" 
            onMouseDown={(e) => {
@@ -314,9 +313,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
              document.addEventListener('mousemove', handleMouseMove, { passive: false });
              document.addEventListener('mouseup', handleMouseUp);
            }}
-      >
-        <div className="w-0 h-0 border-b-8 border-r-8 border-gray-400 absolute bottom-0 right-0"></div>
-      </div>
+      />
 
       {/* Bottom-left corner */}
       <div className="absolute bottom-0 left-0 w-8 h-8 cursor-nesw-resize resize-handle resize-handle-bl"
@@ -357,9 +354,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
              document.addEventListener('mousemove', handleMouseMove, { passive: false });
              document.addEventListener('mouseup', handleMouseUp);
            }}
-      >
-        <div className="w-0 h-0 border-b-8 border-l-8 border-gray-400 absolute bottom-0 left-0"></div>
-      </div>
+      />
 
       {/* Top-right corner */}
       <div className="absolute top-0 right-0 w-8 h-8 cursor-nesw-resize resize-handle resize-handle-tr"
@@ -400,9 +395,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
              document.addEventListener('mousemove', handleMouseMove, { passive: false });
              document.addEventListener('mouseup', handleMouseUp);
            }}
-      >
-        <div className="w-0 h-0 border-t-8 border-r-8 border-gray-400 absolute top-0 right-0"></div>
-      </div>
+      />
 
       {/* Top-left corner */}
       <div className="absolute top-0 left-0 w-8 h-8 cursor-nwse-resize resize-handle resize-handle-tl"
@@ -446,12 +439,10 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
              document.addEventListener('mousemove', handleMouseMove, { passive: false });
              document.addEventListener('mouseup', handleMouseUp);
            }}
-      >
-        <div className="w-0 h-0 border-t-8 border-l-8 border-gray-400 absolute top-0 left-0"></div>
-      </div>
+      />
 
-      {/* Bottom resize handle */}
-      <div className="absolute bottom-0 left-4 right-4 h-1 cursor-ns-resize resize-handle resize-handle-b"
+      {/* Edge resize handles - only keep the functionality, remove visual indicators */}
+      <div className="absolute bottom-0 left-8 right-8 h-1 cursor-ns-resize resize-handle resize-handle-b"
         onMouseDown={(e) => {
           e.stopPropagation();
           e.preventDefault();
@@ -478,12 +469,10 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
           document.addEventListener('mousemove', handleMouseMove, { passive: false });
           document.addEventListener('mouseup', handleMouseUp);
         }}
-      >
-        <div className="h-1 w-full bg-transparent hover:bg-gray-400/20"></div>
-      </div>
+      />
       
       {/* Right resize handle */}
-      <div className="absolute top-4 bottom-4 right-0 w-1 cursor-ew-resize resize-handle resize-handle-r"
+      <div className="absolute top-8 bottom-8 right-0 w-1 cursor-ew-resize resize-handle resize-handle-r"
         onMouseDown={(e) => {
           e.stopPropagation();
           e.preventDefault();
@@ -510,12 +499,10 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
           document.addEventListener('mousemove', handleMouseMove, { passive: false });
           document.addEventListener('mouseup', handleMouseUp);
         }}
-      >
-        <div className="w-1 h-full bg-transparent hover:bg-gray-400/20"></div>
-      </div>
+      />
       
       {/* Left resize handle */}
-      <div className="absolute top-4 bottom-4 left-0 w-1 cursor-ew-resize resize-handle resize-handle-l"
+      <div className="absolute top-8 bottom-8 left-0 w-1 cursor-ew-resize resize-handle resize-handle-l"
         onMouseDown={(e) => {
           e.stopPropagation();
           e.preventDefault();
@@ -550,12 +537,10 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
           document.addEventListener('mousemove', handleMouseMove, { passive: false });
           document.addEventListener('mouseup', handleMouseUp);
         }}
-      >
-        <div className="w-1 h-full bg-transparent hover:bg-gray-400/20"></div>
-      </div>
+      />
       
       {/* Top resize handle */}
-      <div className="absolute top-0 left-4 right-4 h-1 cursor-ns-resize resize-handle resize-handle-t"
+      <div className="absolute top-0 left-8 right-8 h-1 cursor-ns-resize resize-handle resize-handle-t"
         onMouseDown={(e) => {
           e.stopPropagation();
           e.preventDefault();
@@ -590,9 +575,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
           document.addEventListener('mousemove', handleMouseMove, { passive: false });
           document.addEventListener('mouseup', handleMouseUp);
         }}
-      >
-        <div className="h-1 w-full bg-transparent hover:bg-gray-400/20"></div>
-      </div>
+      />
     </div>
   );
 };

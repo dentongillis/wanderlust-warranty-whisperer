@@ -2,9 +2,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Send, Bot, MessageSquarePlus, SidebarIcon, Share2 } from 'lucide-react';
+import { Send, Bot, MessageSquarePlus, SidebarIcon, Share2, X, Trash2 } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { Separator } from '@/components/ui/separator';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from '@/components/ui/dialog';
 import { 
   Tooltip,
   TooltipContent,
@@ -12,6 +13,7 @@ import {
   TooltipProvider
 } from '@/components/ui/tooltip';
 import { useToast } from "@/hooks/use-toast";
+import { format, isToday, isYesterday, isSameWeek, isThisMonth, isThisYear, parseISO } from 'date-fns';
 
 type Message = {
   role: "user" | "assistant";
@@ -60,6 +62,46 @@ const getPageNameFromPath = (pathname: string): string => {
   return pathMap[pathname] || "Dashboard";
 };
 
+// Helper to group chats by date
+const groupChatsByDate = (chats: Chat[]) => {
+  const sortedChats = [...chats].sort((a, b) => 
+    new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime()
+  );
+
+  const grouped: Record<string, Chat[]> = {
+    'Today': [],
+    'Yesterday': [],
+    'This Week': [],
+    'This Month': [],
+    'Earlier': []
+  };
+
+  sortedChats.forEach(chat => {
+    const date = new Date(chat.lastUpdated);
+    
+    if (isToday(date)) {
+      grouped['Today'].push(chat);
+    } else if (isYesterday(date)) {
+      grouped['Yesterday'].push(chat);
+    } else if (isSameWeek(date, new Date(), { weekStartsOn: 1 })) {
+      grouped['This Week'].push(chat);
+    } else if (isThisMonth(date)) {
+      grouped['This Month'].push(chat);
+    } else {
+      grouped['Earlier'].push(chat);
+    }
+  });
+
+  // Remove empty categories
+  Object.keys(grouped).forEach(key => {
+    if (grouped[key].length === 0) {
+      delete grouped[key];
+    }
+  });
+
+  return grouped;
+};
+
 export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({ 
   onClose, 
   onMinimize, 
@@ -74,6 +116,8 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [showThreads, setShowThreads] = useState(true);
   const { toast } = useToast();
+  const [chatToDelete, setChatToDelete] = useState<string | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   
   // Get chats from storage or initialize
   const getStoredChats = (): Chat[] => {
@@ -110,6 +154,9 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
     const { chat, isNew } = getActiveChat(getStoredChats(), chatId);
     return chat;
   });
+
+  // Group chats by date
+  const groupedChats = groupChatsByDate(chats);
 
   // Update local storage whenever chats change
   useEffect(() => {
@@ -277,6 +324,39 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
     });
   };
 
+  const openDeleteDialog = (chatId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setChatToDelete(chatId);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDeleteChat = () => {
+    if (!chatToDelete) return;
+    
+    // Remove chat from the list
+    const updatedChats = chats.filter(chat => chat.id !== chatToDelete);
+    setChats(updatedChats);
+    
+    // If the active chat was deleted, set a new active chat
+    if (activeChat.id === chatToDelete) {
+      if (updatedChats.length > 0) {
+        setActiveChat(updatedChats[0]);
+      } else {
+        // Create a new chat if all were deleted
+        handleCreateNewChat();
+      }
+    }
+    
+    setIsDeleteDialogOpen(false);
+    setChatToDelete(null);
+    
+    toast({
+      title: "Chat Deleted",
+      description: "The conversation has been removed.",
+      duration: 3000,
+    });
+  };
+
   return (
     <div className="flex h-full">
       {/* Left sidebar for chat threads */}
@@ -305,29 +385,47 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
                 </TooltipProvider>
               </div>
               
-              <div className="mt-3 space-y-1 overflow-y-auto custom-scrollbar" style={{ maxHeight: 'calc(100vh - 220px)' }}>
-                {chats.map((chat) => (
-                  <button
-                    key={chat.id}
-                    className={`w-full text-left px-2 py-1.5 rounded-md text-sm transition-colors ${
-                      chat.id === activeChat.id 
-                        ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300' 
-                        : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'
-                    }`}
-                    onClick={() => handleSwitchChat(chat)}
-                  >
-                    <div className="flex items-start">
-                      <Bot size={14} className="mt-0.5 mr-2 flex-shrink-0" />
-                      <div className="overflow-hidden">
-                        <p className="truncate font-medium">{getChatName(chat)}</p>
-                        <div className="flex items-center text-xs text-gray-500 mt-0.5">
-                          <span>{new Date(chat.lastUpdated).toLocaleDateString()}</span>
-                          <span className="mx-1">·</span>
-                          <span>{chat.page}</span>
+              <div className="mt-3 space-y-3 overflow-y-auto custom-scrollbar" style={{ maxHeight: 'calc(100vh - 220px)' }}>
+                {Object.entries(groupedChats).map(([dateGroup, dateChats]) => (
+                  <div key={dateGroup} className="mb-2">
+                    <h3 className="text-xs uppercase text-gray-500 font-medium mb-1 px-2">{dateGroup}</h3>
+                    <div className="space-y-1">
+                      {dateChats.map((chat) => (
+                        <div key={chat.id} 
+                          className={`flex items-center justify-between group w-full text-left px-2 py-1.5 rounded-md text-sm transition-colors ${
+                            chat.id === activeChat.id 
+                              ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300' 
+                              : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'
+                          }`}
+                        >
+                          <div 
+                            className="flex-1 cursor-pointer overflow-hidden"
+                            onClick={() => handleSwitchChat(chat)}
+                          >
+                            <div className="flex items-start">
+                              <Bot size={14} className="mt-0.5 mr-2 flex-shrink-0" />
+                              <div className="overflow-hidden">
+                                <p className="truncate font-medium">{getChatName(chat)}</p>
+                                <div className="flex items-center text-xs text-gray-500 mt-0.5">
+                                  <span>{format(new Date(chat.lastUpdated), 'h:mm a')}</span>
+                                  <span className="mx-1">·</span>
+                                  <span>{chat.page}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                            onClick={(e) => openDeleteDialog(chat.id, e)}
+                          >
+                            <Trash2 size={14} className="text-gray-500 hover:text-red-500" />
+                          </Button>
                         </div>
-                      </div>
+                      ))}
                     </div>
-                  </button>
+                  </div>
                 ))}
               </div>
             </div>
@@ -467,6 +565,27 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Delete Chat Dialog */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Delete Conversation</DialogTitle>
+          </DialogHeader>
+          <p className="py-4">
+            Are you sure you want to delete this conversation? This action cannot be undone.
+          </p>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDeleteChat}>
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
+

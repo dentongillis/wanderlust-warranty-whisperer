@@ -171,11 +171,7 @@
     z-index: 10;
   }
   
-  .resize-chat:hover .resize-handle {
-    opacity: 1;
-  }
-  
-  /* Corner resize handles */
+  /* No visible resize indicators */
   .resize-handle-br,
   .resize-handle-bl,
   .resize-handle-tr,
@@ -239,3 +235,4 @@
     @apply bg-blue-50 dark:bg-gray-700;
   }
 }
+
