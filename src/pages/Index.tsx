@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { DashboardLayout } from '@/components/Layout/DashboardLayout';
 import { TopStats } from '@/components/Dashboard/TopStats';
@@ -26,11 +25,9 @@ const Index = () => {
             </div>
             
             {/* Claims by Model Bar */}
-            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm mb-3 bg-transparent">
-              <CardContent className="p-3 pt-2 pb-2">
-                <ClaimsByModelBarChart />
-              </CardContent>
-            </Card>
+            <div className="mb-3">
+              <ClaimsByModelBarChart />
+            </div>
             
             {/* Models table */}
             <Card className="border border-gray-200 dark:border-gray-700 shadow-sm h-[300px] overflow-hidden mb-3">
