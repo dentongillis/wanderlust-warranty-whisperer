@@ -6,6 +6,7 @@ import { Send, Bot, MessageSquarePlus, SidebarIcon, Share2, X, Trash2 } from 'lu
 import { useLocation } from 'react-router-dom';
 import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
   Tooltip,
   TooltipContent,
@@ -370,7 +371,7 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
       <div className={`bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transition-all duration-300 flex flex-col ${showThreads ? 'w-1/3' : 'w-0'}`}>
         {showThreads && (
           <div className="flex flex-col h-full">
-            <div className="p-3 flex flex-col h-full">
+            <div className="p-3 flex flex-col h-full overflow-hidden">
               <div className="flex items-center gap-1 mb-3">
                 <TooltipProvider>
                   <Tooltip>
@@ -392,57 +393,56 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
                 </TooltipProvider>
               </div>
               
-              <div 
-                ref={threadsContainerRef}
-                className="flex-1 mt-3 space-y-3 overflow-y-auto custom-scrollbar"
-                style={{ maxHeight: 'calc(100% - 120px)' }}
-              >
-                {Object.entries(groupedChats).map(([dateGroup, dateChats]) => (
-                  <div key={dateGroup} className="mb-2">
-                    <h3 className="text-xs uppercase text-gray-500 font-medium mb-1 px-2">{dateGroup}</h3>
-                    <div className="space-y-1">
-                      {dateChats.map((chat) => (
-                        <div key={chat.id} 
-                          className={`flex items-center justify-between group w-full text-left px-2 py-1.5 rounded-md text-sm transition-colors ${
-                            chat.id === activeChat.id 
-                              ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300' 
-                              : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'
-                          }`}
-                        >
-                          <div 
-                            className="flex-1 cursor-pointer overflow-hidden"
-                            onClick={() => handleSwitchChat(chat)}
+              {/* ScrollArea for threads with proper height constraints */}
+              <ScrollArea className="flex-1">
+                <div className="mt-3 space-y-3 pr-2">
+                  {Object.entries(groupedChats).map(([dateGroup, dateChats]) => (
+                    <div key={dateGroup} className="mb-2">
+                      <h3 className="text-xs uppercase text-gray-500 font-medium mb-1 px-2">{dateGroup}</h3>
+                      <div className="space-y-1">
+                        {dateChats.map((chat) => (
+                          <div key={chat.id} 
+                            className={`flex items-center justify-between group w-full text-left px-2 py-1.5 rounded-md text-sm transition-colors ${
+                              chat.id === activeChat.id 
+                                ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300' 
+                                : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'
+                            }`}
                           >
-                            <div className="flex items-start">
-                              <Bot size={14} className="mt-0.5 mr-2 flex-shrink-0" />
-                              <div className="overflow-hidden">
-                                <p className="truncate font-medium">{getChatName(chat)}</p>
-                                <div className="flex items-center text-xs text-gray-500 mt-0.5">
-                                  <span>{format(new Date(chat.lastUpdated), 'h:mm a')}</span>
-                                  <span className="mx-1">·</span>
-                                  <span>{chat.page}</span>
+                            <div 
+                              className="flex-1 cursor-pointer overflow-hidden"
+                              onClick={() => handleSwitchChat(chat)}
+                            >
+                              <div className="flex items-start">
+                                <Bot size={14} className="mt-0.5 mr-2 flex-shrink-0" />
+                                <div className="overflow-hidden">
+                                  <p className="truncate font-medium">{getChatName(chat)}</p>
+                                  <div className="flex items-center text-xs text-gray-500 mt-0.5">
+                                    <span>{format(new Date(chat.lastUpdated), 'h:mm a')}</span>
+                                    <span className="mx-1">·</span>
+                                    <span>{chat.page}</span>
+                                  </div>
                                 </div>
                               </div>
                             </div>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                              onClick={(e) => openDeleteDialog(chat.id, e)}
+                            >
+                              <Trash2 size={14} className="text-gray-500 hover:text-red-500" />
+                            </Button>
                           </div>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                            onClick={(e) => openDeleteDialog(chat.id, e)}
-                          >
-                            <Trash2 size={14} className="text-gray-500 hover:text-red-500" />
-                          </Button>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              </ScrollArea>
             </div>
             
-            {/* Share button at the bottom */}
-            <div className="mt-auto p-3 border-t border-gray-200 dark:border-gray-800">
+            {/* Share button pinned at the bottom */}
+            <div className="p-3 border-t border-gray-200 dark:border-gray-800 mt-auto bg-gray-50 dark:bg-gray-900 z-10">
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -526,7 +526,7 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
                     <Button 
                       variant="outline"
                       size="icon"
-                      className="flex-shrink-0 bg-transparent border-gray-200 dark:border-gray-800"
+                      className="flex-shrink-0 bg-transparent border-gray-200 dark:border-gray-800 z-10"
                       onClick={() => setShowThreads(!showThreads)}
                     >
                       <SidebarIcon size={18} />
@@ -544,7 +544,7 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
                     <Button 
                       variant="outline"
                       size="icon"
-                      className="flex-shrink-0 bg-transparent border-gray-200 dark:border-gray-800"
+                      className="flex-shrink-0 bg-transparent border-gray-200 dark:border-gray-800 z-10"
                       onClick={handleCreateNewChat}
                     >
                       <MessageSquarePlus size={18} />
@@ -569,7 +569,7 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
               onClick={handleSend} 
               size="icon" 
               disabled={isThinking}
-              className="flex-shrink-0 chat-button-gradient relative z-50"
+              className="flex-shrink-0 chat-button-gradient relative z-10"
             >
               <Send size={18} />
             </Button>

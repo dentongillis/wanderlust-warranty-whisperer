@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -211,8 +212,44 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
       >
         <div
           className="p-3 border-b flex flex-row items-center justify-between space-y-0 chat-header-gradient text-white rounded-t-lg"
-          onMouseDown={handleMouseDown}
-          onTouchStart={handleTouchStart}
+          onMouseDown={(e) => {
+            // Only allow dragging from the header, not the buttons
+            if (
+              e.target instanceof HTMLElement && 
+              !e.target.closest('button') && 
+              e.target.tagName !== 'BUTTON'
+            ) {
+              if (chatRef.current) {
+                e.preventDefault();
+                const rect = chatRef.current.getBoundingClientRect();
+                setDragOffset({
+                  x: e.clientX - rect.left,
+                  y: e.clientY - rect.top
+                });
+                setIsDragging(true);
+                document.body.classList.add('select-none');
+              }
+            }
+          }}
+          onTouchStart={(e) => {
+            // Only allow dragging from the header, not the buttons
+            if (
+              e.target instanceof HTMLElement && 
+              !e.target.closest('button') && 
+              e.target.tagName !== 'BUTTON'
+            ) {
+              if (chatRef.current) {
+                const rect = chatRef.current.getBoundingClientRect();
+                const touch = e.touches[0];
+                setDragOffset({
+                  x: touch.clientX - rect.left,
+                  y: touch.clientY - rect.top
+                });
+                setIsDragging(true);
+                document.body.classList.add('select-none');
+              }
+            }
+          }}
         >
           <div className="flex items-center gap-2">
             <h3 className="text-sm font-medium select-none">Warranty AI Assistant</h3>
