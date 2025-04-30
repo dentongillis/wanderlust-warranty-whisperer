@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { X, RefreshCw } from 'lucide-react';
+import { X, Minimize, MessageSquarePlus } from 'lucide-react';
 import { AIChatAssistant } from './AIChatAssistant';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
@@ -10,15 +10,21 @@ import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/componen
 interface DraggableAIChatProps {
   isOpen: boolean;
   onClose: () => void;
+  onMinimize?: () => void;
   resetConversation?: boolean;
   onNewChat?: () => void;
+  chatId?: string;
+  onChatChange?: (chatId: string) => void;
 }
 
 export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({ 
   isOpen, 
   onClose, 
+  onMinimize,
   resetConversation = false,
-  onNewChat 
+  onNewChat,
+  chatId,
+  onChatChange
 }) => {
   const [position, setPosition] = useState({ x: window.innerWidth / 2 - 200, y: window.innerHeight / 4 });
   const [isDragging, setIsDragging] = useState(false);
@@ -178,7 +184,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
         className="h-full rounded-lg overflow-hidden border-0"
       >
         <div
-          className="p-3 border-b flex flex-row items-center justify-between space-y-0 bg-sidebar text-white rounded-t-lg"
+          className="p-3 border-b flex flex-row items-center justify-between space-y-0 bg-gradient-to-r from-blue-700 to-blue-500 text-white rounded-t-lg"
           onMouseDown={handleMouseDown}
           onTouchStart={handleTouchStart}
         >
@@ -191,14 +197,14 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
                     variant="ghost" 
                     size="sm" 
                     className="h-auto p-1 text-white hover:bg-white/20 hover:text-white" 
-                    onClick={onNewChat}
+                    onClick={onMinimize}
                   >
-                    <RefreshCw size={16} />
-                    <span className="sr-only">New Chat</span>
+                    <Minimize size={16} />
+                    <span className="sr-only">Minimize</span>
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="bottom">
-                  <p>New Chat</p>
+                  <p>Minimize</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -217,7 +223,13 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
         
         <ResizablePanel defaultSize={100} minSize={30} className="h-full">
           <div className="flex-1 p-3 overflow-hidden backdrop-blur-md dark:bg-gray-800/90 h-full">
-            <AIChatAssistant onClose={onClose} resetConversation={resetConversation} />
+            <AIChatAssistant 
+              onClose={onClose} 
+              onMinimize={onMinimize}
+              resetConversation={resetConversation} 
+              chatId={chatId}
+              onNewChat={onNewChat}
+            />
           </div>
         </ResizablePanel>
       </ResizablePanelGroup>

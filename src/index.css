@@ -100,6 +100,18 @@
     @apply bg-gradient-to-br from-rv-blue-500 to-rv-teal-500;
   }
   
+  .chat-header-gradient {
+    @apply bg-gradient-to-r from-blue-700 to-blue-500;
+  }
+  
+  .chat-button-gradient {
+    @apply bg-gradient-to-r from-blue-700 to-blue-500 hover:from-blue-800 hover:to-blue-600;
+  }
+  
+  .new-chat-button {
+    @apply text-white hover:text-blue-300 transition-colors;
+  }
+  
   .stats-card {
     @apply rounded-xl shadow-md p-6 bg-white hover:shadow-lg transition-shadow;
   }
@@ -187,5 +199,14 @@
   .resize-handle-t {
     top: 0;
     cursor: ns-resize;
+  }
+  
+  /* Chat thread styling */
+  .chat-thread {
+    @apply flex items-center justify-between px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition-colors;
+  }
+  
+  .chat-thread.active {
+    @apply bg-blue-50 dark:bg-gray-700;
   }
 }

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from "@/hooks/use-toast";
 import { DraggableAIChat } from './DraggableAIChat';
+import { MessageSquarePlus } from 'lucide-react';
 
 interface AIChatSheetProps {
   children: React.ReactNode;
@@ -11,11 +12,14 @@ interface AIChatSheetProps {
 export function AIChatSheet({ children }: AIChatSheetProps) {
   const [open, setOpen] = useState(false);
   const [resetConversation, setResetConversation] = useState(false);
+  const [minimized, setMinimized] = useState(false);
+  const [activeChat, setActiveChat] = useState<string | undefined>(undefined);
   const { toast } = useToast();
   
   const handleOpenChange = (open: boolean) => {
     setOpen(open);
     if (open) {
+      setMinimized(false);
       toast({
         title: "AI Assistant Activated",
         description: "Ask questions about your warranty data and get insights",
@@ -24,8 +28,21 @@ export function AIChatSheet({ children }: AIChatSheetProps) {
     }
   };
 
+  const handleMinimize = () => {
+    setMinimized(true);
+  };
+
   const toggleChat = () => {
-    handleOpenChange(!open);
+    if (minimized) {
+      setMinimized(false);
+    } else {
+      handleOpenChange(!open);
+    }
+  };
+
+  const handleNewChat = () => {
+    setResetConversation(true);
+    setTimeout(() => setResetConversation(false), 100);
   };
 
   return (
@@ -33,14 +50,25 @@ export function AIChatSheet({ children }: AIChatSheetProps) {
       <div onClick={toggleChat}>
         {children}
       </div>
+      
+      {/* Minimized Chat Bubble */}
+      {minimized && (
+        <div 
+          className="fixed bottom-4 right-4 bg-gradient-to-r from-blue-700 to-blue-500 text-white rounded-full p-3 shadow-lg cursor-pointer z-50 hover:from-blue-800 hover:to-blue-600 transition-all"
+          onClick={() => setMinimized(false)}
+        >
+          <MessageSquarePlus size={24} />
+        </div>
+      )}
+      
       <DraggableAIChat 
-        isOpen={open} 
+        isOpen={open && !minimized} 
         onClose={() => handleOpenChange(false)}
+        onMinimize={handleMinimize}
         resetConversation={resetConversation}
-        onNewChat={() => setResetConversation(prev => {
-          setTimeout(() => setResetConversation(false), 100);
-          return true;
-        })}
+        onNewChat={handleNewChat}
+        chatId={activeChat}
+        onChatChange={setActiveChat}
       />
     </>
   );
