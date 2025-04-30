@@ -15,8 +15,8 @@ import {
   PieChart,
   Store
 } from 'lucide-react';
-import { SettingsSheet } from '../Settings/SettingsSheet';
-import { HelpSheet } from '../Help/HelpSheet';
+import { SettingsDialog } from '../Settings/SettingsDialog';
+import { HelpDialog } from '../Help/HelpDialog';
 
 interface SidebarProps {
   collapsed: boolean;
@@ -61,22 +61,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
         collapsed ? "w-[60px]" : "w-[240px]"
       )}
     >
-      <div className="p-4 flex items-center justify-center border-b border-blue-800/50">
-        {collapsed ? (
-          <img 
-            src="/lovable-uploads/5193ca6f-3c8a-4506-a10d-65db7d531983.png" 
-            alt="RVAI Logo" 
-            className="h-8 w-auto"
-          />
-        ) : (
-          <div className="flex items-center justify-center w-full">
-            <img 
-              src="/lovable-uploads/5193ca6f-3c8a-4506-a10d-65db7d531983.png" 
-              alt="RVAI Logo" 
-              className="h-10 w-auto"
-            />
-          </div>
-        )}
+      <div className="p-4 flex items-center justify-end border-b border-blue-800/50">
+        <img 
+          src="/lovable-uploads/5193ca6f-3c8a-4506-a10d-65db7d531983.png" 
+          alt="RVAI Logo" 
+          className="h-6 w-auto"
+        />
       </div>
       
       <nav className="flex-1 py-4 px-2 space-y-1 overflow-y-auto">
@@ -132,25 +122,25 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
       </nav>
       
       <div className="mt-auto py-4 px-2 space-y-1 border-t border-blue-800/50">
-        <SettingsSheet>
+        <SettingsDialog>
           <button className={cn(
             "w-full flex items-center gap-3 px-3 py-2 rounded-md text-white/80 transition-colors",
-            location.pathname === '/settings' ? "bg-blue-700 text-white font-medium" : "hover:bg-blue-800/50 hover:text-white"
+            "hover:bg-blue-800/50 hover:text-white focus:outline-none"
           )}>
             <SettingsIcon size={18} />
             {!collapsed && <span className="text-sm">Settings</span>}
           </button>
-        </SettingsSheet>
+        </SettingsDialog>
         
-        <HelpSheet>
+        <HelpDialog>
           <button className={cn(
             "w-full flex items-center gap-3 px-3 py-2 rounded-md text-white/80 transition-colors",
-            location.pathname === '/help' ? "bg-blue-700 text-white font-medium" : "hover:bg-blue-800/50 hover:text-white"
+            "hover:bg-blue-800/50 hover:text-white focus:outline-none"
           )}>
             <HelpCircleIcon size={18} />
             {!collapsed && <span className="text-sm">Help & Support</span>}
           </button>
-        </HelpSheet>
+        </HelpDialog>
       </div>
     </div>
   );
