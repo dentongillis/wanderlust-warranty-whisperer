@@ -104,6 +104,23 @@ export const DealerClaimsChart: React.FC = () => {
     return activeTab.charAt(0).toUpperCase() + activeTab.slice(1);
   };
 
+  // Custom tooltip component for better formatting
+  const CustomTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      const item = data.find(item => item.x === payload[0].value);
+      return (
+        <div className="bg-white dark:bg-gray-800 p-3 shadow-lg border border-gray-200 dark:border-gray-700 rounded">
+          <p className="font-medium text-sm mb-2">{item?.name}</p>
+          <div className="space-y-1 text-xs">
+            <p><span className="text-gray-500">Total Claims:</span> {item?.x}</p>
+            <p><span className="text-gray-500">Total Cost:</span> ${item?.y}k</p>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="h-full flex flex-col">
       {/* Chart Header */}
@@ -172,22 +189,7 @@ export const DealerClaimsChart: React.FC = () => {
                 label={{ value: 'Total Cost ($k)', angle: -90, position: 'insideLeft', offset: 10, fontSize: 10 }}
                 domain={domains.yDomain}
               />
-              <ChartTooltip
-                content={
-                  <ChartTooltipContent 
-                    formatter={(value, name, props) => {
-                      if (name === 'Total Claims') return [`${value}`, name];
-                      if (name === 'Total Cost') return [`$${value}k`, name];
-                      return [value, name];
-                    }}
-                    labelFormatter={(value) => {
-                      // Find the item by x value
-                      const item = data.find(item => item.x === value);
-                      return item ? item.name : '';
-                    }}
-                  />
-                }
-              />
+              <Tooltip content={<CustomTooltip />} />
               <Scatter 
                 name={getEntityTypeLabel()}
                 data={data} 
