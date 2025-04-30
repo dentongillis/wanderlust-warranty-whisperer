@@ -41,6 +41,7 @@ interface Chat {
   page?: string;
 }
 
+// Helper function to generate the initial message based on page name
 const generateInitialMessage = (pageName: string): Message => ({
   role: "assistant",
   content: `Hello! I'm your RV warranty assistant. I see you're on the ${pageName} page. Ask me anything about warranty claims, trends, or statistics related to what you're viewing.`,
@@ -152,11 +153,17 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
   const [chats, setChats] = useState<Chat[]>(() => getStoredChats());
   const [activeChat, setActiveChat] = useState<Chat>(() => {
     const { chat, isNew } = getActiveChat(getStoredChats(), chatId);
+    if (isNew) {
+      // If this is a new chat, save it immediately to the chats list
+      const updatedChats = [...getStoredChats(), chat];
+      localStorage.setItem(chatsStorageKey, JSON.stringify(updatedChats));
+    }
     return chat;
   });
 
   // Group chats by date
   const groupedChats = groupChatsByDate(chats);
+  const threadsContainerRef = useRef<HTMLDivElement>(null);
 
   // Update local storage whenever chats change
   useEffect(() => {
@@ -360,10 +367,10 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
   return (
     <div className="flex h-full">
       {/* Left sidebar for chat threads */}
-      <div className={`bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transition-all duration-300 ${showThreads ? 'w-1/3' : 'w-0'}`}>
+      <div className={`bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transition-all duration-300 flex flex-col ${showThreads ? 'w-1/3' : 'w-0'}`}>
         {showThreads && (
           <div className="flex flex-col h-full">
-            <div className="p-3">
+            <div className="p-3 flex flex-col h-full">
               <div className="flex items-center gap-1 mb-3">
                 <TooltipProvider>
                   <Tooltip>
@@ -385,7 +392,11 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
                 </TooltipProvider>
               </div>
               
-              <div className="mt-3 space-y-3 overflow-y-auto custom-scrollbar" style={{ maxHeight: 'calc(100vh - 220px)' }}>
+              <div 
+                ref={threadsContainerRef}
+                className="flex-1 mt-3 space-y-3 overflow-y-auto custom-scrollbar"
+                style={{ maxHeight: 'calc(100% - 120px)' }}
+              >
                 {Object.entries(groupedChats).map(([dateGroup, dateChats]) => (
                   <div key={dateGroup} className="mb-2">
                     <h3 className="text-xs uppercase text-gray-500 font-medium mb-1 px-2">{dateGroup}</h3>
@@ -558,7 +569,7 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
               onClick={handleSend} 
               size="icon" 
               disabled={isThinking}
-              className="flex-shrink-0 chat-button-gradient"
+              className="flex-shrink-0 chat-button-gradient relative z-50"
             >
               <Send size={18} />
             </Button>
@@ -588,4 +599,3 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
     </div>
   );
 };
-
