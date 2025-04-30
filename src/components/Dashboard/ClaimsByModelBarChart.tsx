@@ -13,9 +13,6 @@ const models = [
 export const ClaimsByModelBarChart: React.FC = () => {
   return (
     <div className="h-[35px] bg-transparent">
-      <div className="mb-1">
-        <h3 className="text-sm font-medium">Daily Claims by Model</h3>
-      </div>
       <WideBarChart 
         data={models} 
         showLabels={false} 
