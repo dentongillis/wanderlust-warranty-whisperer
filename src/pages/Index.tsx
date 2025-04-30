@@ -6,6 +6,7 @@ import { WarrantyTrendsChart } from '@/components/Dashboard/WarrantyTrendsChart'
 import { DealerClaimsChart } from '@/components/Dashboard/DealerClaimsChart';
 import { ModelsTable } from '@/components/Dashboard/ModelsTable';
 import { RecentClaimsTable } from '@/components/Dashboard/RecentClaimsTable';
+import { ClaimsByModelChart } from '@/components/Dashboard/ClaimsByModelChart';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -23,6 +24,16 @@ const Index = () => {
             <div className="mb-3">
               <TopStats />
             </div>
+            
+            {/* Claims by Model Chart */}
+            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm mb-3">
+              <CardHeader className="py-2 px-3">
+                <CardTitle className="text-base font-medium">Claims by Model</CardTitle>
+              </CardHeader>
+              <CardContent className="p-3">
+                <ClaimsByModelChart />
+              </CardContent>
+            </Card>
             
             {/* Models table */}
             <Card className="border border-gray-200 dark:border-gray-700 shadow-sm h-[300px] overflow-hidden mb-3">
