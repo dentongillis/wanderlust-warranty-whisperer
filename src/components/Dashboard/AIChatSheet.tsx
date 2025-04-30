@@ -10,6 +10,7 @@ interface AIChatSheetProps {
 
 export function AIChatSheet({ children }: AIChatSheetProps) {
   const [open, setOpen] = useState(false);
+  const [resetConversation, setResetConversation] = useState(false);
   const { toast } = useToast();
   
   const handleOpenChange = (open: boolean) => {
@@ -27,14 +28,34 @@ export function AIChatSheet({ children }: AIChatSheetProps) {
     handleOpenChange(!open);
   };
 
+  const startNewChat = () => {
+    setResetConversation(true);
+    handleOpenChange(true);
+    
+    // Reset the flag after a brief delay to ensure it's processed
+    setTimeout(() => {
+      setResetConversation(false);
+    }, 100);
+  };
+
   return (
     <>
-      <div onClick={toggleChat}>
-        {children}
+      <div className="flex space-x-1">
+        <div onClick={toggleChat}>
+          {children}
+        </div>
+        <Button 
+          variant="outline" 
+          className="text-xs py-1 px-2 h-auto"
+          onClick={startNewChat}
+        >
+          New Chat
+        </Button>
       </div>
       <DraggableAIChat 
         isOpen={open} 
         onClose={() => handleOpenChange(false)}
+        resetConversation={resetConversation}
       />
     </>
   );

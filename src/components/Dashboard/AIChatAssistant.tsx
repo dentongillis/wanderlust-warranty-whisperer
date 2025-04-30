@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Send, Bot } from 'lucide-react';
+import { Send, Bot, RefreshCw } from 'lucide-react';
 
 type Message = {
   role: "user" | "assistant";
@@ -19,19 +19,36 @@ const initialMessages: Message[] = [
   }
 ];
 
+// Create a global variable to persist messages
+let persistedMessages = [...initialMessages];
+
 interface AIChatAssistantProps {
   onClose?: () => void;
+  resetConversation?: boolean;
 }
 
-export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({ onClose }) => {
+export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({ onClose, resetConversation = false }) => {
   const [input, setInput] = useState('');
-  const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const [messages, setMessages] = useState<Message[]>(persistedMessages);
   const [isThinking, setIsThinking] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Reset conversation if needed
+  useEffect(() => {
+    if (resetConversation) {
+      setMessages(initialMessages);
+      persistedMessages = [...initialMessages];
+    }
+  }, [resetConversation]);
 
   // Auto scroll to bottom of messages
   useEffect(() => {
     scrollToBottom();
+  }, [messages]);
+
+  // Update persisted messages when messages change
+  useEffect(() => {
+    persistedMessages = [...messages];
   }, [messages]);
 
   const scrollToBottom = () => {
@@ -80,9 +97,26 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({ onClose }) => 
     }, 1500);
   };
 
+  const handleNewChat = () => {
+    setMessages(initialMessages);
+    persistedMessages = [...initialMessages];
+  };
+
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 overflow-y-auto mb-4 pr-1">
+      <div className="flex justify-between items-center mb-2">
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="h-7 px-2 text-xs flex items-center gap-1 hover:bg-blue-50 dark:hover:bg-gray-700"
+          onClick={handleNewChat}
+        >
+          <RefreshCw size={12} />
+          New Chat
+        </Button>
+      </div>
+      
+      <div className="flex-1 overflow-y-auto mb-4 pr-1 custom-scrollbar">
         <div className="space-y-4">
           {messages.map((message, index) => (
             <div 
@@ -92,13 +126,16 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({ onClose }) => 
               <div 
                 className={`max-w-[85%] rounded-2xl px-4 py-2 ${
                   message.role === 'user' 
-                    ? 'bg-primary text-primary-foreground' 
-                    : 'bg-muted dark:bg-gray-800'
+                    ? 'bg-gradient-to-r from-blue-500 to-cyan-400 text-white' 
+                    : 'bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700'
                 }`}
+                style={{
+                  boxShadow: message.role === 'user' ? '0 2px 8px rgba(0, 102, 255, 0.15)' : '0 2px 8px rgba(0, 0, 0, 0.05)'
+                }}
               >
                 {message.role === 'assistant' && (
                   <div className="flex items-center mb-1">
-                    <Bot size={16} className="mr-1" />
+                    <Bot size={16} className="mr-1 text-blue-500" />
                     <span className="text-xs font-medium">Warranty AI</span>
                   </div>
                 )}
@@ -111,15 +148,15 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({ onClose }) => 
           ))}
           {isThinking && (
             <div className="flex justify-start">
-              <div className="max-w-[85%] rounded-2xl px-4 py-2 bg-muted dark:bg-gray-800">
+              <div className="max-w-[85%] rounded-2xl px-4 py-2 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
                 <div className="flex items-center">
-                  <Bot size={16} className="mr-1" />
+                  <Bot size={16} className="mr-1 text-blue-500" />
                   <span className="text-xs font-medium">Warranty AI</span>
                 </div>
                 <div className="flex space-x-1 mt-2 items-center">
-                  <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                  <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                  <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                  <div className="w-2 h-2 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                  <div className="w-2 h-2 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                  <div className="w-2 h-2 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: '300ms' }}></div>
                 </div>
               </div>
             </div>
@@ -134,9 +171,14 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({ onClose }) => 
           onChange={(e) => setInput(e.target.value)} 
           placeholder="Ask about warranty data..." 
           onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-          className="flex-1"
+          className="flex-1 border-gray-300 dark:border-gray-600 focus:ring-blue-300 dark:focus:ring-blue-700"
         />
-        <Button onClick={handleSend} size="icon" disabled={isThinking}>
+        <Button 
+          onClick={handleSend} 
+          size="icon" 
+          disabled={isThinking}
+          className="bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500"
+        >
           <Send size={18} />
         </Button>
       </div>
