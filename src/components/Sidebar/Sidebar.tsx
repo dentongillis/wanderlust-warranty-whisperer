@@ -69,7 +69,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
           <img 
             src="/lovable-uploads/5193ca6f-3c8a-4506-a10d-65db7d531983.png" 
             alt="RVAI Logo" 
-            className="h-6 w-auto"
+            className={cn(
+              "transition-all duration-300 ease-in-out",
+              collapsed ? "h-5 w-auto" : "h-6 w-auto"
+            )}
           />
         </div>
       </div>
