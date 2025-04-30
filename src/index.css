@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -101,11 +100,11 @@
   }
   
   .chat-header-gradient {
-    @apply bg-gradient-to-r from-sidebar to-sidebar-accent;
+    @apply bg-gradient-to-r from-[#1A1F2C] to-[#243045];
   }
   
   .chat-button-gradient {
-    @apply bg-gradient-to-r from-sidebar to-sidebar-accent hover:from-sidebar-accent hover:to-sidebar;
+    @apply bg-gradient-to-r from-[#1A1F2C] to-[#243045] hover:from-[#243045] hover:to-[#1A1F2C];
   }
   
   .new-chat-button {

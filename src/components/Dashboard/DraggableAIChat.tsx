@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { X, Minimize, RefreshCw } from 'lucide-react';
+import { X, Minimize, Maximize } from 'lucide-react';
 import { AIChatAssistant } from './AIChatAssistant';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
@@ -30,7 +30,32 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [dimensions, setDimensions] = useState({ width: 320, height: 500 });
+  const [isMaximized, setIsMaximized] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
+  const previousDimensions = useRef({ position: { x: 0, y: 0 }, dimensions: { width: 0, height: 0 } });
+
+  // Handle maximize/restore functionality
+  const toggleMaximize = () => {
+    if (isMaximized) {
+      // Restore to previous position and size
+      setPosition(previousDimensions.current.position);
+      setDimensions(previousDimensions.current.dimensions);
+      setIsMaximized(false);
+    } else {
+      // Save current position and size
+      previousDimensions.current = {
+        position: { ...position },
+        dimensions: { ...dimensions }
+      };
+      // Set to maximized size and position
+      setPosition({ x: 20, y: 20 });
+      setDimensions({ 
+        width: window.innerWidth - 40, 
+        height: window.innerHeight - 40 
+      });
+      setIsMaximized(true);
+    }
+  };
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     // Don't start dragging if clicking on buttons or input
@@ -184,7 +209,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
         className="h-full rounded-lg overflow-hidden border-0"
       >
         <div
-          className="p-3 border-b flex flex-row items-center justify-between space-y-0 bg-gradient-to-r from-sidebar to-sidebar-accent text-white rounded-t-lg"
+          className="p-3 border-b flex flex-row items-center justify-between space-y-0 chat-header-gradient text-white rounded-t-lg"
           onMouseDown={handleMouseDown}
           onTouchStart={handleTouchStart}
         >
@@ -192,26 +217,16 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
             <h3 className="text-sm font-medium select-none">Warranty AI Assistant</h3>
           </div>
           <div className="flex items-center space-x-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-auto p-1 text-white hover:bg-white/20 hover:text-white"
-              onClick={onNewChat}
-            >
-              <RefreshCw size={15} className="mr-1" />
-              <span className="text-xs">New Chat</span>
-            </Button>
-            
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button 
                     variant="ghost" 
-                    size="sm" 
-                    className="h-auto p-1 text-white hover:bg-white/20 hover:text-white" 
+                    size="icon"
+                    className="h-6 w-6 text-white hover:bg-white/20 hover:text-white" 
                     onClick={onMinimize}
                   >
-                    <Minimize size={16} />
+                    <Minimize size={14} />
                     <span className="sr-only">Minimize</span>
                   </Button>
                 </TooltipTrigger>
@@ -221,13 +236,32 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
               </Tooltip>
             </TooltipProvider>
             
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    className="h-6 w-6 text-white hover:bg-white/20 hover:text-white" 
+                    onClick={toggleMaximize}
+                  >
+                    <Maximize size={14} />
+                    <span className="sr-only">Maximize</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  <p>{isMaximized ? 'Restore' : 'Maximize'}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            
             <Button 
               variant="ghost" 
-              size="sm" 
-              className="h-auto p-1 text-white hover:bg-white/20 hover:text-white" 
+              size="icon"
+              className="h-6 w-6 text-white hover:bg-white/20 hover:text-white" 
               onClick={onClose}
             >
-              <X size={16} />
+              <X size={14} />
               <span className="sr-only">Close</span>
             </Button>
           </div>
