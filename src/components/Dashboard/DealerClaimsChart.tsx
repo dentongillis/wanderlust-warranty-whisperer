@@ -2,24 +2,28 @@
 import React from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
+// Daily dealer claims data
 const data = [
-  { x: 22, y: 65 },
-  { x: 23, y: 85 },
-  { x: 24, y: 70 },
-  { x: 25, y: 92 },
-  { x: 26, y: 75 },
-  { x: 27, y: 88 },
-  { x: 28, y: 68 },
-  { x: 29, y: 74 },
-  { x: 30, y: 80 },
-  { x: 31, y: 72 },
-  { x: 32, y: 62 }
+  { x: 8, y: 12 },
+  { x: 9, y: 15 },
+  { x: 10, y: 13 },
+  { x: 11, y: 17 },
+  { x: 12, y: 14 },
+  { x: 13, y: 16 },
+  { x: 14, y: 12 },
+  { x: 15, y: 14 },
+  { x: 16, y: 15 },
+  { x: 17, y: 13 },
+  { x: 18, y: 11 }
 ];
 
 export const DealerClaimsChart: React.FC = () => {
   return (
     <div className="h-[160px]">
-      <ResponsiveContainer width="100%" height="100%">
+      <div className="mb-1">
+        <h3 className="text-sm font-medium">Daily Dealer Claims</h3>
+      </div>
+      <ResponsiveContainer width="100%" height="85%">
         <ScatterChart
           margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
         >
@@ -27,15 +31,15 @@ export const DealerClaimsChart: React.FC = () => {
           <XAxis 
             dataKey="x" 
             type="number" 
-            name="Total Number of Claims"
+            name="Hour of Day"
             tick={{ fontSize: 9 }}
             axisLine={false}
             tickLine={false}
-            label={{ value: 'Claims', position: 'insideBottom', offset: -5, fontSize: 9 }}
+            label={{ value: 'Hour', position: 'insideBottom', offset: -5, fontSize: 9 }}
           />
           <YAxis 
             dataKey="y" 
-            name="Total Number of Claims" 
+            name="Number of Claims" 
             tick={{ fontSize: 9 }}
             axisLine={false}
             tickLine={false}

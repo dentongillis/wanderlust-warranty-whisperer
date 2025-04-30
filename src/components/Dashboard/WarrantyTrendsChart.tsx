@@ -40,8 +40,14 @@ export const WarrantyTrendsChart: React.FC = () => {
   
   return (
     <div className="h-[280px]">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-medium">Warranty Trends</h3>
+      <div className="flex items-center justify-between mb-2">
+        <div>
+          <h3 className="text-lg font-medium">Warranty Trends</h3>
+          <div className="flex items-center gap-1">
+            <TrendingUp className="text-green-600 h-3 w-3" />
+            <span className="text-sm font-medium text-green-600">4.8% Growth</span>
+          </div>
+        </div>
         <div className="flex items-center gap-2">
           <span className={`text-xs ${!showModelData ? 'text-gray-900 font-medium' : 'text-gray-400'}`}>All Claims</span>
           <Switch
@@ -115,10 +121,6 @@ export const WarrantyTrendsChart: React.FC = () => {
           )}
         </LineChart>
       </ResponsiveContainer>
-      <div className="text-right flex items-center justify-end gap-1 mt-1">
-        <TrendingUp className="text-green-600 h-3 w-3" />
-        <span className="text-sm font-medium text-green-600">4.8% Growth</span>
-      </div>
     </div>
   );
 };

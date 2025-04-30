@@ -2,17 +2,20 @@
 import React from 'react';
 import { WideBarChart } from './WideBarChart';
 
-// Sample data - this would be replaced with real data in a production app
+// Sample data - daily view of claims by model
 const models = [
-  { name: 'Model I', value: 520, color: '#8B5CF6' },
-  { name: 'Model Z Air', value: 480, color: '#10B981' },
-  { name: 'Model Z', value: 410, color: '#F97316' },
-  { name: 'Model G', value: 390, color: '#0EA5E9' }
+  { name: 'Model I', value: 42, color: '#8B5CF6' },
+  { name: 'Model Z Air', value: 38, color: '#10B981' },
+  { name: 'Model Z', value: 34, color: '#F97316' },
+  { name: 'Model G', value: 31, color: '#0EA5E9' }
 ];
 
 export const ClaimsByModelBarChart: React.FC = () => {
   return (
-    <div className="h-[35px] bg-transparent"> 
+    <div className="h-[35px] bg-transparent">
+      <div className="mb-1">
+        <h3 className="text-sm font-medium">Daily Claims by Model</h3>
+      </div>
       <WideBarChart 
         data={models} 
         showLabels={false} 
