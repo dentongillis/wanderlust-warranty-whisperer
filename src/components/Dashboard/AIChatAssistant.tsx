@@ -109,7 +109,7 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({ onClose, reset
               <div 
                 className={`max-w-[85%] rounded-2xl px-4 py-2 ${
                   message.role === 'user' 
-                    ? 'bg-gradient-to-r from-blue-500 to-cyan-400 text-white' 
+                    ? 'bg-sidebar text-white' 
                     : 'bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700'
                 }`}
                 style={{
@@ -160,7 +160,7 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({ onClose, reset
           onClick={handleSend} 
           size="icon" 
           disabled={isThinking}
-          className="bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500"
+          className="bg-sidebar hover:bg-sidebar/80"
         >
           <Send size={18} />
         </Button>

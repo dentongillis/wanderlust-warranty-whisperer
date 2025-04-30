@@ -158,7 +158,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
   return (
     <div 
       ref={chatRef}
-      className={`absolute shadow-lg dark:shadow-blue-900/20 rounded-lg z-50 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+      className={`absolute shadow-lg dark:shadow-blue-900/20 rounded-lg z-50 transition-opacity duration-300 resize-chat ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
       style={{ 
         left: `${position.x}px`, 
         top: `${position.y}px`,
@@ -178,7 +178,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
         className="h-full rounded-lg overflow-hidden border-0"
       >
         <div
-          className="p-3 border-b flex flex-row items-center justify-between space-y-0 bg-gradient-to-r from-blue-500 to-cyan-400 text-white rounded-t-lg"
+          className="p-3 border-b flex flex-row items-center justify-between space-y-0 bg-sidebar text-white rounded-t-lg"
           onMouseDown={handleMouseDown}
           onTouchStart={handleTouchStart}
         >
@@ -222,8 +222,8 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
         </ResizablePanel>
       </ResizablePanelGroup>
       
-      {/* Resize handles */}
-      <div className="absolute bottom-0 right-0 w-4 h-4 cursor-nwse-resize" 
+      {/* Resize handles for all sides */}
+      <div className="absolute bottom-0 right-0 w-4 h-4 cursor-nwse-resize resize-handle resize-handle-br" 
            onMouseDown={(e) => {
              e.stopPropagation();
              e.preventDefault(); // Prevent text selection
@@ -255,6 +255,150 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
            }}
       >
         <div className="w-0 h-0 border-b-4 border-r-4 border-gray-400 absolute bottom-0 right-0"></div>
+      </div>
+
+      {/* Bottom resize handle */}
+      <div className="absolute bottom-0 left-4 right-4 h-1 cursor-ns-resize resize-handle resize-handle-b"
+        onMouseDown={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          const startY = e.clientY;
+          const startHeight = dimensions.height;
+          
+          const handleMouseMove = (e: MouseEvent) => {
+            e.preventDefault();
+            const newHeight = Math.max(300, startHeight + (e.clientY - startY));
+            
+            setDimensions({
+              ...dimensions,
+              height: newHeight
+            });
+          };
+          
+          const handleMouseUp = () => {
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+            document.body.classList.remove('select-none');
+          };
+          
+          document.body.classList.add('select-none');
+          document.addEventListener('mousemove', handleMouseMove, { passive: false });
+          document.addEventListener('mouseup', handleMouseUp);
+        }}
+      >
+        <div className="h-1 w-full bg-transparent hover:bg-gray-400/20"></div>
+      </div>
+      
+      {/* Right resize handle */}
+      <div className="absolute top-4 bottom-4 right-0 w-1 cursor-ew-resize resize-handle resize-handle-r"
+        onMouseDown={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          const startX = e.clientX;
+          const startWidth = dimensions.width;
+          
+          const handleMouseMove = (e: MouseEvent) => {
+            e.preventDefault();
+            const newWidth = Math.max(280, startWidth + (e.clientX - startX));
+            
+            setDimensions({
+              ...dimensions,
+              width: newWidth
+            });
+          };
+          
+          const handleMouseUp = () => {
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+            document.body.classList.remove('select-none');
+          };
+          
+          document.body.classList.add('select-none');
+          document.addEventListener('mousemove', handleMouseMove, { passive: false });
+          document.addEventListener('mouseup', handleMouseUp);
+        }}
+      >
+        <div className="w-1 h-full bg-transparent hover:bg-gray-400/20"></div>
+      </div>
+      
+      {/* Left resize handle */}
+      <div className="absolute top-4 bottom-4 left-0 w-1 cursor-ew-resize resize-handle resize-handle-l"
+        onMouseDown={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          const startX = e.clientX;
+          const startLeft = position.x;
+          const startWidth = dimensions.width;
+          
+          const handleMouseMove = (e: MouseEvent) => {
+            e.preventDefault();
+            const dx = startX - e.clientX;
+            const newWidth = Math.max(280, startWidth + dx);
+            const newLeft = startLeft - (newWidth - startWidth);
+            
+            setPosition({
+              ...position,
+              x: newLeft
+            });
+            
+            setDimensions({
+              ...dimensions,
+              width: newWidth
+            });
+          };
+          
+          const handleMouseUp = () => {
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+            document.body.classList.remove('select-none');
+          };
+          
+          document.body.classList.add('select-none');
+          document.addEventListener('mousemove', handleMouseMove, { passive: false });
+          document.addEventListener('mouseup', handleMouseUp);
+        }}
+      >
+        <div className="w-1 h-full bg-transparent hover:bg-gray-400/20"></div>
+      </div>
+      
+      {/* Top resize handle */}
+      <div className="absolute top-0 left-4 right-4 h-1 cursor-ns-resize resize-handle resize-handle-t"
+        onMouseDown={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          const startY = e.clientY;
+          const startTop = position.y;
+          const startHeight = dimensions.height;
+          
+          const handleMouseMove = (e: MouseEvent) => {
+            e.preventDefault();
+            const dy = startY - e.clientY;
+            const newHeight = Math.max(300, startHeight + dy);
+            const newTop = startTop - (newHeight - startHeight);
+            
+            setPosition({
+              ...position,
+              y: newTop
+            });
+            
+            setDimensions({
+              ...dimensions,
+              height: newHeight
+            });
+          };
+          
+          const handleMouseUp = () => {
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+            document.body.classList.remove('select-none');
+          };
+          
+          document.body.classList.add('select-none');
+          document.addEventListener('mousemove', handleMouseMove, { passive: false });
+          document.addEventListener('mouseup', handleMouseUp);
+        }}
+      >
+        <div className="h-1 w-full bg-transparent hover:bg-gray-400/20"></div>
       </div>
     </div>
   );
