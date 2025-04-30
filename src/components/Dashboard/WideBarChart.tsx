@@ -15,7 +15,7 @@ export const WideBarChart: React.FC<WideBarChartProps> = ({
   colorScheme = 'blue',
   showLabels = false,
   useCustomColors = false,
-  barHeight = 60
+  barHeight = 30
 }) => {
   const max = Math.max(...data.map(item => item.value));
   const total = data.reduce((acc, item) => acc + item.value, 0);

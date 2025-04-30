@@ -14,11 +14,11 @@ const data = [
 
 export const WarrantyTrendsChart: React.FC = () => {
   return (
-    <div className="h-[110px]">
+    <div className="h-[150px]">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={data}
-          margin={{ top: 5, right: 5, left: 0, bottom: 5 }}
+          margin={{ top: 10, right: 10, left: 0, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
           <XAxis 

@@ -18,8 +18,8 @@ const Index = () => {
     >
       <div className="space-y-3">
         <div className="grid grid-cols-12 gap-3">
-          {/* Left column - adjusted to be slightly narrower */}
-          <div className="col-span-12 lg:col-span-7">
+          {/* Left column - adjusted to be wider */}
+          <div className="col-span-12 lg:col-span-8">
             {/* Top stats */}
             <div className="mb-3">
               <TopStats />
@@ -30,7 +30,7 @@ const Index = () => {
               <ClaimsByModelBarChart />
             </div>
             
-            {/* Warranty Trends Chart - moved from right column */}
+            {/* Warranty Trends Chart - increased height */}
             <Card className="border border-gray-200 dark:border-gray-700 shadow-sm mb-3">
               <CardHeader className="py-2 px-3">
                 <div className="flex justify-between items-center">
@@ -71,11 +71,11 @@ const Index = () => {
             </Card>
           </div>
           
-          {/* Right column - adjusted to be wider */}
-          <div className="col-span-12 lg:col-span-5">
+          {/* Right column - adjusted to be narrower */}
+          <div className="col-span-12 lg:col-span-4">
             <div className="grid grid-rows-2 gap-3 h-full">
-              {/* Models Table - moved from left column */}
-              <Card className="border border-gray-200 dark:border-gray-700 shadow-sm h-[300px] overflow-hidden">
+              {/* Models Table */}
+              <Card className="border border-gray-200 dark:border-gray-700 shadow-sm h-[280px] overflow-hidden">
                 <CardHeader className="py-2 px-3">
                   <CardTitle className="text-base font-medium">Model Overview</CardTitle>
                 </CardHeader>
