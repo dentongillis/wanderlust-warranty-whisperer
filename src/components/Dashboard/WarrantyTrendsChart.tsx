@@ -14,32 +14,29 @@ const data = [
 
 export const WarrantyTrendsChart: React.FC = () => {
   return (
-    <div className="h-[220px]">
+    <div className="h-[150px]">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={data}
-          margin={{ top: 10, right: 10, left: 0, bottom: 15 }}
+          margin={{ top: 10, right: 10, left: 0, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
           <XAxis 
             dataKey="day" 
             axisLine={false}
             tickLine={false}
-            tick={{ fontSize: 10, fill: '#6B7280' }}
-            dy={10}
+            tick={{ fontSize: 9, fill: '#6B7280' }}
           />
           <YAxis 
             axisLine={false}
             tickLine={false}
-            tick={{ fontSize: 10, fill: '#6B7280' }}
-            domain={[0, 'dataMax + 10']}
-            ticks={[0, 25, 50, 75, 100]}
+            tick={{ fontSize: 9, fill: '#6B7280' }}
           />
           <Tooltip 
             contentStyle={{ 
-              fontSize: '12px', 
-              padding: '8px', 
-              borderRadius: '6px',
+              fontSize: '11px', 
+              padding: '6px', 
+              borderRadius: '4px',
               boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
               border: '1px solid #e2e8f0'
             }} 
@@ -48,9 +45,9 @@ export const WarrantyTrendsChart: React.FC = () => {
             type="monotone" 
             dataKey="claims" 
             stroke="#3b82f6" 
-            strokeWidth={2.5}
-            dot={{ stroke: '#3b82f6', strokeWidth: 2, r: 4, fill: '#fff' }}
-            activeDot={{ r: 6, stroke: '#2563eb', strokeWidth: 2, fill: '#3b82f6' }}
+            strokeWidth={2}
+            dot={{ stroke: '#3b82f6', strokeWidth: 2, r: 3, fill: '#fff' }}
+            activeDot={{ r: 4, stroke: '#2563eb', strokeWidth: 2, fill: '#3b82f6' }}
           />
         </LineChart>
       </ResponsiveContainer>

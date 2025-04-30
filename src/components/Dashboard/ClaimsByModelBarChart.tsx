@@ -12,12 +12,12 @@ const models = [
 
 export const ClaimsByModelBarChart: React.FC = () => {
   return (
-    <div className="h-[40px] bg-transparent"> 
+    <div className="h-[35px] bg-transparent"> 
       <WideBarChart 
         data={models} 
-        showLabels={true} 
+        showLabels={false} 
         useCustomColors={true}
-        barHeight={40} 
+        barHeight={30} // Reduced height for thinner bars
       />
     </div>
   );

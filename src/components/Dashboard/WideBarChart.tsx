@@ -52,23 +52,23 @@ export const WideBarChart: React.FC<WideBarChartProps> = ({
               <Tooltip key={item.name}>
                 <TooltipTrigger asChild>
                   <div 
-                    className={`${color} relative transition-all duration-300 ease-in-out hover:brightness-95 group`} 
+                    className={`${color} relative transition-all duration-300 ease-in-out hover:opacity-90`} 
                     style={style}
                   >
                     {/* Always show model name in the segment with appropriate styling */}
                     <div className="absolute inset-0 flex items-center justify-center text-white text-xs font-medium">
-                      <span className="truncate px-1 whitespace-nowrap overflow-hidden drop-shadow-sm">{item.name}</span>
+                      <span className="truncate px-1 whitespace-nowrap overflow-hidden">{item.name}</span>
                     </div>
                   </div>
                 </TooltipTrigger>
                 <TooltipContent className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg p-2 rounded-lg">
                   <div className="text-xs font-medium">
-                    <div className="font-semibold mb-1">{item.name}</div>
-                    <div className="flex justify-between gap-4 text-gray-600 dark:text-gray-300">
+                    <div>{item.name}</div>
+                    <div className="flex justify-between gap-2">
                       <span>Claims:</span>
                       <span className="font-bold">{item.value}</span>
                     </div>
-                    <div className="flex justify-between gap-4 text-gray-600 dark:text-gray-300">
+                    <div className="flex justify-between gap-2">
                       <span>Share:</span>
                       <span className="font-bold">{percentage.toFixed(1)}%</span>
                     </div>
