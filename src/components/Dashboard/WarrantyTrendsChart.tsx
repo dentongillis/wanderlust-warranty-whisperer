@@ -2,7 +2,9 @@
 import React, { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Switch } from '@/components/ui/switch';
+import { Toggle } from '@/components/ui/toggle';
 import { Label } from '@/components/ui/label';
+import { TrendingUp } from 'lucide-react';
 
 // Sample data for all claims
 const claimsData = [
@@ -37,15 +39,19 @@ export const WarrantyTrendsChart: React.FC = () => {
   const [showModelData, setShowModelData] = useState(false);
   
   return (
-    <div className="h-[220px]">
-      <div className="flex items-center justify-end space-x-2 mb-2">
-        <Label htmlFor="claims-toggle" className="text-xs text-gray-500">All Claims</Label>
-        <Switch
-          id="claims-toggle"
-          checked={showModelData}
-          onCheckedChange={setShowModelData}
-        />
-        <Label htmlFor="claims-toggle" className="text-xs text-gray-500">Model Claims</Label>
+    <div className="h-[280px]">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-medium">Warranty Trends</h3>
+        <div className="flex items-center gap-2">
+          <span className={`text-xs ${!showModelData ? 'text-gray-900 font-medium' : 'text-gray-400'}`}>All Claims</span>
+          <Switch
+            id="claims-toggle"
+            checked={showModelData}
+            onCheckedChange={setShowModelData}
+            className="h-4 w-8 data-[state=checked]:bg-primary"
+          />
+          <span className={`text-xs ${showModelData ? 'text-gray-900 font-medium' : 'text-gray-400'}`}>Model Claims</span>
+        </div>
       </div>
       
       <ResponsiveContainer width="100%" height="85%">
@@ -64,6 +70,8 @@ export const WarrantyTrendsChart: React.FC = () => {
             axisLine={false}
             tickLine={false}
             tick={{ fontSize: 10, fill: '#6B7280' }}
+            domain={[0, 100]}
+            ticks={[0, 25, 50, 75, 100]}
           />
           <Tooltip 
             contentStyle={{ 
@@ -107,8 +115,9 @@ export const WarrantyTrendsChart: React.FC = () => {
           )}
         </LineChart>
       </ResponsiveContainer>
-      <div className="text-right text-xs text-green-600 dark:text-green-500 font-medium mt-1">
-        <span>4.8% Growth</span>
+      <div className="text-right flex items-center justify-end gap-1 mt-1">
+        <TrendingUp className="text-green-600 h-3 w-3" />
+        <span className="text-sm font-medium text-green-600">4.8% Growth</span>
       </div>
     </div>
   );

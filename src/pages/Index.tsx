@@ -32,12 +32,7 @@ const Index = () => {
             
             {/* Warranty Trends Chart - increased height */}
             <Card className="border border-gray-200 dark:border-gray-700 shadow-sm mb-3">
-              <CardHeader className="py-2 px-3">
-                <div className="flex justify-between items-center">
-                  <CardTitle className="text-base font-medium">Warranty Trends</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent className="p-0 px-2 pb-2">
+              <CardContent className="p-4">
                 <WarrantyTrendsChart />
               </CardContent>
             </Card>
