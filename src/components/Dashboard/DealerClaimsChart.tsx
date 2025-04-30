@@ -131,20 +131,20 @@ export const DealerClaimsChart: React.FC = () => {
               <XAxis 
                 dataKey="x" 
                 type="number" 
-                name="Hour of Day"
+                name="Claims"
                 tick={{ fontSize: 9 }}
                 axisLine={false}
                 tickLine={false}
-                label={{ value: 'Hour', position: 'insideBottom', offset: -5, fontSize: 9 }}
+                label={{ value: 'Claims', position: 'insideBottom', offset: -5, fontSize: 9 }}
                 domain={[7, 18]} // Set fixed domain
               />
               <YAxis 
                 dataKey="y" 
-                name="Claims" 
+                name="Total Cost" 
                 tick={{ fontSize: 9 }}
                 axisLine={false}
                 tickLine={false}
-                label={{ value: 'Claims', angle: -90, position: 'insideLeft', offset: 5, fontSize: 9 }}
+                label={{ value: 'Total Cost', angle: -90, position: 'insideLeft', offset: 5, fontSize: 9 }}
                 domain={['dataMin - 1', 'dataMax + 1']} // Dynamic domain based on data
                 allowDataOverflow={false}
               />
@@ -152,8 +152,8 @@ export const DealerClaimsChart: React.FC = () => {
                 content={
                   <ChartTooltipContent 
                     formatter={(value, name, props) => {
-                      if (name === 'Claims') return [`${value} claims`, 'Claims'];
-                      if (name === 'Hour of Day') return [`${value}:00`, 'Hour'];
+                      if (name === 'Total Cost') return [`$${value}k`, 'Total Cost'];
+                      if (name === 'Claims') return [`${value}`, 'Claims'];
                       return [value, name];
                     }}
                     labelFormatter={(label) => {
