@@ -99,6 +99,11 @@ export const DealerClaimsChart: React.FC = () => {
   const domains = getAxisDomains();
   const data = getActiveData();
 
+  // Function to get entity type label
+  const getEntityTypeLabel = () => {
+    return activeTab.charAt(0).toUpperCase() + activeTab.slice(1);
+  };
+
   return (
     <div className="h-full flex flex-col">
       {/* Chart Header */}
@@ -151,7 +156,7 @@ export const DealerClaimsChart: React.FC = () => {
               <XAxis 
                 dataKey="x" 
                 type="number" 
-                name="Claims"
+                name="Total Claims"
                 tick={{ fontSize: 9 }}
                 axisLine={false}
                 tickLine={false}
@@ -171,19 +176,20 @@ export const DealerClaimsChart: React.FC = () => {
                 content={
                   <ChartTooltipContent 
                     formatter={(value, name, props) => {
-                      if (name === 'Total Cost') return [`$${value}k`, 'Total Cost'];
-                      if (name === 'Claims') return [`${value}`, 'Total Claims'];
+                      if (name === 'Total Claims') return [`${value}`, name];
+                      if (name === 'Total Cost') return [`$${value}k`, name];
                       return [value, name];
                     }}
-                    labelFormatter={(label) => {
-                      const item = data.find(item => item.x === label);
-                      return item?.name || '';
+                    labelFormatter={(value) => {
+                      // Find the item by x value
+                      const item = data.find(item => item.x === value);
+                      return item ? item.name : '';
                     }}
                   />
                 }
               />
               <Scatter 
-                name={activeTab === 'dealer' ? 'Dealer' : activeTab === 'component' ? 'Component' : 'Model'}
+                name={getEntityTypeLabel()}
                 data={data} 
                 fill={getDotColor()}
                 shape="circle"
