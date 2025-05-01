@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+
+import React from 'react';
 import { DashboardLayout } from '@/components/Layout/DashboardLayout';
 import { ChartCard } from '@/components/Charts/ChartCard';
-import { FilterCard } from '@/components/Filters/FilterCard';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, 
   ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell, Legend
@@ -66,68 +66,12 @@ const kpiData = {
 };
 
 const FinancialImpact = () => {
-  // Filter state
-  const [model, setModel] = useState('');
-  const [component, setComponent] = useState('');
-  const [dealer, setDealer] = useState('');
-
-  const handleApplyFilters = () => {
-    console.log("Applying filters:", { model, component, dealer });
-    // In a real app, this would update the charts with filtered data
-  };
-
-  const handleResetFilters = () => {
-    setModel('');
-    setComponent('');
-    setDealer('');
-  };
-
   return (
     <DashboardLayout
       title="Financial Impact"
       description="Analyze warranty costs, trends, and financial impact"
     >
       <div className="space-y-6">
-        <FilterCard 
-          filters={[
-            {
-              label: "Model",
-              options: [
-                { value: "freedom-deluxe", label: "Freedom Deluxe" },
-                { value: "traveler-xl", label: "Traveler XL" },
-                { value: "voyager-elite", label: "Voyager Elite" },
-                { value: "expedition", label: "Expedition" },
-              ],
-              value: model,
-              onChange: setModel
-            },
-            {
-              label: "Component",
-              options: [
-                { value: "air-conditioner", label: "Air Conditioner" },
-                { value: "slide-mechanism", label: "Slide Mechanism" },
-                { value: "refrigerator", label: "Refrigerator" },
-                { value: "roof-system", label: "Roof System" },
-              ],
-              value: component,
-              onChange: setComponent
-            },
-            {
-              label: "Dealer",
-              options: [
-                { value: "camping-world", label: "Camping World" },
-                { value: "rv-one", label: "RV One Superstores" },
-                { value: "lazydays", label: "Lazydays" },
-                { value: "general-rv", label: "General RV" },
-              ],
-              value: dealer,
-              onChange: setDealer
-            },
-          ]}
-          onApply={handleApplyFilters}
-          onReset={handleResetFilters}
-        />
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <Card>
             <CardContent className="p-6">

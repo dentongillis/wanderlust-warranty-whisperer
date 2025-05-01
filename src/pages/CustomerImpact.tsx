@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+
+import React from 'react';
 import { DashboardLayout } from '@/components/Layout/DashboardLayout';
 import { ChartCard } from '@/components/Charts/ChartCard';
-import { FilterCard } from '@/components/Filters/FilterCard';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, 
   ResponsiveContainer, PieChart, Pie, Cell, Legend
@@ -55,67 +55,12 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 const SATISFACTION_COLORS = ['#00C49F', '#82ca9d', '#FFBB28', '#ff8042', '#ff0000'];
 
 const CustomerImpact = () => {
-  // Filter state
-  const [customerType, setCustomerType] = useState('');
-  const [ownerLength, setOwnerLength] = useState('');
-  const [dateRange, setDateRange] = useState('last-12-months');
-
-  const handleApplyFilters = () => {
-    console.log("Applying filters:", { customerType, ownerLength, dateRange });
-    // In a real app, this would update the charts with filtered data
-  };
-
-  const handleResetFilters = () => {
-    setCustomerType('');
-    setOwnerLength('');
-    setDateRange('last-12-months');
-  };
-
   return (
     <DashboardLayout
       title="Customer Impact"
       description="Analyze how warranty claims affect different customer segments"
     >
       <div className="space-y-6">
-        <FilterCard 
-          filters={[
-            {
-              label: "Customer Type",
-              options: [
-                { value: "private", label: "Private Owner" },
-                { value: "commercial", label: "Commercial" },
-                { value: "rental", label: "Rental Fleet" },
-              ],
-              value: customerType,
-              onChange: setCustomerType
-            },
-            {
-              label: "Owner Length",
-              options: [
-                { value: "new", label: "New (0-1 year)" },
-                { value: "experienced", label: "Experienced (1-3 years)" },
-                { value: "veteran", label: "Veteran (3+ years)" },
-                { value: "second", label: "Second Owner" },
-              ],
-              value: ownerLength,
-              onChange: setOwnerLength
-            },
-            {
-              label: "Date Range",
-              options: [
-                { value: "last-30-days", label: "Last 30 Days" },
-                { value: "last-90-days", label: "Last 90 Days" },
-                { value: "last-6-months", label: "Last 6 Months" },
-                { value: "last-12-months", label: "Last 12 Months" },
-              ],
-              value: dateRange,
-              onChange: setDateRange
-            }
-          ]}
-          onApply={handleApplyFilters}
-          onReset={handleResetFilters}
-        />
-
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <ChartCard 
             title="Claims by Customer State/Region" 

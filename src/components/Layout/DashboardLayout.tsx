@@ -1,10 +1,11 @@
 
 import React, { useState } from 'react';
 import { Sidebar } from '../Sidebar/Sidebar';
-import { Menu, Search } from 'lucide-react';
+import { Menu, Search, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { FiltersSheet } from '../Filters/FiltersSheet';
 import { AIChatSheet } from '../Dashboard/AIChatSheet';
+import { useLocation } from 'react-router-dom';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -14,6 +15,7 @@ interface DashboardLayoutProps {
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title, description }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const location = useLocation();
   
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900 overflow-hidden">
@@ -60,7 +62,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
               </AIChatSheet>
               
               <FiltersSheet>
-                <Button variant="outline" className="text-sm py-1 px-3 h-auto">
+                <Button variant="outline" className="text-sm py-1 px-3 h-auto flex items-center">
+                  <Filter size={14} className="mr-1" />
                   Filter
                 </Button>
               </FiltersSheet>

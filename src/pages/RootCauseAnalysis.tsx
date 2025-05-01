@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+
+import React from 'react';
 import { DashboardLayout } from '@/components/Layout/DashboardLayout';
 import { ChartCard } from '@/components/Charts/ChartCard';
-import { FilterCard } from '@/components/Filters/FilterCard';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 
 // Sample data for Top Warranty Issues
@@ -50,81 +50,12 @@ const resolutionTimeData = [
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 
 const RootCauseAnalysis = () => {
-  // Filter state
-  const [model, setModel] = useState('');
-  const [floorplan, setFloorplan] = useState('');
-  const [componentMfr, setComponentMfr] = useState('');
-  const [dealer, setDealer] = useState('');
-
-  const handleApplyFilters = () => {
-    console.log("Applying filters:", { model, floorplan, componentMfr, dealer });
-    // In a real app, this would update the charts with filtered data
-  };
-
-  const handleResetFilters = () => {
-    setModel('');
-    setFloorplan('');
-    setComponentMfr('');
-    setDealer('');
-  };
-
   return (
     <DashboardLayout
       title="Root Cause Analysis"
       description="Analyze warranty issues, components, and root causes"
     >
       <div className="space-y-6">
-        <FilterCard 
-          filters={[
-            {
-              label: "Model",
-              options: [
-                { value: "freedom-deluxe", label: "Freedom Deluxe" },
-                { value: "traveler-xl", label: "Traveler XL" },
-                { value: "voyager-elite", label: "Voyager Elite" },
-                { value: "expedition", label: "Expedition" },
-              ],
-              value: model,
-              onChange: setModel
-            },
-            {
-              label: "Floorplan",
-              options: [
-                { value: "fp-3200", label: "3200" },
-                { value: "fp-2800", label: "2800" },
-                { value: "fp-2500", label: "2500" },
-                { value: "fp-3600", label: "3600" },
-              ],
-              value: floorplan,
-              onChange: setFloorplan
-            },
-            {
-              label: "Component Manufacturer",
-              options: [
-                { value: "dometic", label: "Dometic" },
-                { value: "lippert", label: "Lippert" },
-                { value: "furrion", label: "Furrion" },
-                { value: "carefree", label: "Carefree" },
-              ],
-              value: componentMfr,
-              onChange: setComponentMfr
-            },
-            {
-              label: "Dealer",
-              options: [
-                { value: "camping-world", label: "Camping World" },
-                { value: "rv-one", label: "RV One" },
-                { value: "lazydays", label: "Lazydays" },
-                { value: "general-rv", label: "General RV" },
-              ],
-              value: dealer,
-              onChange: setDealer
-            },
-          ]}
-          onApply={handleApplyFilters}
-          onReset={handleResetFilters}
-        />
-
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <ChartCard 
             title="Top Warranty Issues" 

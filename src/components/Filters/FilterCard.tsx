@@ -1,11 +1,10 @@
 
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { RefreshCcw } from 'lucide-react';
 
-interface FilterOption {
+export interface FilterOption {
   label: string;
   options: { value: string; label: string }[];
   value?: string;

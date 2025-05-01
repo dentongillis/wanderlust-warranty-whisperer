@@ -1,5 +1,6 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import {
   Sheet,
   SheetContent,
@@ -10,97 +11,92 @@ import {
 } from "@/components/ui/sheet";
 import { FilterCard } from './FilterCard';
 import { useToast } from "@/hooks/use-toast";
+import { getPageFilterConfig } from '@/utils/filterConfigs';
 
 interface FiltersSheetProps {
   children: React.ReactNode;
 }
 
-const dateRangeOptions = [
-  { value: 'today', label: 'Today' },
-  { value: 'yesterday', label: 'Yesterday' },
-  { value: 'last7days', label: 'Last 7 Days' },
-  { value: 'last30days', label: 'Last 30 Days' },
-  { value: 'thisMonth', label: 'This Month' },
-  { value: 'lastMonth', label: 'Last Month' },
-  { value: 'thisYear', label: 'This Year' }
-];
-
-const modelOptions = [
-  { value: 'all', label: 'All Models' },
-  { value: 'skyline-5000', label: 'Skyline 5000' },
-  { value: 'pathfinder-x', label: 'Pathfinder X' },
-  { value: 'venture-elite', label: 'Venture Elite' },
-  { value: 'nomad-trail', label: 'Nomad Trail' },
-  { value: 'freedom-deluxe', label: 'Freedom Deluxe 3200' }
-];
-
-const dealerOptions = [
-  { value: 'all', label: 'All Dealers' },
-  { value: 'adventure-rv', label: 'Adventure RV' },
-  { value: 'highway-haven', label: 'Highway Haven' },
-  { value: 'mountain-motors', label: 'Mountain Motors' },
-  { value: 'cross-country', label: 'Cross Country RVs' }
-];
-
-const componentOptions = [
-  { value: 'all', label: 'All Components' },
-  { value: 'engine', label: 'Engine' },
-  { value: 'transmission', label: 'Transmission' },
-  { value: 'electrical', label: 'Electrical System' },
-  { value: 'plumbing', label: 'Plumbing' },
-  { value: 'chassis', label: 'Chassis' },
-  { value: 'hvac', label: 'HVAC System' },
-  { value: 'refrigerator', label: 'Refrigerator' }
-];
-
 export function FiltersSheet({ children }: FiltersSheetProps) {
+  const location = useLocation();
+  const { toast } = useToast();
+  const [open, setOpen] = useState(false);
+
+  // Filter states for all pages - each page will use only what it needs
   const [dateRange, setDateRange] = useState('last30days');
   const [model, setModel] = useState('all');
   const [dealer, setDealer] = useState('all');
   const [component, setComponent] = useState('all');
-  const { toast } = useToast();
+  const [floorplan, setFloorplan] = useState('');
+  const [componentMfr, setComponentMfr] = useState('');
+  const [region, setRegion] = useState('all');
+  const [customerType, setCustomerType] = useState('');
+  const [ownerLength, setOwnerLength] = useState('');
+  const [timeRange, setTimeRange] = useState('6months');
+  const [status, setStatus] = useState('all');
   
-  const filters = [
-    {
-      label: "Date Range",
-      options: dateRangeOptions,
-      value: dateRange,
-      onChange: setDateRange
-    },
-    {
-      label: "Model",
-      options: modelOptions,
-      value: model,
-      onChange: setModel
-    },
-    {
-      label: "Dealer",
-      options: dealerOptions,
-      value: dealer,
-      onChange: setDealer
-    },
-    {
-      label: "Component",
-      options: componentOptions,
-      value: component,
-      onChange: setComponent
-    }
-  ];
-  
-  const handleApplyFilters = () => {
-    toast({
-      title: "Filters Applied",
-      description: `Showing data for: ${dateRangeOptions.find(d => d.value === dateRange)?.label || dateRange}, ${modelOptions.find(m => m.value === model)?.label || model}`,
-      duration: 3000,
-    });
-    console.log("Applied filters:", { dateRange, model, dealer, component });
-  };
-  
-  const handleResetFilters = () => {
+  // Reset filters when route changes
+  useEffect(() => {
+    // Reset to default values when page changes
     setDateRange('last30days');
     setModel('all');
     setDealer('all');
     setComponent('all');
+    setFloorplan('');
+    setComponentMfr('');
+    setRegion('all');
+    setCustomerType('');
+    setOwnerLength('');
+    setTimeRange('6months');
+    setStatus('all');
+  }, [location.pathname]);
+  
+  const filterStates = {
+    dateRange, setDateRange,
+    model, setModel,
+    dealer, setDealer,
+    component, setComponent,
+    floorplan, setFloorplan,
+    componentMfr, setComponentMfr,
+    region, setRegion,
+    customerType, setCustomerType,
+    ownerLength, setOwnerLength,
+    timeRange, setTimeRange,
+    status, setStatus
+  };
+
+  const pageConfig = getPageFilterConfig(location.pathname, filterStates);
+  
+  const handleApplyFilters = () => {
+    if (!pageConfig) return;
+    
+    toast({
+      title: "Filters Applied",
+      description: `Filters applied for ${pageConfig.title}`,
+      duration: 3000,
+    });
+    
+    setOpen(false);
+    
+    // Generate a summary of the active filters
+    const activeFilters = pageConfig.filters
+      .filter(filter => filter.value && filter.value !== 'all' && filter.value !== '')
+      .map(filter => `${filter.label}: ${filter.options.find(o => o.value === filter.value)?.label}`);
+    
+    console.log(`Applied filters for ${pageConfig.id}:`, activeFilters.length > 0 ? activeFilters : "No active filters");
+  };
+  
+  const handleResetFilters = () => {
+    if (!pageConfig) return;
+    
+    // Reset only the filters for the current page
+    pageConfig.filters.forEach(filter => {
+      if (filter.onChange && typeof filter.onChange === 'function') {
+        const defaultValue = filter.label.includes('Date') ? 'last30days' : 'all';
+        filter.onChange(defaultValue);
+      }
+    });
+    
     toast({
       title: "Filters Reset",
       description: "All filters have been reset to default values",
@@ -108,21 +104,25 @@ export function FiltersSheet({ children }: FiltersSheetProps) {
     });
   };
   
+  if (!pageConfig) {
+    return null; // Don't render anything if no filters for this page
+  }
+  
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         {children}
       </SheetTrigger>
       <SheetContent className="sm:max-w-md">
         <SheetHeader>
-          <SheetTitle>Dashboard Filters</SheetTitle>
+          <SheetTitle>{pageConfig.title}</SheetTitle>
           <SheetDescription>
-            Filter dashboard data to focus on specific insights
+            {pageConfig.description}
           </SheetDescription>
         </SheetHeader>
         <div className="py-4">
           <FilterCard 
-            filters={filters}
+            filters={pageConfig.filters}
             onApply={handleApplyFilters}
             onReset={handleResetFilters}
           />
