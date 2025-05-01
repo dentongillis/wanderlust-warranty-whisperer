@@ -68,14 +68,14 @@ export const componentMfrOptions = [
 ];
 
 export const customerTypeOptions = [
-  { value: '', label: 'All Customers' },
+  { value: 'all', label: 'All Customers' },
   { value: 'private', label: 'Private Owner' },
   { value: 'commercial', label: 'Commercial' },
   { value: 'rental', label: 'Rental Fleet' }
 ];
 
 export const ownerLengthOptions = [
-  { value: '', label: 'All Ownership Lengths' },
+  { value: 'all', label: 'All Ownership Lengths' },
   { value: 'new', label: 'New (0-1 year)' },
   { value: 'experienced', label: 'Experienced (1-3 years)' },
   { value: 'veteran', label: 'Veteran (3+ years)' },
@@ -131,25 +131,25 @@ export const getPageFilterConfig = (pathname: string, filterStates: Record<strin
         {
           label: "Model",
           options: modelOptions,
-          value: filterStates.model || '',
+          value: filterStates.model || 'all',
           onChange: filterStates.setModel
         },
         {
           label: "Floorplan",
           options: floorplanOptions,
-          value: filterStates.floorplan || '',
+          value: filterStates.floorplan || 'all',
           onChange: filterStates.setFloorplan
         },
         {
           label: "Component Manufacturer",
           options: componentMfrOptions,
-          value: filterStates.componentMfr || '',
+          value: filterStates.componentMfr || 'all',
           onChange: filterStates.setComponentMfr
         },
         {
           label: "Dealer",
           options: dealerOptions,
-          value: filterStates.dealer || '',
+          value: filterStates.dealer || 'all',
           onChange: filterStates.setDealer
         }
       ]
@@ -223,13 +223,13 @@ export const getPageFilterConfig = (pathname: string, filterStates: Record<strin
         {
           label: "Customer Type",
           options: customerTypeOptions,
-          value: filterStates.customerType || '',
+          value: filterStates.customerType || 'all',
           onChange: filterStates.setCustomerType
         },
         {
           label: "Owner Length",
           options: ownerLengthOptions,
-          value: filterStates.ownerLength || '',
+          value: filterStates.ownerLength || 'all',
           onChange: filterStates.setOwnerLength
         },
         {
@@ -240,7 +240,7 @@ export const getPageFilterConfig = (pathname: string, filterStates: Record<strin
             { value: 'last-6-months', label: 'Last 6 Months' },
             { value: 'last-12-months', label: 'Last 12 Months' },
           ],
-          value: filterStates.dateRange || 'last-12-months',
+          value: filterStates.dateRange || 'last-30-days',
           onChange: filterStates.setDateRange
         }
       ]
@@ -253,19 +253,19 @@ export const getPageFilterConfig = (pathname: string, filterStates: Record<strin
         {
           label: "Model",
           options: modelOptions,
-          value: filterStates.model || '',
+          value: filterStates.model || 'all',
           onChange: filterStates.setModel
         },
         {
           label: "Component",
           options: componentOptions,
-          value: filterStates.component || '',
+          value: filterStates.component || 'all',
           onChange: filterStates.setComponent
         },
         {
           label: "Dealer",
           options: dealerOptions,
-          value: filterStates.dealer || '',
+          value: filterStates.dealer || 'all',
           onChange: filterStates.setDealer
         }
       ]

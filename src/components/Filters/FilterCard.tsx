@@ -34,7 +34,10 @@ export const FilterCard: React.FC<FilterCardProps> = ({
             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
               {filter.label}
             </label>
-            <Select value={filter.value} onValueChange={filter.onChange}>
+            <Select 
+              value={filter.value || 'all'} 
+              onValueChange={filter.onChange}
+            >
               <SelectTrigger className="w-full bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                 <SelectValue placeholder={`Select ${filter.label}`} />
               </SelectTrigger>

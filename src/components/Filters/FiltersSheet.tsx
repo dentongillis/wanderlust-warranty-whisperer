@@ -27,11 +27,11 @@ export function FiltersSheet({ children }: FiltersSheetProps) {
   const [model, setModel] = useState('all');
   const [dealer, setDealer] = useState('all');
   const [component, setComponent] = useState('all');
-  const [floorplan, setFloorplan] = useState('');
-  const [componentMfr, setComponentMfr] = useState('');
+  const [floorplan, setFloorplan] = useState('all');
+  const [componentMfr, setComponentMfr] = useState('all');
   const [region, setRegion] = useState('all');
-  const [customerType, setCustomerType] = useState('');
-  const [ownerLength, setOwnerLength] = useState('');
+  const [customerType, setCustomerType] = useState('all');
+  const [ownerLength, setOwnerLength] = useState('all');
   const [timeRange, setTimeRange] = useState('6months');
   const [status, setStatus] = useState('all');
   
@@ -42,11 +42,11 @@ export function FiltersSheet({ children }: FiltersSheetProps) {
     setModel('all');
     setDealer('all');
     setComponent('all');
-    setFloorplan('');
-    setComponentMfr('');
+    setFloorplan('all');
+    setComponentMfr('all');
     setRegion('all');
-    setCustomerType('');
-    setOwnerLength('');
+    setCustomerType('all');
+    setOwnerLength('all');
     setTimeRange('6months');
     setStatus('all');
   }, [location.pathname]);
