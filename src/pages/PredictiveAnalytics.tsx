@@ -1,9 +1,9 @@
+
 import React, { useState, useEffect } from 'react';
 import { DashboardLayout } from '@/components/Layout/DashboardLayout';
 import { ChartCard } from '@/components/Charts/ChartCard';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertTriangle, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -87,20 +87,23 @@ const PredictiveAnalytics = () => {
       title="Predictive Analytics"
       description="AI-powered forecasting and predictive insights for warranty trends"
     >
-      <div className="space-y-6 relative">
+      <div className="space-y-6">
         {showTrainingInfo && (
-          <div className="absolute inset-x-0 top-0 z-50 p-4">
-            <Alert className="bg-yellow-50 border-yellow-200 shadow-lg">
-              <AlertTriangle className="h-5 w-5 text-yellow-600" />
-              <AlertTitle className="text-yellow-800 font-medium">Model Training Information</AlertTitle>
-              <AlertDescription className="text-yellow-700 text-sm">
-                Predictive models were last trained on April 10, 2025, using 24 months of historical data. Current forecast accuracy: 89%.
-                Models are retrained every 30 days to incorporate the latest data and improve accuracy.
-              </AlertDescription>
+          <div className="mb-6">
+            <div className="bg-amber-50 border border-amber-200 rounded-md p-4 relative">
+              <div className="flex">
+                <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                <div className="ml-3 pr-8">
+                  <h5 className="text-amber-800 font-medium text-sm">Model Training Information</h5>
+                  <p className="text-amber-700 text-sm mt-1">
+                    Predictive models were last trained on April 10, 2025, using 24 months of historical data. Current forecast accuracy: 89%. Models are retrained every 30 days to incorporate the latest data and improve accuracy.
+                  </p>
+                </div>
+              </div>
               <Button
                 variant="ghost"
                 size="sm"
-                className="absolute top-2 right-2 h-6 w-6 p-0 rounded-full bg-yellow-100 hover:bg-yellow-200 text-yellow-800"
+                className="absolute top-3 right-3 h-6 w-6 p-0 rounded-full hover:bg-amber-100 text-amber-700"
                 onClick={() => {
                   setShowTrainingInfo(false);
                   toast({
@@ -110,14 +113,14 @@ const PredictiveAnalytics = () => {
                   });
                 }}
               >
-                <X className="h-3 w-3" />
+                <X className="h-4 w-4" />
                 <span className="sr-only">Dismiss</span>
               </Button>
-            </Alert>
+            </div>
           </div>
         )}
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <ChartCard 
             title="Forecasted Claim Volume" 
             infoText="Projected warranty claims for the next 6 months"
