@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+
+import React from 'react';
 import { DashboardLayout } from '@/components/Layout/DashboardLayout';
 import { ChartCard } from '@/components/Charts/ChartCard';
-import { FilterCard } from '@/components/Filters/FilterCard';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, 
   ResponsiveContainer, ScatterChart, Scatter, ZAxis,
@@ -70,69 +70,12 @@ const dealerDetailsData = [
 ];
 
 const DealerPerformance = () => {
-  // Filter state
-  const [dealer, setDealer] = useState('');
-  const [region, setRegion] = useState('');
-  const [dateRange, setDateRange] = useState('last-12-months');
-
-  const handleApplyFilters = () => {
-    console.log("Applying filters:", { dealer, region, dateRange });
-    // In a real app, this would update the charts with filtered data
-  };
-
-  const handleResetFilters = () => {
-    setDealer('');
-    setRegion('');
-    setDateRange('last-12-months');
-  };
-
   return (
     <DashboardLayout
       title="Dealer Performance"
       description="Analyze dealer-specific warranty handling and metrics"
     >
       <div className="space-y-6">
-        <FilterCard 
-          filters={[
-            {
-              label: "Dealer Name",
-              options: [
-                { value: "camping-world", label: "Camping World" },
-                { value: "rv-one", label: "RV One Superstores" },
-                { value: "lazydays", label: "Lazydays" },
-                { value: "general-rv", label: "General RV" },
-              ],
-              value: dealer,
-              onChange: setDealer
-            },
-            {
-              label: "Dealer Region",
-              options: [
-                { value: "northeast", label: "Northeast" },
-                { value: "southeast", label: "Southeast" },
-                { value: "midwest", label: "Midwest" },
-                { value: "southwest", label: "Southwest" },
-                { value: "west", label: "West" },
-              ],
-              value: region,
-              onChange: setRegion
-            },
-            {
-              label: "Date Range",
-              options: [
-                { value: "last-30-days", label: "Last 30 Days" },
-                { value: "last-90-days", label: "Last 90 Days" },
-                { value: "last-6-months", label: "Last 6 Months" },
-                { value: "last-12-months", label: "Last 12 Months" },
-              ],
-              value: dateRange,
-              onChange: setDateRange
-            }
-          ]}
-          onApply={handleApplyFilters}
-          onReset={handleResetFilters}
-        />
-
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <ChartCard 
             title="Top Dealers by Claims Volume" 

@@ -26,6 +26,8 @@ export const FilterCard: React.FC<FilterCardProps> = ({
 }) => {
   return (
     <div className="space-y-6">
+      {title && <h3 className="text-lg font-medium">{title}</h3>}
+      
       <div className="grid grid-cols-1 gap-4">
         {filters.map((filter, index) => (
           <div key={index} className="space-y-2">

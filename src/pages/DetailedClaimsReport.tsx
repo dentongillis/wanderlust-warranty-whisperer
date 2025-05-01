@@ -1,6 +1,6 @@
+
 import React, { useState } from 'react';
 import { DashboardLayout } from '@/components/Layout/DashboardLayout';
-import { FilterCard } from '@/components/Filters/FilterCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
   Table, 
@@ -156,36 +156,9 @@ const getStatusBadge = (status: string) => {
 };
 
 const DetailedClaimsReport = () => {
-  const [model, setModel] = useState('');
-  const [floorplan, setFloorplan] = useState('');
-  const [dealer, setDealer] = useState('');
-  const [component, setComponent] = useState('');
-  const [status, setStatus] = useState('');
-  const [dateRange, setDateRange] = useState('last-30-days');
-  
   const [searchTerm, setSearchTerm] = useState('');
-  
   const [page, setPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  
   const [selectedClaim, setSelectedClaim] = useState<string | null>(null);
-
-  const handleApplyFilters = () => {
-    console.log("Applying filters:", { model, floorplan, dealer, component, status, dateRange });
-  };
-
-  const handleResetFilters = () => {
-    setModel('');
-    setFloorplan('');
-    setDealer('');
-    setComponent('');
-    setStatus('');
-    setDateRange('last-30-days');
-  };
-  
-  const handleExportCSV = () => {
-    console.log("Exporting data to CSV...");
-  };
   
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -194,6 +167,10 @@ const DetailedClaimsReport = () => {
   
   const handleViewDetails = (claimId: string) => {
     setSelectedClaim(selectedClaim === claimId ? null : claimId);
+  };
+
+  const handleExportCSV = () => {
+    console.log("Exporting data to CSV...");
   };
 
   const filteredData = claimsData.filter((claim) => {
@@ -211,81 +188,6 @@ const DetailedClaimsReport = () => {
       description="Comprehensive list of all warranty claims with detailed information and export options"
     >
       <div className="space-y-4">
-        <FilterCard 
-          filters={[
-            {
-              label: "Model",
-              options: [
-                { value: "freedom-deluxe", label: "Freedom Deluxe" },
-                { value: "traveler-xl", label: "Traveler XL" },
-                { value: "voyager-elite", label: "Voyager Elite" },
-                { value: "expedition", label: "Expedition" },
-              ],
-              value: model,
-              onChange: setModel
-            },
-            {
-              label: "Floorplan",
-              options: [
-                { value: "3200", label: "3200" },
-                { value: "2800", label: "2800" },
-                { value: "2500", label: "2500" },
-                { value: "3600", label: "3600" },
-                { value: "1800", label: "1800" },
-              ],
-              value: floorplan,
-              onChange: setFloorplan
-            },
-            {
-              label: "Dealer",
-              options: [
-                { value: "camping-world", label: "Camping World" },
-                { value: "rv-one", label: "RV One Superstores" },
-                { value: "lazydays", label: "Lazydays" },
-                { value: "general-rv", label: "General RV" },
-              ],
-              value: dealer,
-              onChange: setDealer
-            },
-            {
-              label: "Component",
-              options: [
-                { value: "roof-seal", label: "Roof Seal" },
-                { value: "inverter", label: "Inverter" },
-                { value: "refrigerator", label: "Refrigerator" },
-                { value: "slide", label: "Slide Mechanism" },
-              ],
-              value: component,
-              onChange: setComponent
-            },
-            {
-              label: "Status",
-              options: [
-                { value: "pending", label: "Pending" },
-                { value: "approved", label: "Approved" },
-                { value: "in-progress", label: "In Progress" },
-                { value: "completed", label: "Completed" },
-                { value: "declined", label: "Declined" },
-              ],
-              value: status,
-              onChange: setStatus
-            },
-            {
-              label: "Date Range",
-              options: [
-                { value: "last-7-days", label: "Last 7 Days" },
-                { value: "last-30-days", label: "Last 30 Days" },
-                { value: "last-90-days", label: "Last 90 Days" },
-                { value: "custom", label: "Custom Range" },
-              ],
-              value: dateRange,
-              onChange: setDateRange
-            },
-          ]}
-          onApply={handleApplyFilters}
-          onReset={handleResetFilters}
-        />
-
         <Card>
           <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0 pb-2">
             <CardTitle className="text-lg font-medium">Claims Database</CardTitle>
