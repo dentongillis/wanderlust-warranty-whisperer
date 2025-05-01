@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { DashboardLayout } from '@/components/Layout/DashboardLayout';
 import { ChartCard } from '@/components/Charts/ChartCard';
@@ -6,7 +5,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertTriangle, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from '@/components/ui/sonner';
 
 // Sample data for forecasted claim volume
 const forecastedClaimData = [
@@ -75,12 +74,47 @@ const claimLikelihoodData = [
 
 const PredictiveAnalytics = () => {
   const [showTrainingInfo, setShowTrainingInfo] = useState(true);
-  const { toast } = useToast();
   
   // Reset notification visibility when revisiting the page
   useEffect(() => {
     setShowTrainingInfo(true);
-  }, []);
+    
+    if (showTrainingInfo) {
+      toast.custom((t) => (
+        <div className="bg-amber-50 border border-amber-200 rounded-md p-4 relative max-w-md shadow-lg">
+          <div className="flex">
+            <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+            <div className="ml-3 pr-8">
+              <h5 className="text-amber-800 font-medium text-sm">Model Training Information</h5>
+              <p className="text-amber-700 text-sm mt-1">
+                Predictive models were last trained on April 10, 2025, using 24 months of historical data. Current forecast accuracy: 89%. Models are retrained every 30 days to incorporate the latest data and improve accuracy.
+              </p>
+            </div>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="absolute top-3 right-3 h-6 w-6 p-0 rounded-full hover:bg-amber-100 text-amber-700"
+            onClick={() => {
+              setShowTrainingInfo(false);
+              toast.dismiss(t.id);
+            }}
+          >
+            <X className="h-4 w-4" />
+            <span className="sr-only">Dismiss</span>
+          </Button>
+        </div>
+      ), {
+        duration: Infinity,
+        position: "bottom-right",
+        id: "model-training-info"
+      });
+    }
+    
+    return () => {
+      toast.dismiss("model-training-info");
+    };
+  }, [showTrainingInfo]);
 
   return (
     <DashboardLayout
@@ -88,38 +122,6 @@ const PredictiveAnalytics = () => {
       description="AI-powered forecasting and predictive insights for warranty trends"
     >
       <div className="space-y-6">
-        {showTrainingInfo && (
-          <div className="mb-6">
-            <div className="bg-amber-50 border border-amber-200 rounded-md p-4 relative">
-              <div className="flex">
-                <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
-                <div className="ml-3 pr-8">
-                  <h5 className="text-amber-800 font-medium text-sm">Model Training Information</h5>
-                  <p className="text-amber-700 text-sm mt-1">
-                    Predictive models were last trained on April 10, 2025, using 24 months of historical data. Current forecast accuracy: 89%. Models are retrained every 30 days to incorporate the latest data and improve accuracy.
-                  </p>
-                </div>
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="absolute top-3 right-3 h-6 w-6 p-0 rounded-full hover:bg-amber-100 text-amber-700"
-                onClick={() => {
-                  setShowTrainingInfo(false);
-                  toast({
-                    title: "Notification dismissed",
-                    description: "You can revisit this page to see the model training information again.",
-                    duration: 3000,
-                  });
-                }}
-              >
-                <X className="h-4 w-4" />
-                <span className="sr-only">Dismiss</span>
-              </Button>
-            </div>
-          </div>
-        )}
-        
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <ChartCard 
             title="Forecasted Claim Volume" 
