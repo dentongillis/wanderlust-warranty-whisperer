@@ -26,12 +26,15 @@ export const getLatestChatId = (): string | undefined => {
   const chats = JSON.parse(stored);
   if (!chats || chats.length === 0) return undefined;
   
-  // Sort by lastUpdated and get the most recent one
-  const sortedChats = [...chats].sort((a, b) => 
+  // Sort by lastUpdated and get the most recent one, but only consider saved chats
+  const savedChats = chats.filter((chat: any) => chat.saved === true);
+  if (savedChats.length === 0) return undefined;
+  
+  const sortedChats = [...savedChats].sort((a: any, b: any) => 
     new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime()
   );
   
-  return sortedChats[0].id;
+  return sortedChats[0]?.id;
 };
 
 export function AIChatSheet({ children }: AIChatSheetProps) {
@@ -45,11 +48,9 @@ export function AIChatSheet({ children }: AIChatSheetProps) {
   // Update active chat ID whenever a new chat is created
   useEffect(() => {
     if (resetConversation) {
-      // Delay to ensure the new chat is created in storage
-      setTimeout(() => {
-        const latestChatId = getLatestChatId();
-        setActiveChat(latestChatId);
-      }, 200);
+      // We no longer immediately set the latest chat ID because new chats
+      // aren't saved in the history until the user sends a message
+      // The activeChat will be set when the chat is created in the AIChatAssistant component
     }
   }, [resetConversation]);
   

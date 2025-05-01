@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -42,6 +43,7 @@ export interface Chat {
   lastUpdated: Date;
   createdAt: Date;
   page?: string;
+  saved: boolean; // New flag to track if chat should be shown in the sidebar
 }
 
 // Helper function to generate the initial message based on page name
@@ -68,7 +70,10 @@ const getPageNameFromPath = (pathname: string): string => {
 
 // Helper to group chats by date
 const groupChatsByDate = (chats: Chat[]) => {
-  const sortedChats = [...chats].sort((a, b) => 
+  // Filter to only include saved chats
+  const savedChats = chats.filter(chat => chat.saved);
+  
+  const sortedChats = [...savedChats].sort((a, b) => 
     new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime()
   );
 
@@ -129,7 +134,17 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
   // Get chats from storage or initialize
   const getStoredChats = (): Chat[] => {
     const stored = localStorage.getItem(chatsStorageKey);
-    return stored ? JSON.parse(stored) : [];
+    const parsedChats = stored ? JSON.parse(stored) : [];
+    
+    // Migrate old chats if needed (add saved property)
+    if (parsedChats.length > 0 && parsedChats[0].saved === undefined) {
+      return parsedChats.map((chat: any) => ({
+        ...chat,
+        saved: chat.messages.some((m: any) => m.role === 'user') // Consider existing chats as saved if they have user messages
+      }));
+    }
+    
+    return parsedChats;
   };
 
   // Get active chat or create a new one
@@ -142,14 +157,15 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
       }
     }
     
-    // Create new chat
+    // Create new chat - not saved to the sidebar until user sends a message
     const newChat: Chat = {
       id: Date.now().toString(),
       name: `Chat ${chats.length + 1}`,
       messages: [generateInitialMessage(pageName)],
       lastUpdated: new Date(),
       createdAt: new Date(),
-      page: pageName
+      page: pageName,
+      saved: false // Start as not saved
     };
     
     return { chat: newChat, isNew: true };
@@ -160,7 +176,7 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
   const [activeChat, setActiveChat] = useState<Chat>(() => {
     const { chat, isNew } = getActiveChat(getStoredChats(), chatId);
     if (isNew) {
-      // If this is a new chat, save it immediately to the chats list
+      // If this is a new chat, save it immediately to the chats list (but not visible in sidebar yet)
       const updatedChats = [...getStoredChats(), chat];
       localStorage.setItem(chatsStorageKey, JSON.stringify(updatedChats));
     }
@@ -200,7 +216,8 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
         messages: [generateInitialMessage(pageName)],
         lastUpdated: new Date(),
         createdAt: new Date(),
-        page: pageName
+        page: pageName,
+        saved: false // Start as not saved
       };
       
       setActiveChat(newChat);
@@ -246,7 +263,8 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
         messages: [generateInitialMessage(pageName)],
         lastUpdated: new Date(),
         createdAt: new Date(),
-        page: pageName
+        page: pageName,
+        saved: false // Start as not saved
       };
       
       setActiveChat(newChat);
@@ -259,11 +277,12 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
     }
   };
 
-  const updateActiveChat = (messages: Message[]) => {
+  const updateActiveChat = (messages: Message[], shouldSave: boolean = false) => {
     const updatedChat = {
       ...activeChat,
       messages,
-      lastUpdated: new Date()
+      lastUpdated: new Date(),
+      saved: shouldSave || activeChat.saved // Set saved to true if requested or if already saved
     };
     
     setActiveChat(updatedChat);
@@ -283,7 +302,9 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
     };
     
     const updatedMessages = [...activeChat.messages, userMessage];
-    updateActiveChat(updatedMessages);
+    
+    // Mark chat as saved once the user sends a message
+    updateActiveChat(updatedMessages, true);
     
     setInput('');
     setIsThinking(true);
@@ -311,7 +332,7 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
         timestamp: new Date(),
       };
       
-      updateActiveChat([...updatedMessages, assistantMessage]);
+      updateActiveChat([...updatedMessages, assistantMessage], true);
       setIsThinking(false);
     }, 1500);
   };
@@ -382,10 +403,19 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
     
     // If the active chat was deleted, set a new active chat
     if (activeChat.id === chatToDelete) {
-      if (updatedChats.length > 0) {
-        setActiveChat(updatedChats[0]);
+      // Try to find a saved chat first
+      const savedChats = updatedChats.filter(chat => chat.saved);
+      if (savedChats.length > 0) {
+        setActiveChat(savedChats[0]);
         
         // Notify parent component of chat ID change
+        if (onChatChange) {
+          onChatChange(savedChats[0].id);
+        }
+      } else if (updatedChats.length > 0) {
+        // If no saved chats, use any available chat
+        setActiveChat(updatedChats[0]);
+        
         if (onChatChange) {
           onChatChange(updatedChats[0].id);
         }
