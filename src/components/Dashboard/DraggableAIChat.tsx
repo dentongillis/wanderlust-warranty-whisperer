@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -30,12 +29,12 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
   showThreads = true,
   onToggleThreads
 }) => {
-  // Initial position centered in the viewport
-  const [position, setPosition] = useState({ x: window.innerWidth / 2 - 400, y: window.innerHeight / 4 });
+  // Initial position centered in the viewport but with adjusted dimensions
+  const [position, setPosition] = useState({ x: window.innerWidth / 2 - 360, y: window.innerHeight / 4 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  // Increased initial dimensions for better usability
-  const [dimensions, setDimensions] = useState({ width: 800, height: 650 });
+  // Reduced dimensions by 20% height and 10% width
+  const [dimensions, setDimensions] = useState({ width: 720, height: 520 });
   const [isMaximized, setIsMaximized] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
   const previousDimensions = useRef({ position: { x: 0, y: 0 }, dimensions: { width: 0, height: 0 } });
@@ -91,10 +90,13 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
     if (!isDragging) return;
     e.preventDefault(); // Prevent text selection
     
-    // Calculate new position without any delay
+    // Calculate new position with boundary constraints
+    const newX = Math.max(0, Math.min(document.documentElement.clientWidth - dimensions.width, e.clientX - dragOffset.x));
+    const newY = Math.max(0, Math.min(document.documentElement.clientHeight - dimensions.height, e.clientY - dragOffset.y));
+    
     setPosition({
-      x: e.clientX - dragOffset.x,
-      y: e.clientY - dragOffset.y,
+      x: newX,
+      y: newY
     });
   };
 
@@ -134,10 +136,13 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
     
     const touch = e.touches[0];
     
-    // Set position directly without any delay
+    // Apply boundary constraints for touch as well
+    const newX = Math.max(0, Math.min(document.documentElement.clientWidth - dimensions.width, touch.clientX - dragOffset.x));
+    const newY = Math.max(0, Math.min(document.documentElement.clientHeight - dimensions.height, touch.clientY - dragOffset.y));
+    
     setPosition({
-      x: touch.clientX - dragOffset.x,
-      y: touch.clientY - dragOffset.y,
+      x: newX,
+      y: newY
     });
   };
 
@@ -156,6 +161,33 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
       });
     }
   };
+
+  // Handle window resize to keep chat within bounds
+  useEffect(() => {
+    const handleWindowResize = () => {
+      if (isMaximized) {
+        setDimensions({
+          width: window.innerWidth - 40,
+          height: window.innerHeight - 40
+        });
+        return;
+      }
+      
+      // Adjust position if chat would be outside viewport after resize
+      const newPosition = {
+        x: Math.min(position.x, window.innerWidth - dimensions.width),
+        y: Math.min(position.y, window.innerHeight - dimensions.height)
+      };
+      
+      // Only update if position actually changed
+      if (newPosition.x !== position.x || newPosition.y !== position.y) {
+        setPosition(newPosition);
+      }
+    };
+    
+    window.addEventListener('resize', handleWindowResize);
+    return () => window.removeEventListener('resize', handleWindowResize);
+  }, [dimensions, position, isMaximized]);
 
   useEffect(() => {
     if (isDragging) {
@@ -203,6 +235,8 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
         minHeight: '300px',
         width: `${dimensions.width}px`,
         height: `${dimensions.height}px`,
+        maxWidth: '90vw',
+        maxHeight: '80vh',
         backdropFilter: 'blur(8px)',
         WebkitBackdropFilter: 'blur(8px)',
         background: 'rgba(255, 255, 255, 0.85)',
