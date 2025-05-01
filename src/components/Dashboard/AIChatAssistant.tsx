@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -28,12 +27,15 @@ interface AIChatAssistantProps {
   resetConversation?: boolean;
   chatId?: string;
   onNewChat?: () => void;
+  onChatChange?: (chatId: string) => void;
+  showThreads?: boolean;
+  onToggleThreads?: () => void;
 }
 
 // Create a chat storage for persisting chats
-const chatsStorageKey = "warranty-ai-chats";
+export const chatsStorageKey = "warranty-ai-chats";
 
-interface Chat {
+export interface Chat {
   id: string;
   name: string;
   messages: Message[];
@@ -109,14 +111,17 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
   onMinimize, 
   resetConversation = false, 
   chatId,
-  onNewChat 
+  onNewChat,
+  onChatChange,
+  showThreads = true,
+  onToggleThreads
 }) => {
   const location = useLocation();
   const pageName = getPageNameFromPath(location.pathname);
   const [input, setInput] = useState('');
   const [isThinking, setIsThinking] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const [showThreads, setShowThreads] = useState(true);
+  const [showLocalThreads, setShowLocalThreads] = useState(showThreads);
   const { toast } = useToast();
   const [chatToDelete, setChatToDelete] = useState<string | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -171,6 +176,21 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
     localStorage.setItem(chatsStorageKey, JSON.stringify(chats));
   }, [chats]);
 
+  // Keep local threads state in sync with props
+  useEffect(() => {
+    setShowLocalThreads(showThreads);
+  }, [showThreads]);
+
+  // Update when external chatId prop changes
+  useEffect(() => {
+    if (chatId && chatId !== activeChat.id) {
+      const existingChat = chats.find(c => c.id === chatId);
+      if (existingChat) {
+        setActiveChat(existingChat);
+      }
+    }
+  }, [chatId, chats]);
+
   // Reset conversation if needed or track page changes
   useEffect(() => {
     if (resetConversation) {
@@ -185,6 +205,11 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
       
       setActiveChat(newChat);
       setChats(prev => [...prev, newChat]);
+      
+      // Notify parent component of new chat ID
+      if (onChatChange) {
+        onChatChange(newChat.id);
+      }
     } else {
       // Update active chat's page if it changed
       if (activeChat.page !== pageName) {
@@ -226,6 +251,11 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
       
       setActiveChat(newChat);
       setChats(prev => [...prev, newChat]);
+      
+      // Notify parent component of new chat ID
+      if (onChatChange) {
+        onChatChange(newChat.id);
+      }
     }
   };
 
@@ -288,6 +318,11 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
 
   const handleSwitchChat = (chat: Chat) => {
     setActiveChat(chat);
+    
+    // Notify parent component of chat ID change
+    if (onChatChange) {
+      onChatChange(chat.id);
+    }
   };
 
   // Create a better chat name based on first user message
@@ -349,6 +384,11 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
     if (activeChat.id === chatToDelete) {
       if (updatedChats.length > 0) {
         setActiveChat(updatedChats[0]);
+        
+        // Notify parent component of chat ID change
+        if (onChatChange) {
+          onChatChange(updatedChats[0].id);
+        }
       } else {
         // Create a new chat if all were deleted
         handleCreateNewChat();
@@ -365,11 +405,20 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
     });
   };
 
+  const handleToggleThreads = () => {
+    const newShowThreads = !showLocalThreads;
+    setShowLocalThreads(newShowThreads);
+    
+    if (onToggleThreads) {
+      onToggleThreads();
+    }
+  };
+
   return (
     <div className="flex h-full">
       {/* Left sidebar for chat threads */}
-      <div className={`bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transition-all duration-300 flex flex-col ${showThreads ? 'w-1/3' : 'w-0'}`}>
-        {showThreads && (
+      <div className={`bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transition-all duration-300 flex flex-col ${showLocalThreads ? 'w-1/3' : 'w-0'}`}>
+        {showLocalThreads && (
           <div className="flex flex-col h-full">
             <div className="p-3 flex flex-col h-full overflow-hidden">
               <div className="flex items-center gap-1 mb-3">
@@ -527,13 +576,13 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
                       variant="outline"
                       size="icon"
                       className="flex-shrink-0 bg-transparent border-gray-200 dark:border-gray-800 z-10"
-                      onClick={() => setShowThreads(!showThreads)}
+                      onClick={handleToggleThreads}
                     >
                       <SidebarIcon size={18} />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent side="top">
-                    <p>{showThreads ? 'Hide threads' : 'Show threads'}</p>
+                    <p>{showLocalThreads ? 'Hide threads' : 'Show threads'}</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>

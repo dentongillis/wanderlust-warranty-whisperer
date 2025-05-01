@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from "@/hooks/use-toast";
 import { DraggableAIChat } from './DraggableAIChat';
@@ -15,6 +15,25 @@ interface AIChatSheetProps {
   children: React.ReactNode;
 }
 
+// Create a shared storage key for chat history
+const chatsStorageKey = "warranty-ai-chats";
+
+// Function to get the latest chat ID
+export const getLatestChatId = (): string | undefined => {
+  const stored = localStorage.getItem(chatsStorageKey);
+  if (!stored) return undefined;
+  
+  const chats = JSON.parse(stored);
+  if (!chats || chats.length === 0) return undefined;
+  
+  // Sort by lastUpdated and get the most recent one
+  const sortedChats = [...chats].sort((a, b) => 
+    new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime()
+  );
+  
+  return sortedChats[0].id;
+};
+
 export function AIChatSheet({ children }: AIChatSheetProps) {
   const [open, setOpen] = useState(false);
   const [resetConversation, setResetConversation] = useState(false);
@@ -22,6 +41,17 @@ export function AIChatSheet({ children }: AIChatSheetProps) {
   const [activeChat, setActiveChat] = useState<string | undefined>(undefined);
   const [showThreads, setShowThreads] = useState(true);
   const { toast } = useToast();
+  
+  // Update active chat ID whenever a new chat is created
+  useEffect(() => {
+    if (resetConversation) {
+      // Delay to ensure the new chat is created in storage
+      setTimeout(() => {
+        const latestChatId = getLatestChatId();
+        setActiveChat(latestChatId);
+      }, 200);
+    }
+  }, [resetConversation]);
   
   const handleOpenChange = (open: boolean) => {
     setOpen(open);
@@ -135,6 +165,8 @@ export function AIChatSheet({ children }: AIChatSheetProps) {
         onNewChat={handleNewChat}
         chatId={activeChat}
         onChatChange={setActiveChat}
+        showThreads={showThreads}
+        onToggleThreads={() => setShowThreads(!showThreads)}
       />
     </>
   );

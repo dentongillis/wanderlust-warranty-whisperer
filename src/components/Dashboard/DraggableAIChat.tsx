@@ -15,6 +15,8 @@ interface DraggableAIChatProps {
   onNewChat?: () => void;
   chatId?: string;
   onChatChange?: (chatId: string) => void;
+  showThreads?: boolean;
+  onToggleThreads?: () => void;
 }
 
 export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({ 
@@ -24,7 +26,9 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
   resetConversation = false,
   onNewChat,
   chatId,
-  onChatChange
+  onChatChange,
+  showThreads = true,
+  onToggleThreads
 }) => {
   // Initial position centered in the viewport
   const [position, setPosition] = useState({ x: window.innerWidth / 2 - 400, y: window.innerHeight / 4 });
@@ -313,6 +317,9 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
               resetConversation={resetConversation} 
               chatId={chatId}
               onNewChat={onNewChat}
+              onChatChange={onChatChange}
+              showThreads={showThreads}
+              onToggleThreads={onToggleThreads}
             />
           </div>
         </ResizablePanel>
