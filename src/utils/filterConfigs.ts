@@ -91,6 +91,10 @@ export interface PageFilterConfig {
 }
 
 export const getPageFilterConfig = (pathname: string, filterStates: Record<string, any>): PageFilterConfig | null => {
+  // Normalize the pathname to handle both "/" and "" cases for the dashboard
+  const normalizedPath = pathname === "/" || pathname === "" ? "/" : 
+                        pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
+                        
   const configs: Record<string, PageFilterConfig> = {
     '/': {
       id: 'dashboard',
@@ -310,7 +314,6 @@ export const getPageFilterConfig = (pathname: string, filterStates: Record<strin
     }
   };
 
-  const normalizedPath = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
   return configs[normalizedPath] || null;
 };
 
