@@ -1,10 +1,12 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { DashboardLayout } from '@/components/Layout/DashboardLayout';
 import { ChartCard } from '@/components/Charts/ChartCard';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { AlertTriangle } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertTriangle, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 // Sample data for forecasted claim volume
 const forecastedClaimData = [
@@ -72,26 +74,38 @@ const claimLikelihoodData = [
 ];
 
 const PredictiveAnalytics = () => {
+  const [showTrainingInfo, setShowTrainingInfo] = useState(true);
+  
+  // Reset notification visibility when revisiting the page
+  useEffect(() => {
+    setShowTrainingInfo(true);
+  }, []);
+
   return (
     <DashboardLayout
       title="Predictive Analytics"
       description="AI-powered forecasting and predictive insights for warranty trends"
     >
       <div className="space-y-6">
-        <Card className="bg-yellow-50 border-yellow-200">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-medium flex items-center">
-              <AlertTriangle className="mr-2 text-yellow-600" size={20} />
-              <span className="text-yellow-800">Model Training Information</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-yellow-700 text-sm">
+        {showTrainingInfo && (
+          <Alert className="bg-yellow-50 border-yellow-200 relative">
+            <AlertTriangle className="h-5 w-5 text-yellow-600" />
+            <AlertTitle className="text-yellow-800 font-medium">Model Training Information</AlertTitle>
+            <AlertDescription className="text-yellow-700 text-sm">
               Predictive models were last trained on April 10, 2025, using 24 months of historical data. Current forecast accuracy: 89%.
               Models are retrained every 30 days to incorporate the latest data and improve accuracy.
-            </p>
-          </CardContent>
-        </Card>
+            </AlertDescription>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute top-2 right-2 h-6 w-6 p-0 text-yellow-800 hover:bg-yellow-100 hover:text-yellow-900"
+              onClick={() => setShowTrainingInfo(false)}
+            >
+              <X className="h-4 w-4" />
+              <span className="sr-only">Dismiss</span>
+            </Button>
+          </Alert>
+        )}
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <ChartCard 
