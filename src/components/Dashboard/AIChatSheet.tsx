@@ -45,15 +45,6 @@ export function AIChatSheet({ children }: AIChatSheetProps) {
   const [showThreads, setShowThreads] = useState(true);
   const { toast } = useToast();
   
-  // Update active chat ID whenever a new chat is created
-  useEffect(() => {
-    if (resetConversation) {
-      // We no longer immediately set the latest chat ID because new chats
-      // aren't saved in the history until the user sends a message
-      // The activeChat will be set when the chat is created in the AIChatAssistant component
-    }
-  }, [resetConversation]);
-  
   const handleOpenChange = (open: boolean) => {
     setOpen(open);
     if (open) {

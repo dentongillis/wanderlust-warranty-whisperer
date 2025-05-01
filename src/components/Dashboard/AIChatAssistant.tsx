@@ -220,6 +220,7 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
         saved: false // Start as not saved
       };
       
+      // Add the new chat to the list but don't mark as saved yet
       setActiveChat(newChat);
       setChats(prev => [...prev, newChat]);
       
@@ -286,9 +287,22 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
     };
     
     setActiveChat(updatedChat);
-    setChats(prev => prev.map(chat => 
-      chat.id === activeChat.id ? updatedChat : chat
-    ));
+    
+    // Update the chat in the global chats list
+    setChats(prev => {
+      // First check if the chat already exists in the list
+      const exists = prev.some(c => c.id === updatedChat.id);
+      
+      if (exists) {
+        // Update existing chat
+        return prev.map(chat => 
+          chat.id === updatedChat.id ? updatedChat : chat
+        );
+      } else {
+        // Add the chat to the list if it doesn't exist
+        return [...prev, updatedChat];
+      }
+    });
   };
 
   const handleSend = () => {
@@ -305,6 +319,11 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
     
     // Mark chat as saved once the user sends a message
     updateActiveChat(updatedMessages, true);
+    
+    // Ensure the chat ID is passed to the parent component
+    if (onChatChange) {
+      onChatChange(activeChat.id);
+    }
     
     setInput('');
     setIsThinking(true);
