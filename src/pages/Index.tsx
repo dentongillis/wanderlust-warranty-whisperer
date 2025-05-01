@@ -47,9 +47,6 @@ const Index = () => {
                       placeholder="Search" 
                       className="border rounded px-2 py-1 text-xs border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200" 
                     />
-                    <button className="bg-gray-100 dark:bg-gray-700 px-2 rounded text-xs flex items-center text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600">
-                      Filter
-                    </button>
                     <button className="text-blue-600 dark:text-blue-400 text-xs hover:underline">View All Claims</button>
                   </div>
                 </div>
