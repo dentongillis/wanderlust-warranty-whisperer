@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { DashboardLayout } from '@/components/Layout/DashboardLayout';
 import { ChartCard } from '@/components/Charts/ChartCard';
@@ -97,7 +98,8 @@ const PredictiveAnalytics = () => {
             className="absolute top-3 right-3 h-6 w-6 p-0 rounded-full hover:bg-amber-100 text-amber-700"
             onClick={() => {
               setShowTrainingInfo(false);
-              toast.dismiss(t.id);
+              // Fix the TypeScript error by directly using the string ID we defined
+              toast.dismiss("model-training-info");
             }}
           >
             <X className="h-4 w-4" />
