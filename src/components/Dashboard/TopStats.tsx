@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 
 export const TopStats: React.FC = () => {
   return (
-    <div className="grid grid-cols-3 gap-3">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
       <Card className="border border-gray-200 dark:border-gray-700 shadow-sm">
         <CardContent className="p-3">
           <div className="flex flex-col h-full">

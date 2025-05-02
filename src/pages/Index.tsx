@@ -15,10 +15,10 @@ const Index = () => {
       title="Dashboard"
       description="RV warranty analysis overview"
     >
-      <div className="space-y-3">
-        <div className="grid grid-cols-12 gap-3">
+      <div className="h-full flex flex-col">
+        <div className="grid grid-cols-12 gap-3 h-full flex-1 min-h-0">
           {/* Left column */}
-          <div className="col-span-12 lg:col-span-7">
+          <div className="col-span-12 lg:col-span-7 flex flex-col h-full min-h-0">
             {/* Top stats */}
             <div className="mb-3">
               <TopStats />
@@ -30,15 +30,15 @@ const Index = () => {
             </div>
             
             {/* Warranty Trends Chart - increased height */}
-            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm mb-3">
-              <CardContent className="p-4">
+            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm mb-3 min-h-0">
+              <CardContent className="p-4 h-[280px]">
                 <WarrantyTrendsChart />
               </CardContent>
             </Card>
             
             {/* Recent claims table */}
-            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm">
-              <CardHeader className="py-2 px-3">
+            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm flex-grow min-h-0 mb-3 lg:mb-0 flex flex-col">
+              <CardHeader className="py-2 px-3 flex-shrink-0">
                 <div className="flex justify-between items-center">
                   <CardTitle className="text-base font-medium">Recent Claims</CardTitle>
                   <div className="flex gap-2">
@@ -51,28 +51,28 @@ const Index = () => {
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="p-0">
+              <CardContent className="p-0 flex-grow overflow-auto">
                 <RecentClaimsTable />
               </CardContent>
             </Card>
           </div>
           
           {/* Right column */}
-          <div className="col-span-12 lg:col-span-5 flex flex-col h-full">
+          <div className="col-span-12 lg:col-span-5 flex flex-col h-full min-h-0">
             <div className="flex flex-col h-full gap-3">
               {/* Models Table */}
-              <Card className="border border-gray-200 dark:border-gray-700 shadow-sm">
-                <CardHeader className="py-2 px-3">
+              <Card className="border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col">
+                <CardHeader className="py-2 px-3 flex-shrink-0">
                   <CardTitle className="text-base font-medium">Model Overview</CardTitle>
                 </CardHeader>
-                <CardContent className="p-0">
+                <CardContent className="p-0 overflow-auto flex-grow">
                   <ModelsTable />
                 </CardContent>
               </Card>
               
               {/* Claims Analysis Chart - properly styled as horizontal bar chart with improved margin */}
-              <Card className="border border-gray-200 dark:border-gray-700 shadow-sm flex-grow">
-                <CardContent className="p-3 h-full">
+              <Card className="border border-gray-200 dark:border-gray-700 shadow-sm flex-grow min-h-0 flex flex-col">
+                <CardContent className="p-3 flex flex-col h-full overflow-hidden">
                   <HorizontalLineChart />
                 </CardContent>
               </Card>

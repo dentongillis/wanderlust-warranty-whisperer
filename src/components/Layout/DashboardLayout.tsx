@@ -71,7 +71,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
           </div>
         </header>
         
-        <main className="flex-1 overflow-auto p-2 sm:p-3">
+        <main className="flex-1 overflow-auto p-2 sm:p-3 flex flex-col min-h-0">
           {children}
         </main>
       </div>
