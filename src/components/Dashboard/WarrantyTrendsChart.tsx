@@ -2,8 +2,6 @@
 import React, { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Switch } from '@/components/ui/switch';
-import { Toggle } from '@/components/ui/toggle';
-import { Label } from '@/components/ui/label';
 import { TrendingUp } from 'lucide-react';
 
 // Sample data for all claims - daily view
@@ -74,11 +72,11 @@ const modelClaimsData = [
   { day: '30 May', "Model I": 38, "Model Z": 25, "Model G": 15 }
 ];
 
-// Colors for model lines - improved with more visually appealing colors
+// Colors for model lines - improved with more contrast and brighter colors
 const modelColors = {
   "Model I": "#9b87f5", // Purple
   "Model Z": "#F97316", // Orange
-  "Model G": "#0EA5E9"  // Blue
+  "Model G": "#0EA5E9"  // Bright Blue
 };
 
 export const WarrantyTrendsChart: React.FC = () => {
@@ -86,7 +84,7 @@ export const WarrantyTrendsChart: React.FC = () => {
   
   return (
     <div className="h-full w-full flex flex-col">
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex justify-between items-center mb-4">
         <div>
           <h3 className="text-base font-medium">Warranty Trends</h3>
           <div className="flex items-center gap-1">
@@ -94,17 +92,22 @@ export const WarrantyTrendsChart: React.FC = () => {
             <span className="text-sm font-medium text-green-600">4.8% Growth</span>
           </div>
         </div>
-        <div className="flex items-center">
-          <div className="flex items-center gap-2 relative">
-            <span className={`text-xs ${!showModelData ? 'text-gray-900 font-medium' : 'text-gray-400'}`}>All Claims</span>
-            <Switch
-              id="claims-toggle"
-              checked={showModelData}
-              onCheckedChange={setShowModelData}
-              className="h-4 w-8 data-[state=checked]:bg-primary"
-            />
-            <span className={`text-xs ${showModelData ? 'text-gray-900 font-medium' : 'text-gray-400'}`}>Model Claims</span>
-          </div>
+        
+        <div className="flex items-center space-x-3">
+          <span className={`text-xs ${!showModelData ? 'text-gray-900 dark:text-gray-100 font-medium' : 'text-gray-500 dark:text-gray-400'}`}>
+            All Claims
+          </span>
+          
+          <Switch
+            id="claims-toggle"
+            checked={showModelData}
+            onCheckedChange={setShowModelData}
+            className="h-4 w-8 data-[state=checked]:bg-blue-600"
+          />
+          
+          <span className={`text-xs ${showModelData ? 'text-gray-900 dark:text-gray-100 font-medium' : 'text-gray-500 dark:text-gray-400'}`}>
+            Model Claims
+          </span>
         </div>
       </div>
       
@@ -112,7 +115,7 @@ export const WarrantyTrendsChart: React.FC = () => {
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
             data={showModelData ? modelClaimsData : claimsData}
-            margin={{ top: 10, right: 10, left: -20, bottom: 5 }}
+            margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
             <XAxis 
@@ -121,53 +124,56 @@ export const WarrantyTrendsChart: React.FC = () => {
               tickLine={false}
               tick={{ fontSize: 10, fill: '#6B7280' }}
               padding={{ left: 10, right: 10 }}
+              height={25}
             />
             <YAxis 
               axisLine={false}
               tickLine={false}
               tick={{ fontSize: 10, fill: '#6B7280' }}
-              domain={[0, 100]}
-              ticks={[0, 25, 50, 75, 100]}
-              width={30}
+              domain={['dataMin - 5', 'dataMax + 5']}
+              width={25}
             />
             <Tooltip 
               contentStyle={{ 
-                fontSize: '11px', 
+                fontSize: '12px', 
                 padding: '8px', 
                 borderRadius: '6px',
                 boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
                 border: '1px solid #e2e8f0'
               }} 
+              formatter={(value) => [`${value}`, showModelData ? '' : 'Claims']}
+              labelFormatter={(label) => `Date: ${label}`}
             />
             {showModelData ? (
               <>
-                <Legend 
-                  align="right"
-                  verticalAlign="top"
-                  height={25}
-                  iconSize={10}
-                  iconType="circle"
-                  wrapperStyle={{ fontSize: '10px', paddingBottom: '8px' }}
-                />
                 {Object.keys(modelColors).map((model) => (
                   <Line 
                     key={model}
                     type="monotone" 
                     dataKey={model} 
+                    name={model}
                     stroke={modelColors[model as keyof typeof modelColors]} 
-                    strokeWidth={2.5}
-                    dot={{ stroke: modelColors[model as keyof typeof modelColors], strokeWidth: 2, r: 4, fill: '#fff' }}
+                    strokeWidth={3}
+                    dot={false}
                     activeDot={{ r: 6, stroke: modelColors[model as keyof typeof modelColors], strokeWidth: 2, fill: '#fff' }}
                   />
                 ))}
+                <Legend 
+                  verticalAlign="top"
+                  height={30}
+                  formatter={(value) => <span className="text-xs">{value}</span>}
+                  iconType="circle"
+                  iconSize={8}
+                  wrapperStyle={{ paddingTop: '5px' }}
+                />
               </>
             ) : (
               <Line 
                 type="monotone" 
                 dataKey="claims" 
                 stroke="#3b82f6" 
-                strokeWidth={2.5}
-                dot={{ stroke: '#3b82f6', strokeWidth: 2, r: 4, fill: '#fff' }}
+                strokeWidth={3}
+                dot={false}
                 activeDot={{ r: 6, stroke: '#2563eb', strokeWidth: 2, fill: '#fff' }}
               />
             )}
