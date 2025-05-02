@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -15,7 +14,13 @@ const dealerData = [
   { name: 'Dixie RV Superstores', value: 9 },
   { name: 'Campers Inn RV', value: 13 },
   { name: 'Giant RV', value: 11 },
-  { name: 'PleasureLand RV', value: 8 }
+  { name: 'PleasureLand RV', value: 8 },
+  // Adding more dealers to demonstrate scrolling
+  { name: 'Happy Camper RV', value: 18 },
+  { name: 'Sunshine RV Center', value: 14 },
+  { name: 'Mountain View RV', value: 12 },
+  { name: 'Adventure Motors', value: 19 },
+  { name: 'Freedom RV Sales', value: 15 }
 ];
 
 const floorplanData = [
@@ -113,54 +118,56 @@ export const HorizontalLineChart: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Chart Header */}
-      <div className="flex justify-between items-center mb-4">
+      {/* Chart Header - moved tabs below title */}
+      <div className="mb-4">
         <div>
           <h3 className="text-sm font-medium">Claims Analysis</h3>
-          <p className="text-xs text-muted-foreground">By Category</p>
+          <div className="flex justify-between items-center mt-1">
+            <p className="text-xs text-muted-foreground">By Category</p>
+            <Tabs 
+              value={activeTab} 
+              onValueChange={(val) => setActiveTab(val as TabType)}
+              className="h-8"
+            >
+              <TabsList className="h-8 bg-gray-50 dark:bg-gray-800 p-0.5">
+                <TabsTrigger 
+                  value="dealer" 
+                  className="text-xs h-7 px-3 data-[state=active]:bg-black data-[state=active]:text-white"
+                >
+                  Dealer
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="floorplan" 
+                  className="text-xs h-7 px-3 data-[state=active]:bg-black data-[state=active]:text-white"
+                >
+                  Floorplan
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="component" 
+                  className="text-xs h-7 px-3 data-[state=active]:bg-black data-[state=active]:text-white"
+                >
+                  Component
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="issue" 
+                  className="text-xs h-7 px-3 data-[state=active]:bg-black data-[state=active]:text-white"
+                >
+                  Issue
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
         </div>
-        <Tabs 
-          value={activeTab} 
-          onValueChange={(val) => setActiveTab(val as TabType)}
-          className="h-8"
-        >
-          <TabsList className="h-8 bg-gray-50 dark:bg-gray-800 p-0.5">
-            <TabsTrigger 
-              value="dealer" 
-              className="text-xs h-7 px-3 data-[state=active]:bg-black data-[state=active]:text-white"
-            >
-              Dealer
-            </TabsTrigger>
-            <TabsTrigger 
-              value="floorplan" 
-              className="text-xs h-7 px-3 data-[state=active]:bg-black data-[state=active]:text-white"
-            >
-              Floorplan
-            </TabsTrigger>
-            <TabsTrigger 
-              value="component" 
-              className="text-xs h-7 px-3 data-[state=active]:bg-black data-[state=active]:text-white"
-            >
-              Component
-            </TabsTrigger>
-            <TabsTrigger 
-              value="issue" 
-              className="text-xs h-7 px-3 data-[state=active]:bg-black data-[state=active]:text-white"
-            >
-              Issue
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
       </div>
 
-      {/* Chart with scroll area */}
+      {/* Chart with scroll area - enhanced scrolling capabilities */}
       <ScrollArea className="flex-1 w-full overflow-hidden">
-        <div className="h-[300px] min-w-[300px]">
+        <div className="h-[400px] min-w-[300px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               layout="vertical"
               data={getActiveData()}
-              margin={{ top: 5, right: 20, left: 80, bottom: 5 }}
+              margin={{ top: 5, right: 20, left: 40, bottom: 5 }} // Reduced left margin from 80 to 40
             >
               <CartesianGrid strokeDasharray="3 3" horizontal={true} stroke="#f0f0f0" />
               <XAxis 
@@ -176,7 +183,7 @@ export const HorizontalLineChart: React.FC = () => {
                 tick={{ fontSize: 10 }}
                 tickLine={false}
                 axisLine={false}
-                width={100} 
+                width={80} // Reduced width from 100 to 80
               />
               <Tooltip content={<CustomTooltip />} />
               <Bar 
