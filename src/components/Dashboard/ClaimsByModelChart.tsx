@@ -5,10 +5,10 @@ import { ChartContainer, ChartTooltipContent } from '@/components/ui/chart';
 
 // Sample data - this would be replaced with real data in a production app
 const data = [
-  { name: 'Model I', value: 520, color: '#3b82f6' },
-  { name: 'Model Z Air', value: 480, color: '#10b981' },
-  { name: 'Model Z', value: 410, color: '#8b5cf6' },
-  { name: 'Model G', value: 390, color: '#f59e0b' }
+  { name: 'Model I', value: 520, color: '#8B5CF6' },
+  { name: 'Model Z Air', value: 480, color: '#10B981' },
+  { name: 'Model Z', value: 410, color: '#F97316' },
+  { name: 'Model G', value: 390, color: '#0EA5E9' }
 ];
 
 // Create a single bar data structure where each model is a property

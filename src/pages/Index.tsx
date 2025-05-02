@@ -57,11 +57,11 @@ const Index = () => {
             </Card>
           </div>
           
-          {/* Right column - adjusted to be a medium width (5/12 columns) */}
+          {/* Right column */}
           <div className="col-span-12 lg:col-span-5 flex flex-col h-full">
             <div className="flex flex-col h-full gap-3">
               {/* Models Table */}
-              <Card className="border border-gray-200 dark:border-gray-700 shadow-sm h-[280px] overflow-hidden">
+              <Card className="border border-gray-200 dark:border-gray-700 shadow-sm">
                 <CardHeader className="py-2 px-3">
                   <CardTitle className="text-base font-medium">Model Overview</CardTitle>
                 </CardHeader>
@@ -70,8 +70,8 @@ const Index = () => {
                 </CardContent>
               </Card>
               
-              {/* Horizontal Line Chart - replacing the dot chart */}
-              <Card className="border border-gray-200 dark:border-gray-700 shadow-sm flex-1 min-h-[350px]">
+              {/* Claims Analysis Chart - properly styled as a line chart */}
+              <Card className="border border-gray-200 dark:border-gray-700 shadow-sm flex-1">
                 <CardContent className="p-3 h-full">
                   <HorizontalLineChart />
                 </CardContent>
