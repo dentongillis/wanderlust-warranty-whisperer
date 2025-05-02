@@ -3,10 +3,10 @@ import React from 'react';
 import { DashboardLayout } from '@/components/Layout/DashboardLayout';
 import { TopStats } from '@/components/Dashboard/TopStats';
 import { WarrantyTrendsChart } from '@/components/Dashboard/WarrantyTrendsChart';
-import { DealerClaimsChart } from '@/components/Dashboard/DealerClaimsChart';
 import { ModelsTable } from '@/components/Dashboard/ModelsTable';
 import { RecentClaimsTable } from '@/components/Dashboard/RecentClaimsTable';
 import { ClaimsByModelBarChart } from '@/components/Dashboard/ClaimsByModelBarChart';
+import { HorizontalLineChart } from '@/components/Dashboard/HorizontalLineChart';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const Index = () => {
@@ -70,10 +70,10 @@ const Index = () => {
                 </CardContent>
               </Card>
               
-              {/* Dealer claims chart - positioned at bottom right */}
-              <Card className="border border-gray-200 dark:border-gray-700 shadow-sm h-[350px] mt-auto">
+              {/* Horizontal Line Chart - replacing the dot chart */}
+              <Card className="border border-gray-200 dark:border-gray-700 shadow-sm flex-1 min-h-[350px]">
                 <CardContent className="p-3 h-full">
-                  <DealerClaimsChart />
+                  <HorizontalLineChart />
                 </CardContent>
               </Card>
             </div>
