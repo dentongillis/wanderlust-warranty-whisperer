@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 // Sample data for each tab type
 const dealerData = [
@@ -60,7 +60,7 @@ const issueData = [
 type TabType = 'dealer' | 'floorplan' | 'component' | 'issue';
 
 export const HorizontalLineChart: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<TabType>('floorplan');
+  const [activeTab, setActiveTab] = useState<TabType>('dealer');
 
   const getActiveData = () => {
     switch (activeTab) {
@@ -73,12 +73,12 @@ export const HorizontalLineChart: React.FC = () => {
       case 'issue':
         return issueData;
       default:
-        return floorplanData;
+        return dealerData;
     }
   };
 
-  // Get color based on active tab
-  const getDotColor = () => {
+  // Get bar color based on active tab
+  const getBarColor = () => {
     switch (activeTab) {
       case 'dealer':
         return '#3b82f6'; // blue
@@ -89,7 +89,7 @@ export const HorizontalLineChart: React.FC = () => {
       case 'issue':
         return '#f97316'; // orange
       default:
-        return '#8b5cf6'; // purple as default
+        return '#3b82f6'; // blue as default
     }
   };
 
@@ -97,8 +97,14 @@ export const HorizontalLineChart: React.FC = () => {
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white dark:bg-gray-800 p-2 shadow-lg border border-gray-200 dark:border-gray-700 rounded">
-          <p className="font-medium text-sm">{`${payload[0].payload.name}: ${payload[0].value}`}</p>
+        <div className="bg-white dark:bg-gray-800 p-3 shadow-lg border border-gray-200 dark:border-gray-700 rounded">
+          <p className="font-medium text-sm mb-1">{payload[0].payload.name}</p>
+          <div className="text-xs font-medium">
+            <div className="flex justify-between gap-2">
+              <span className="text-gray-500">Count:</span>
+              <span>{payload[0].value}</span>
+            </div>
+          </div>
         </div>
       );
     }
@@ -111,7 +117,7 @@ export const HorizontalLineChart: React.FC = () => {
       <div className="flex justify-between items-center mb-4">
         <div>
           <h3 className="text-sm font-medium">Claims Analysis</h3>
-          <p className="text-xs text-muted-foreground">By Category & Cost</p>
+          <p className="text-xs text-muted-foreground">By Category</p>
         </div>
         <Tabs 
           value={activeTab} 
@@ -148,49 +154,39 @@ export const HorizontalLineChart: React.FC = () => {
       </div>
 
       {/* Chart with scroll area */}
-      <ScrollArea className="flex-1 w-full pr-1">
-        <div className="h-[300px] min-w-[500px]">
+      <ScrollArea className="flex-1 w-full overflow-hidden">
+        <div className="h-[300px] min-w-[300px]">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart
+            <BarChart
               layout="vertical"
               data={getActiveData()}
               margin={{ top: 5, right: 20, left: 80, bottom: 5 }}
             >
-              <CartesianGrid horizontal={false} strokeDasharray="3 3" stroke="#f0f0f0" />
+              <CartesianGrid strokeDasharray="3 3" horizontal={true} stroke="#f0f0f0" />
               <XAxis 
-                type="number" 
-                domain={[0, 'dataMax + 5']}
-                tickLine={false}
+                type="number"
                 axisLine={false}
+                tickLine={false}
+                tick={{ fontSize: 10 }}
+                domain={[0, 'dataMax + 5']}
               />
               <YAxis 
                 type="category" 
                 dataKey="name" 
-                width={80}
                 tick={{ fontSize: 10 }}
                 tickLine={false}
                 axisLine={false}
+                width={100} 
               />
               <Tooltip content={<CustomTooltip />} />
-              <Line 
-                type="monotone" 
+              <Bar 
                 dataKey="value" 
-                stroke={getDotColor()} 
-                strokeWidth={1.5}
-                dot={{ 
-                  stroke: getDotColor(), 
-                  strokeWidth: 1, 
-                  r: 4, 
-                  fill: getDotColor() 
-                }}
-                activeDot={{ 
-                  r: 6, 
-                  stroke: getDotColor(), 
-                  strokeWidth: 1, 
-                  fill: getDotColor() 
-                }}
+                fill={getBarColor()} 
+                radius={[0, 4, 4, 0]}
+                barSize={12}
+                animationDuration={500}
               />
-            </LineChart>
+            </BarChart>
           </ResponsiveContainer>
         </div>
       </ScrollArea>

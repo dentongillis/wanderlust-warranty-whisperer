@@ -70,8 +70,8 @@ const Index = () => {
                 </CardContent>
               </Card>
               
-              {/* Claims Analysis Chart - properly styled as a line chart */}
-              <Card className="border border-gray-200 dark:border-gray-700 shadow-sm flex-1">
+              {/* Claims Analysis Chart - properly styled as horizontal bar chart */}
+              <Card className="border border-gray-200 dark:border-gray-700 shadow-sm flex-grow">
                 <CardContent className="p-3 h-full">
                   <HorizontalLineChart />
                 </CardContent>
