@@ -29,11 +29,8 @@ const Index = () => {
               <ClaimsByModelBarChart />
             </div>
             
-            {/* Warranty Trends Chart - properly contained */}
-            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm mb-3 min-h-0 h-[280px]">
-              <CardHeader className="p-4 pb-0">
-                <CardTitle className="text-base font-medium sr-only">Warranty Trends</CardTitle>
-              </CardHeader>
+            {/* Warranty Trends Chart - properly contained with more height */}
+            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm mb-3 min-h-0 h-[300px]">
               <CardContent className="p-4 h-full">
                 <WarrantyTrendsChart />
               </CardContent>
