@@ -29,9 +29,9 @@ const Index = () => {
               <ClaimsByModelBarChart />
             </div>
             
-            {/* Warranty Trends Chart - increased height */}
-            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm mb-3 min-h-0">
-              <CardContent className="p-4 h-[280px]">
+            {/* Warranty Trends Chart - properly contained */}
+            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm mb-3 min-h-0 h-[280px]">
+              <CardContent className="p-4 h-full">
                 <WarrantyTrendsChart />
               </CardContent>
             </Card>
@@ -70,7 +70,7 @@ const Index = () => {
                 </CardContent>
               </Card>
               
-              {/* Claims Analysis Chart - properly styled as horizontal bar chart with improved margin */}
+              {/* Claims Analysis Chart */}
               <Card className="border border-gray-200 dark:border-gray-700 shadow-sm flex-grow min-h-0 flex flex-col">
                 <CardContent className="p-3 flex flex-col h-full overflow-hidden">
                   <HorizontalLineChart />
