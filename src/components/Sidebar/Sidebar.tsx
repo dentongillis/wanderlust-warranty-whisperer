@@ -13,7 +13,8 @@ import {
   HelpCircleIcon,
   DatabaseIcon,
   PieChart,
-  Store
+  Store,
+  MapPin
 } from 'lucide-react';
 import { SettingsDialog } from '../Settings/SettingsDialog';
 import { HelpDialog } from '../Help/HelpDialog';
@@ -110,6 +111,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
           label="Dealer Performance" 
           collapsed={collapsed} 
           active={location.pathname === '/dealer-performance'} 
+        />
+        <SidebarLink 
+          href="/regional-analysis" 
+          icon={MapPin} 
+          label="Regional Analysis" 
+          collapsed={collapsed} 
+          active={location.pathname === '/regional-analysis'} 
         />
         <SidebarLink 
           href="/customer-impact" 

@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,6 +13,7 @@ import DealerPerformance from "./pages/DealerPerformance";
 import CustomerImpact from "./pages/CustomerImpact";
 import FinancialImpact from "./pages/FinancialImpact";
 import DetailedClaimsReport from "./pages/DetailedClaimsReport";
+import RegionalAnalysis from "./pages/RegionalAnalysis";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +29,7 @@ const App = () => (
             <Route path="/root-cause" element={<RootCauseAnalysis />} />
             <Route path="/predictive" element={<PredictiveAnalytics />} />
             <Route path="/dealer-performance" element={<DealerPerformance />} />
+            <Route path="/regional-analysis" element={<RegionalAnalysis />} />
             <Route path="/customer-impact" element={<CustomerImpact />} />
             <Route path="/financial-impact" element={<FinancialImpact />} />
             <Route path="/claims-report" element={<DetailedClaimsReport />} />
