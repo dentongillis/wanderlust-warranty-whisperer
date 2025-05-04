@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { FiltersSheet } from '../Filters/FiltersSheet';
 import { AIChatSheet } from '../Dashboard/AIChatSheet';
 import { useLocation } from 'react-router-dom';
+import { DateRangeSelector } from '../DateFilters/DateRangeSelector';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -25,6 +26,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
       
       <div className="flex flex-col flex-1 w-full min-w-0 transition-all duration-300 ease-in-out">
         <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm z-10 flex-shrink-0">
+          {/* Top header with toggle and title */}
           <div className="flex items-center justify-between p-2 sm:p-3">
             <div className="flex items-center">
               <Button 
@@ -68,6 +70,11 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
                 </Button>
               </FiltersSheet>
             </div>
+          </div>
+          
+          {/* Date range filter section */}
+          <div className="px-3 pb-2">
+            <DateRangeSelector />
           </div>
         </header>
         

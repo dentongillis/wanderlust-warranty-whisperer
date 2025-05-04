@@ -1,0 +1,352 @@
+
+import React, { useState } from 'react';
+import { format, subDays, subMonths, subYears, isAfter, isBefore, startOfDay } from 'date-fns';
+import { Calendar as CalendarIcon, ChevronDown } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
+
+export type DateRangeOption = 
+  | 'today'
+  | 'last7days' 
+  | 'last4weeks'
+  | 'last3months'
+  | 'last12months'
+  | 'monthtodate'
+  | 'quartertodate'
+  | 'yeartodate'
+  | 'alltime'
+  | 'custom';
+
+export type CompareOption =
+  | 'previousperiod'
+  | 'previousmonth'
+  | 'previousquarter'
+  | 'previousyear'
+  | 'custom'
+  | 'none';
+
+interface DateRangeDisplayProps {
+  startDate: Date;
+  endDate: Date;
+}
+
+interface DateRangeDropdownProps {
+  value: DateRangeOption;
+  onChange: (value: DateRangeOption) => void;
+}
+
+interface ComparePeriodDropdownProps {
+  value: CompareOption;
+  onChange: (value: CompareOption) => void;
+  disabled?: boolean;
+}
+
+interface CustomDateRangeProps {
+  startDate: Date;
+  endDate: Date;
+  onRangeChange: (start: Date, end: Date) => void;
+  onApply: () => void;
+}
+
+const options: { value: DateRangeOption; label: string }[] = [
+  { value: 'today', label: 'Today' },
+  { value: 'last7days', label: 'Last 7 days' },
+  { value: 'last4weeks', label: 'Last 4 weeks' },
+  { value: 'last3months', label: 'Last 3 months' },
+  { value: 'last12months', label: 'Last 12 months' },
+  { value: 'monthtodate', label: 'Month to date' },
+  { value: 'quartertodate', label: 'Quarter to date' },
+  { value: 'yeartodate', label: 'Year to date' },
+  { value: 'alltime', label: 'All time' },
+  { value: 'custom', label: 'Custom date range' },
+];
+
+const compareOptions: { value: CompareOption; label: string }[] = [
+  { value: 'previousperiod', label: 'Previous period' },
+  { value: 'previousmonth', label: 'Previous month' },
+  { value: 'previousquarter', label: 'Previous quarter' },
+  { value: 'previousyear', label: 'Previous year' },
+  { value: 'custom', label: 'Custom' },
+  { value: 'none', label: 'No comparison' },
+];
+
+// Component to display the date range
+const DateRangeDisplay = ({ startDate, endDate }: DateRangeDisplayProps) => {
+  return (
+    <div className="flex items-center text-sm text-gray-700 dark:text-gray-300">
+      {format(startDate, 'MMM d, yyyy')} – {format(endDate, 'MMM d, yyyy')}
+    </div>
+  );
+};
+
+// Dropdown for date range selection
+const DateRangeDropdown = ({ value, onChange }: DateRangeDropdownProps) => {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="sm" className="px-2 h-auto">
+          <span className="font-medium text-gray-700 dark:text-gray-300">
+            {options.find(option => option.value === value)?.label || 'Select range'}
+          </span>
+          <ChevronDown className="ml-1 h-4 w-4 opacity-70" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56" align="start">
+        <DropdownMenuRadioGroup value={value} onValueChange={onChange as (value: string) => void}>
+          {options.map((option) => (
+            <DropdownMenuRadioItem key={option.value} value={option.value} className="cursor-pointer">
+              {option.label}
+            </DropdownMenuRadioItem>
+          ))}
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
+
+// Dropdown for comparison period selection
+const ComparePeriodDropdown = ({ value, onChange, disabled }: ComparePeriodDropdownProps) => {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild disabled={disabled}>
+        <Button variant="ghost" size="sm" className="px-2 h-auto" disabled={disabled}>
+          <span className="font-medium text-gray-700 dark:text-gray-300">
+            {compareOptions.find(option => option.value === value)?.label || 'Compare to'}
+          </span>
+          <ChevronDown className="ml-1 h-4 w-4 opacity-70" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56" align="start">
+        <DropdownMenuRadioGroup value={value} onValueChange={onChange as (value: string) => void}>
+          {compareOptions.map((option) => (
+            <DropdownMenuRadioItem key={option.value} value={option.value} className="cursor-pointer">
+              {option.label}
+            </DropdownMenuRadioItem>
+          ))}
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
+
+// Custom date range popover with calendar selection
+const CustomDateRange = ({ startDate, endDate, onRangeChange, onApply }: CustomDateRangeProps) => {
+  const [selectedStartDate, setSelectedStartDate] = useState<Date>(startDate);
+  const [selectedEndDate, setSelectedEndDate] = useState<Date>(endDate);
+  const [selecting, setSelecting] = useState<'start' | 'end'>('start');
+
+  const handleCalendarSelect = (date: Date | undefined) => {
+    if (!date) return;
+    
+    if (selecting === 'start') {
+      setSelectedStartDate(date);
+      setSelecting('end');
+      if (isAfter(date, selectedEndDate)) {
+        setSelectedEndDate(date);
+      }
+    } else {
+      if (isBefore(date, selectedStartDate)) {
+        setSelectedStartDate(date);
+        setSelecting('end');
+      } else {
+        setSelectedEndDate(date);
+        setSelecting('start');
+        onRangeChange(selectedStartDate, date);
+      }
+    }
+  };
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="border-dashed border-gray-300 dark:border-gray-600 h-9"
+        >
+          <CalendarIcon className="mr-2 h-4 w-4" />
+          <span className="text-sm font-normal">
+            {format(selectedStartDate, 'MMM dd, yyyy')} - {format(selectedEndDate, 'MMM dd, yyyy')}
+          </span>
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0" align="start">
+        <div className="p-3 border-b">
+          <div className="flex justify-between items-center mb-2">
+            <div className="text-sm font-medium">
+              {selecting === 'start' ? 'Select start date' : 'Select end date'}
+            </div>
+            <Button 
+              size="sm" 
+              variant="outline" 
+              className="h-7 text-xs" 
+              onClick={() => {
+                onRangeChange(selectedStartDate, selectedEndDate);
+                onApply();
+              }}
+            >
+              Apply Range
+            </Button>
+          </div>
+          <div className="flex gap-2 text-xs">
+            <div 
+              className={cn(
+                "px-2 py-1 rounded cursor-pointer", 
+                selecting === 'start' 
+                  ? "bg-primary text-primary-foreground" 
+                  : "bg-muted text-muted-foreground"
+              )}
+              onClick={() => setSelecting('start')}
+            >
+              From: {format(selectedStartDate, 'MMM d, yyyy')}
+            </div>
+            <div 
+              className={cn(
+                "px-2 py-1 rounded cursor-pointer", 
+                selecting === 'end' 
+                  ? "bg-primary text-primary-foreground" 
+                  : "bg-muted text-muted-foreground"
+              )}
+              onClick={() => setSelecting('end')}
+            >
+              To: {format(selectedEndDate, 'MMM d, yyyy')}
+            </div>
+          </div>
+        </div>
+        <Calendar
+          mode="single"
+          selected={selecting === 'start' ? selectedStartDate : selectedEndDate}
+          onSelect={handleCalendarSelect}
+          initialFocus
+          className="p-3 pointer-events-auto"
+        />
+      </PopoverContent>
+    </Popover>
+  );
+};
+
+interface DateRangeSelectorProps {
+  className?: string;
+}
+
+export const DateRangeSelector = ({ className }: DateRangeSelectorProps) => {
+  const [dateRangeOption, setDateRangeOption] = useState<DateRangeOption>('last7days');
+  const [compareOption, setCompareOption] = useState<CompareOption>('previousperiod');
+  const [startDate, setStartDate] = useState<Date>(() => subDays(new Date(), 7));
+  const [endDate, setEndDate] = useState<Date>(() => new Date());
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+
+  // Update date range based on selected option
+  const updateDateRange = (option: DateRangeOption) => {
+    const today = startOfDay(new Date());
+    
+    switch (option) {
+      case 'today':
+        setStartDate(today);
+        setEndDate(today);
+        break;
+      case 'last7days':
+        setStartDate(subDays(today, 6));
+        setEndDate(today);
+        break;
+      case 'last4weeks':
+        setStartDate(subDays(today, 27));
+        setEndDate(today);
+        break;
+      case 'last3months':
+        setStartDate(subMonths(today, 3));
+        setEndDate(today);
+        break;
+      case 'last12months':
+        setStartDate(subMonths(today, 12));
+        setEndDate(today);
+        break;
+      case 'monthtodate':
+        setStartDate(new Date(today.getFullYear(), today.getMonth(), 1));
+        setEndDate(today);
+        break;
+      case 'quartertodate':
+        const quarter = Math.floor(today.getMonth() / 3);
+        setStartDate(new Date(today.getFullYear(), quarter * 3, 1));
+        setEndDate(today);
+        break;
+      case 'yeartodate':
+        setStartDate(new Date(today.getFullYear(), 0, 1));
+        setEndDate(today);
+        break;
+      case 'alltime':
+        setStartDate(subYears(today, 5)); // Arbitrary "all time" setting
+        setEndDate(today);
+        break;
+      case 'custom':
+        // Don't change dates, just open the calendar
+        setIsCalendarOpen(true);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleDateRangeChange = (option: DateRangeOption) => {
+    setDateRangeOption(option);
+    updateDateRange(option);
+  };
+
+  const handleCustomDateChange = (start: Date, end: Date) => {
+    setStartDate(start);
+    setEndDate(end);
+  };
+
+  const handleApplyCustomDate = () => {
+    setIsCalendarOpen(false);
+  };
+
+  return (
+    <div className={cn("flex flex-wrap items-center gap-2", className)}>
+      <DateRangeDropdown 
+        value={dateRangeOption} 
+        onChange={handleDateRangeChange} 
+      />
+      
+      {dateRangeOption === 'custom' && (
+        <CustomDateRange 
+          startDate={startDate}
+          endDate={endDate}
+          onRangeChange={handleCustomDateChange}
+          onApply={handleApplyCustomDate}
+        />
+      )}
+      
+      {dateRangeOption !== 'custom' && (
+        <DateRangeDisplay 
+          startDate={startDate} 
+          endDate={endDate} 
+        />
+      )}
+
+      <div className="text-gray-400 mx-1">compared to</div>
+      
+      <ComparePeriodDropdown 
+        value={compareOption} 
+        onChange={setCompareOption} 
+        disabled={dateRangeOption === 'alltime'}
+      />
+      
+      <div className="ml-auto flex items-center gap-2">
+        <Button size="sm" variant="outline" className="text-xs px-3 py-1 h-7">Daily</Button>
+        <Button size="sm" variant="outline" className="text-xs px-3 py-1 h-7 bg-primary text-primary-foreground hover:bg-primary/90">Monthly</Button>
+        <Button size="sm" variant="outline" className="text-xs px-3 py-1 h-7">Yearly</Button>
+      </div>
+    </div>
+  );
+};
