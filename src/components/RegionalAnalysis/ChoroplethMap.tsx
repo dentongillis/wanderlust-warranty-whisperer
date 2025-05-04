@@ -1,11 +1,8 @@
-
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Info, MapPin } from 'lucide-react';
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
+import { Info } from 'lucide-react';
 
 // Mock data for the choropleth map
 const usStatesData = [
@@ -77,340 +74,80 @@ const canadianProvincesData = [
   { id: 'NU', province: 'Nunavut', value: 30, change: '+3%' },
 ];
 
-interface MapboxToken {
-  token: string;
-}
+const getColorByValue = (value: number) => {
+  if (value >= 600) return '#0b5394'; // Darkest blue for high values
+  if (value >= 400) return '#3d85c6'; // Darker blue
+  if (value >= 200) return '#6fa8dc'; // Medium blue
+  if (value >= 100) return '#9fc5e8'; // Medium light blue
+  return '#cfe2f3'; // Light blue for low values
+};
 
 export const ChoroplethMap = () => {
-  const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstance = useRef<mapboxgl.Map | null>(null);
   const [activeTab, setActiveTab] = useState('usa');
-  const [loading, setLoading] = useState(true);
-  const [mapboxToken, setMapboxToken] = useState<string>('');
-  const [showTokenInput, setShowTokenInput] = useState(true);
+  const [selectedRegion, setSelectedRegion] = useState<any>(null);
   
-  const initializeMap = (token: string) => {
-    if (!mapRef.current || !token) return;
-    
-    try {
-      mapboxgl.accessToken = token;
-      
-      if (mapInstance.current) {
-        mapInstance.current.remove();
-      }
-      
-      mapInstance.current = new mapboxgl.Map({
-        container: mapRef.current,
-        style: 'mapbox://styles/mapbox/light-v11',
-        zoom: activeTab === 'usa' ? 3 : 2.5,
-        center: activeTab === 'usa' ? [-98, 39] : [-95, 55],
-        interactive: true,
-        attributionControl: false
-      });
-      
-      mapInstance.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
-      
-      mapInstance.current.on('load', () => {
-        setLoading(false);
-        
-        // Add source and layer for the map
-        if (activeTab === 'usa') {
-          addUsMapLayers();
-        } else {
-          addCanadaMapLayers();
-        }
-      });
-    } catch (error) {
-      console.error("Error initializing map:", error);
-      setLoading(false);
-    }
+  const handleRegionClick = (region: any) => {
+    setSelectedRegion(region);
   };
   
-  const addUsMapLayers = () => {
-    if (!mapInstance.current) return;
-    
-    fetch('https://docs.mapbox.com/mapbox-gl-js/assets/us_states.geojson')
-      .then(response => response.json())
-      .then(statesData => {
-        // Join our data with GeoJSON
-        const features = statesData.features.map((feature: any) => {
-          const stateData = usStatesData.find(state => state.id === feature.properties.STATE_ABBR);
-          if (stateData) {
-            return {
-              ...feature,
-              properties: {
-                ...feature.properties,
-                value: stateData.value,
-                change: stateData.change,
-                name: stateData.state
-              }
-            };
-          }
-          return feature;
-        });
-        
-        const sourceData = {
-          type: 'FeatureCollection',
-          features
-        };
-        
-        const map = mapInstance.current;
-        if (map) {
-          // Add source for states
-          if (map.getSource('states')) {
-            (map.getSource('states') as mapboxgl.GeoJSONSource).setData(sourceData);
-          } else {
-            map.addSource('states', {
-              type: 'geojson',
-              data: sourceData
-            });
-          
-            // Add fill layer
-            map.addLayer({
-              id: 'states-fill',
-              type: 'fill',
-              source: 'states',
-              paint: {
-                'fill-color': [
-                  'interpolate',
-                  ['linear'],
-                  ['get', 'value'],
-                  50, '#cfe2f3',  // Light blue for low values
-                  200, '#9fc5e8',  // Medium light blue
-                  400, '#6fa8dc',  // Medium blue
-                  600, '#3d85c6',  // Darker blue
-                  800, '#0b5394'   // Darkest blue for high values
-                ],
-                'fill-opacity': 0.8
-              }
-            });
-          
-            // Add border layer
-            map.addLayer({
-              id: 'states-borders',
-              type: 'line',
-              source: 'states',
-              paint: {
-                'line-color': '#ffffff',
-                'line-width': 0.5
-              }
-            });
-            
-            // Add tooltip interaction
-            map.on('click', 'states-fill', (e) => {
-              if (e.features && e.features[0]) {
-                const props = e.features[0].properties;
-                if (props) {
-                  new mapboxgl.Popup()
-                    .setLngLat(e.lngLat)
-                    .setHTML(`
-                      <strong>${props.name}</strong><br/>
-                      Claims: ${props.value}<br/>
-                      Change: <span style="color:${props.change.startsWith('+') ? 'green' : 'red'}">${props.change}</span>
-                    `)
-                    .addTo(map);
-                }
-              }
-            });
-            
-            map.on('mouseenter', 'states-fill', () => {
-              map.getCanvas().style.cursor = 'pointer';
-            });
-            
-            map.on('mouseleave', 'states-fill', () => {
-              map.getCanvas().style.cursor = '';
-            });
-          }
-        }
-      })
-      .catch(err => console.error('Error loading US states data:', err));
+  const handleClosePopup = () => {
+    setSelectedRegion(null);
   };
-  
-  const addCanadaMapLayers = () => {
-    if (!mapInstance.current) return;
-    
-    fetch('https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/canada.geojson')
-      .then(response => response.json())
-      .then(provincesData => {
-        // Join our data with GeoJSON
-        const features = provincesData.features.map((feature: any) => {
-          const provinceCode = feature.properties.code;
-          const provinceData = canadianProvincesData.find(province => province.id === provinceCode);
-          if (provinceData) {
-            return {
-              ...feature,
-              properties: {
-                ...feature.properties,
-                value: provinceData.value,
-                change: provinceData.change,
-                name: provinceData.province
-              }
-            };
-          }
-          return feature;
-        });
-        
-        const sourceData = {
-          type: 'FeatureCollection',
-          features
-        };
-        
-        const map = mapInstance.current;
-        if (map) {
-          // Add source for provinces
-          if (map.getSource('provinces')) {
-            (map.getSource('provinces') as mapboxgl.GeoJSONSource).setData(sourceData);
-          } else {
-            map.addSource('provinces', {
-              type: 'geojson',
-              data: sourceData
-            });
-          
-            // Add fill layer
-            map.addLayer({
-              id: 'provinces-fill',
-              type: 'fill',
-              source: 'provinces',
-              paint: {
-                'fill-color': [
-                  'interpolate',
-                  ['linear'],
-                  ['get', 'value'],
-                  30, '#cfe2f3',   // Light blue for low values
-                  100, '#9fc5e8',  // Medium light blue
-                  200, '#6fa8dc',  // Medium blue
-                  300, '#3d85c6',  // Darker blue
-                  350, '#0b5394'   // Darkest blue for high values
-                ],
-                'fill-opacity': 0.8
-              }
-            });
-          
-            // Add border layer
-            map.addLayer({
-              id: 'provinces-borders',
-              type: 'line',
-              source: 'provinces',
-              paint: {
-                'line-color': '#ffffff',
-                'line-width': 0.5
-              }
-            });
-            
-            // Add tooltip interaction
-            map.on('click', 'provinces-fill', (e) => {
-              if (e.features && e.features[0]) {
-                const props = e.features[0].properties;
-                if (props) {
-                  new mapboxgl.Popup()
-                    .setLngLat(e.lngLat)
-                    .setHTML(`
-                      <strong>${props.name}</strong><br/>
-                      Claims: ${props.value}<br/>
-                      Change: <span style="color:${props.change.startsWith('+') ? 'green' : 'red'}">${props.change}</span>
-                    `)
-                    .addTo(map);
-                }
-              }
-            });
-            
-            map.on('mouseenter', 'provinces-fill', () => {
-              map.getCanvas().style.cursor = 'pointer';
-            });
-            
-            map.on('mouseleave', 'provinces-fill', () => {
-              map.getCanvas().style.cursor = '';
-            });
-          }
-        }
-      })
-      .catch(err => console.error('Error loading Canadian provinces data:', err));
-  };
-  
-  const handleTokenSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (mapboxToken) {
-      localStorage.setItem('mapbox_token', mapboxToken);
-      setShowTokenInput(false);
-      initializeMap(mapboxToken);
-    }
-  };
-  
-  useEffect(() => {
-    const savedToken = localStorage.getItem('mapbox_token');
-    if (savedToken) {
-      setMapboxToken(savedToken);
-      setShowTokenInput(false);
-      initializeMap(savedToken);
-    }
-  }, []);
-  
-  useEffect(() => {
-    if (!showTokenInput && mapboxToken) {
-      if (mapInstance.current) {
-        mapInstance.current.remove();
-        mapInstance.current = null;
-      }
-      initializeMap(mapboxToken);
-    }
-  }, [activeTab, showTokenInput]);
-  
-  return (
-    <Card className="border border-gray-200 dark:border-gray-700 shadow-sm h-full overflow-hidden">
-      <CardHeader className="p-4 border-b border-gray-200 dark:border-gray-700">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <CardTitle className="text-lg font-medium">Regional Claims Distribution</CardTitle>
-            <Button variant="ghost" size="icon" className="h-6 w-6">
-              <Info size={16} />
-            </Button>
-          </div>
-          
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList>
-              <TabsTrigger value="usa">United States</TabsTrigger>
-              <TabsTrigger value="canada">Canada</TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
-      </CardHeader>
-      
-      <CardContent className="p-0">
-        <div className="p-4 h-[400px]">
-          {showTokenInput ? (
-            <div className="h-full flex flex-col items-center justify-center p-4">
-              <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                <h3 className="text-lg font-medium mb-4">Mapbox API Token Required</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-                  To display the interactive map, please enter your Mapbox public token. 
-                  You can get one from your Mapbox account dashboard.
-                </p>
-                <form onSubmit={handleTokenSubmit}>
-                  <input
-                    type="text"
-                    value={mapboxToken}
-                    onChange={(e) => setMapboxToken(e.target.value)}
-                    placeholder="Enter your Mapbox public token"
-                    className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 rounded"
-                  />
-                  <Button type="submit" className="w-full">
-                    Submit Token
-                  </Button>
-                </form>
-              </div>
-            </div>
-          ) : loading ? (
-            <div className="h-full flex items-center justify-center">
-              <div className="animate-pulse flex flex-col items-center">
-                <div className="h-16 w-16 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
-                <div className="mt-2 text-sm text-gray-500 dark:text-gray-400">Loading map data...</div>
-              </div>
-            </div>
-          ) : (
-            <div ref={mapRef} className="h-full w-full rounded-md border border-gray-200 dark:border-gray-700"></div>
-          )}
-        </div>
-      </CardContent>
-    </Card>
+
+  const USAMap = () => (
+    <svg 
+      viewBox="0 0 959 593" 
+      className="w-full h-full"
+      style={{ maxHeight: '380px' }}
+    >
+      <g>
+        {/* This is where the US states SVG paths would go */}
+        {/* The following is just a simplified representation of a few states */}
+        <path 
+          id="CA" 
+          d="M122.7,385.9l-0.4-1.3l-1.3-0.7l-1.9,0.3l-2.9-0.3l-1.4-1.9l-4.5,0.8l-3.2-1.3l-4.2-0.1l-6.8-0.8l-2.2-1.3l-1.1-1.9l-12.1-26.6V236.2L2,189.7l25.4-36.2l30.6-39l0.6,0.4l0.2,0.2l0.2,0.5l-0.1,0.8l-0.9,1.8l-2.2,1.9v1l0.4,0.7l16.7,8.8l10.3,8.3h0.9l1-1.1l18.6-7l1-2.5l2.7-0.8l3.2-0.4v-0.2l1.2-0.9l0.8-0.9l0.5,0.1l0.5,2.2l0.1,1l-1.2,0.8l-0.6,0.5l0.1,0.2l1.6,1.4l2.4,0.3l2.3-0.3l2.1-2l0.8-1.8l1.3-1.3l1.5-0.8l-0.1-0.2l-0.4-0.9l-0.5-0.3l0.1-0.2l0.9,0.1l1.2-0.5l0.5-0.5l0.1-0.6l-0.2-0.8l0.2-0.5l1.3-0.4l0.5,0.1l0.7,0.6l1.6-0.1l2.6,0.5l0.6-0.1l0.1-0.3l-0.3-0.6l0.3-0.4l1.4-0.2l0.9,0.1l0.8,0.7l0.6,1.1l1.2,0.8l2.2,0.3l0.9,0.6l0.3,1l1.1,1.3l0.1,0.7l-0.7,0.7v0.5l1,1.2l-0.1,0.9l-0.8,0.7l-0.1,0.8l0.8,1l-0.1,1.3l-0.6,0.9l-0.2,0.4l0.1,0.5l0.6,0.5l1.8,0.5l2.9-0.7l0.7-0.6l0.1-0.3l-0.1-0.4l0.3-0.4l1.7-0.8l2.9-0.8l0.7-0.6l1.5-0.4l0.2,0.4l-0.4,0.4v0.6l0.7,0.7l0.7,0.1l1.5-1l3.4,0.7l1.3,0.7l2.1,0.1l0.8-0.3l0.9-0.9v-0.3l-0.6-0.6l-1.5-0.3l-0.5-0.3l0.1-0.7l0.8-1.1l1.1-0.7l2-0.5l3.1,0.8l0.1-0.3l-0.4-0.5v-0.3l0.1-0.3l3.3,0.5l0.6-0.2l0.3-0.6l-0.3-0.8l0.4-0.8l1.8-0.8l1.6-0.3l1.7,0.1l1.4,0.3l1.4,0.9l0.5,0.8l0.1,1.1l-0.3,0.8l-0.6,0.8l-0.7,0.4l-0.6,1.1l-0.9,0.4l-1.3,1.5l-0.1,0.8l0.4,1.4l1.3,0.8l1-0.6l1-0.2l1.5,0.5l1.1,0.9l1.5,0.4l2.4,1.1l1.3,0.4l2.8,1.8l2.9,1.2l3.9,2.1l3.8,1.8l4.2,2.9l3.7,1.6l7.5,4.3l-11.3,33.9l-0.3,0.6l-0.1,0.3l0.2,0.9l-0.4,0.5l-0.1,0.9l0.1,4.7l0.4,1.3l0.8,0.6v0.2l-0.4,0.3l-0.1,0.3l0.2,0.3l-0.2,1.3l-0.5,0.6l-0.3,0.1h-0.4l-0.5,0.2l-0.3,0.4l-0.2,0.7l-0.2,0.1h-0.3l-0.2-0.7l-0.2-0.1l-0.6,0.2l-0.9,1l-0.1,0.3l0.1,0.4l-0.2,0.4l-1.2,2.4l-0.2,0.9v0.3l0.2,0.3l0.7,0.3l0.2,0.2l-0.1,0.5l-1.9,5.1l-1.7,1.5l-1.3,0.9l-0.9,1.3l-1.2,1.2l-0.1,0.7l0.2,0.3l1-0.1l0.3,0.3l-0.1,0.6l-0.4,1.2l-0.2,0.3l-0.4,0.3l-1.9,0.6v0.4l0.2,0.5l0.1,0.2l-0.2,0.5l-0.9,0.2l-0.5,0.5l-0.4,1.3v0.5l1,1.2l0.3,0.5l-0.1,0.4l-1.1,0.5l-0.3,0.3l-0.2,0.9l-0.4,0.2l-0.5,0.1l-0.5,0.4l-0.8,1.3l0.1,0.9l0.6,0.6l0.8,1.6l-0.1,0.9l-1.5,0.5l-0.4,0.3l-0.7,1.1l-0.2,1.3l0.3,3.1l-0.4,0.4v0.3l0.2,0.6l-0.1,0.5l-0.3,0.4l-0.1,0.5l0.3,0.4l-0.5,0.7l-0.9,0.9l-0.1,0.5l0.3,0.4v1l-0.6,0.8l-0.3,1.9l-0.6,0.5l-1.1,0.5l-0.9,0.9l-0.9,0.5l-2.7,0.4l-0.8-0.2l-0.6-0.4l-0.7-0.1l-0.4,0.4l-0.1,0.7l-0.5,0.1v-0.2h-0.1l-0.2,0.2v0.5l0.4,0.3l0.1,0.2l-0.3,0.2l-0.2,0.5l-10.5,1.3z"
+          fill={getColorByValue(780)}
+          stroke="#ffffff"
+          strokeWidth="1"
+          onClick={() => handleRegionClick(usStatesData.find(s => s.id === 'CA'))}
+          className="hover:opacity-80 cursor-pointer"
+        />
+        <path 
+          id="TX" 
+          d="M462.1,542.4l-1.8-1.5l-1.1,0.2l-0.7-0.7l-3.5,1.2l-0.3,0.9l-0.6,0.1l-2.4-1.5l-0.6-1.8l0.1-2.7l-0.7-1.4l0.8-2.2l-2.7-1.5l-0.7-0.1l-0.6,0.3l-0.7-0.7l0.2-0.4l-0.2-0.5l-0.6-0.2l-0.3-0.2v-0.2l0.2-0.5l0.1-0.3h-0.4l-0.3,0.2l-0.3,0.5l-0.1,0.3l-0.5,0.3l-0.3,0.6l-0.4,0.5l-0.5,0.1l-0.5,0.5l-0.4,0.6l-0.4,0.2l-0.6,0.1l-0.7,0.5l-0.8-0.5l1-0.5l0.3-0.5l0.1-0.5l-0.1-0.2l-0.4-0.1h-0.4l-0.7-0.8v-0.6l-0.9-0.6l-0.1-0.3v-0.3l-0.3-0.1h-0.3v-0.6l-0.4-0.3l-0.6-0.7l-0.4-0.2l-0.3-0.4h-0.4l-0.7-0.6l-0.6-0.2h-0.6l-0.3-0.9l-0.9-0.3v-2.6l-0.3-0.4l-1-0.8l-0.3-0.7l-0.5-0.4l-0.3-0.8l-0.6-0.7l-0.1-0.7l-1-0.5l-0.2-0.3v-0.4l0.3-0.1l0.1-0.2l-0.1-0.6l-0.2-0.2l-1-0.5l-0.3-0.5l-0.1-0.6l-0.8-0.3l-0.7-0.7l-1.1-0.1l-0.3-0.2l-1.9-0.5l-1.8-0.9l-0.5-1.8l-1.2-0.7l-0.2-0.9l-0.9-0.8l0.2-1.3l-0.8-0.7h-0.6l-0.9-1.6l0.4-0.3l0.2-0.4l-0.3-0.5v-0.9l-0.9-0.8l-1.1-0.1l-0.9,0.2l-0.3,0.4l-0.3-0.1l-0.5-1.1l-0.5-0.1h-0.5l-0.8,0.5l-0.6-0.3l-0.5-0.5l-2.3-0.8l-0.5,0.1l-0.2,0.4l-0.3,0.1l-1-0.1l-0.9-0.3l-0.3-0.3l0.1-0.6l-0.2-0.3l-0.4-0.1l-0.7-0.6l-0.7-0.3l-2.1-0.8l-1.4-1.5l-0.6-0.2l-1.3-1.2l-0.4-0.1l-0.5,0.2l-0.4,0.6l-2.4-0.4l-1.1-1l-2.7-0.8l-0.6-0.5l-0.1-0.3l-1.3-0.2l-0.6,0.1l-0.8,0.6l-0.9-0.9l-1.2-0.2l-0.9-0.5l-3.9-0.2l-1.6-1.4l-1.3-0.4l-2.2-1.4l-1.1-0.4L386,469l-0.3-0.9l0.6-0.6l0.2-0.6l-0.2-0.5l-0.6-0.1v-0.3l0.4-0.9l0.9-1l0.9-0.8l0.1-0.8l-0.4-0.6l-2.7-1.2l-0.6-0.1l-0.3,0.1l-0.2,0.4l-0.2,0.1h-0.4l-0.5-0.7l-0.9,0.3l-1.4-0.1l-0.4-0.2l-0.1-0.7l-0.6-0.3l-0.8,0.4l-1.3-0.1l-1-0.3l-0.4-0.7l-0.8-0.3l-0.4,0.1l-0.3,0.4l-0.3,0.1h-0.6l-2-0.8l-0.4-0.6l-0.6-0.3l-0.5-0.8l0.1-0.6l-0.7-1l-0.6-0.3l-1-1.5l-0.7-0.6l-0.4-0.1l-0.4,0.1l-0.5,0.5v0.3l-0.9,0.5l-0.6,0.9l-0.2,0.1h-0.4l-0.8-0.9l-0.7-0.2l-0.3,0.2v0.3l0.4,0.9l0.6,0.5v0.6l-0.3,0.7v0.9l-0.9,1.5l-0.7,0.6l-1.6,0.8l-0.4,0.6v0.5l-0.3,0.3h-0.5l-0.7-0.9l-0.8-0.2l-1.6-1.5l-0.9-0.1l-1.4,0.1l-1.1-0.2l-0.4-0.3l-0.2-0.5l-0.8-0.1l-0.8-0.7l-0.9-0.3l-1.2,0.5l-0.4-0.1l-0.3-0.4l-0.7-0.3l-1-0.7v-0.9l-0.2-0.3h-0.6l-0.9-0.5l-1.3,0.3l-0.4-0.1l-0.3-0.2l-0.9,0.3l-1.7-0.1L323.7,439l-0.8-0.3l-2.3-0.3l-0.3-0.4l-0.2-0.8l-0.4-0.3l-0.9-0.2l-0.8-0.7l-1.4-0.3l-2-1.2l-1.2-0.1l-1-0.6l-1.2,0.3l-0.5-0.2l-1-1.5l-1.5-0.3v57.8l3.3,0.2l88.5,3.1l81.2,1.8l1.3-91.6l0.7-0.2L472,443l0.8-0.1l1.7,1l1.3-0.2l3.3,0.8l0.3,0.3l-0.3,1.2l0.5,0.5l2.3,0.2l-0.1,1.5l-0.5,1.9l0.2,0.6l1,0.7l0.6,0.1l0.5,0.6l0.2,1l0.9,1.2l0.8,0.1l0.3,0.8l0.6,0.3l0.2,0.3l0.1,1.2l1.7,1.5l0.1,2.2l1,1.4l0.8,0.4l0.1,0.7l-0.7,2.1l0.3,0.6l0.5,0.3l0.3,0.8l0.6,0.4h0.6l0.3,0.2l0.4,0.8l1.3,0.8l0.5,0.7l1.1,0.5l0.5,0.7l1.2,0.7l1.4,2.3l1.9,0.8l1,1.1l0.5,0.1l1.3-0.3l0.3-0.2l0.2-0.5l0.6-0.1l2.3,1.2l1,0.2l-0.1,19.1l-0.9,0.7l-0.5,1.6l0.1,0.9l0.7,0.8l-0.7,1.5l0.2,1l-0.5,0.8l0.4,0.5l0.8-0.2l0.1,1.8l0.7,0.2l-0.7,2.1l0.5,0.7l1.5,0.8l-32.4-1.6z"
+          fill={getColorByValue(680)}
+          stroke="#ffffff"
+          strokeWidth="1"
+          onClick={() => handleRegionClick(usStatesData.find(s => s.id === 'TX'))}
+          className="hover:opacity-80 cursor-pointer"
+        />
+        {/* Simplified NY state for demonstration */}
+        <path 
+          id="NY" 
+          d="M750,220l0.5-2.3l-0.9-2.4l-1.5-0.3l-0.4-1.5l0.5-1.3l-1.9-1.8l0.8-2l-0.8-1.6l0.6-1.7l-0.2-1l-1.1-2.9l-1.9-1.1l-0.8-2.2l-2.2-2.7l-1-0.5l-2.3-0.5l-1.7-0.8l-0.5,0.4l-1.4-0.7l-0.7,0.8l-0.9-0.8l0.3-0.5v-1.4l-3-3.9l0.6-1l-0.6-0.6l0.2-0.5l-0.5-0.8l-1.3-1.2h-1l-0.7-0.7l-0.3-1.3l-0.7-0.1l-0.4-0.3l0.7-0.9l-0.2-1.2l-0.8-0.7l-0.1-0.9l-0.9-0.7l-1.1-0.2l-1.1-0.9l-1.5-0.6v-0.6l-0.6-0.7l0.3-1.6l-0.3-0.7l0.2-0.4l-0.1-0.4l-1-0.2l0.1-0.9l-0.3-0.6l-0.8-0.3l-2.1-2.2l-0.7-1.1l-1-0.5l-0.1-0.9l-1.3-0.9l1.7-3.9l0.7-1.1l0.9,0.8l1-0.3l1.7-1.8l0.9-0.3l0.5-0.9l1.3-0.1l0.5-0.4h0.8l0.2-0.5l0.6,0.3l0.6-0.7l1.8,0.2l1-0.8h0.7l0.4-0.5l1-0.2l0.4-0.6l1.8,0.1l0.7-0.3l0.6,0.5l0.5-0.1l0.2-0.9l0.8-0.5l1.4,0.1l0.4-0.2v-0.7l1.4-0.5l0.7,0.8l1.9,0.1v-0.6l0.3-0.9l0.6-0.7l0.1-1l0.6-0.4l0.7-1.2l1.3-0.3l0.5-0.7h0.6l0.6-0.5l0.8,0.2l0.1,0.5l0.7,0.4l-0.5,0.5l0.2,1.1l0.5,0.3l2.3,0.5l0.6,0.6l0.8-0.1l0.6,0.9l0.9,0.1l0.4-0.3l0.8,0.4v0.9l1.1,0.8l0.5,0.8l1.3,0.2l0.7,0.5h0.8l0.8,0.5l0.5-0.1l0.9,0.9l1.1,0.3l0.3,0.6l0.5,0.1l0.8-0.7l1.2,0.5v0.9l0.8,0.2l0.9,0.9l1.2,0.7l0.2,0.7l1.7,0.5l0.4,0.5l0.9,0.2l0.7,0.6l0.9-0.2l2.1,1.3l0.2,0.5l1.6,0.2l1.9,1.1l1.5,0.2l0.8,0.4l0.5-0.1l0.9,0.6l2.1,0.2l2.5,1.6l1.1,0.1l1.2,0.9l0.1,0.6l0.7,0.6l-0.6,0.9l0.4,1.3l-0.1,1.6l0.5,0.7l-0.7,0.7l-0.1,0.9l-0.5,0.2l-1,1l-0.3,0.8l-1.3,0.1l-0.4,0.5l-0.6,0.2v1.1l-0.6,0.6h-0.7l-0.3,0.7l-1,0.4l-0.1,0.4l-0.5,0.2l-0.3,0.6h-0.6l-0.6,0.5l-0.3,0.4l-0.9,0.3l-0.5,0.9l-1.3,0.4l-0.6,0.5l-1.9,0.2l-1.1,0.5l-0.3,0.4l-1,0.2l-0.3,0.4l-0.6,0.3l-0.9,1.3h-0.6l-1,1l-1,0.1l-0.8,0.9l-0.4,0.1l-0.3,0.9l-1.1,0.5v0.7l0.4,0.5l-0.4,0.3l-0.4,1.4l-0.6,0.5l-0.9,1.5l-1.3,1.2l-0.6,2.1l-0.6,0.5l-0.8,0.3v0.4l-2.1,0.9l-1.2,1.8l-0.3,0.9l-0.3,0.1l-0.1,0.5l-0.9,0.9v0.5l-0.6,0.6v0.3l-0.6-0.2l-0.1,0.6l-0.6,0.7l-2.2,2.5l-1,0.4l-0.6,0.8l-0.3,0.1l-0.3,0.7l-1.1,0.9l-1,1.4l-0.8,0.2l-0.2,0.7l-0.9,0.9l-0.8,0.3l-0.8,1.1l-0.1,0.6z"
+          fill={getColorByValue(470)}
+          stroke="#ffffff"
+          strokeWidth="1"
+          onClick={() => handleRegionClick(usStatesData.find(s => s.id === 'NY'))}
+          className="hover:opacity-80 cursor-pointer"
+        />
+        {/* Add more states as needed */}
+        <text x="200" y="350" className="text-xs font-bold">CA</text>
+        <text x="400" y="450" className="text-xs font-bold">TX</text>
+        <text x="750" y="200" className="text-xs font-bold">NY</text>
+      </g>
+    </svg>
   );
-};
+  
+  const CanadaMap = () => (
+    <svg 
+      viewBox="0 0 949 699" 
+      className="w-full h-full"
+      style={{ maxHeight: '380px' }}
+    >
+      <g>
+        {/* This is where the Canadian provinces SVG paths would go */}
+        {/* The following is just a simplified representation of a few provinces */}
+        <path 
+          id="ON" 
+          d="M633.1,288.4l-2.3-5l-8-6l-8.5-3.2l-0.9-5.2l3.3-2.6l-1-3.1l2.5-5.7l-1.3-3.7v-5.2L612,240l-4.2-1.3h-4.3l-0.9-1.6l5.7-2.1l1.4-2.9l-0.5-3.1l1.5-2.1l-3.8-5.2l-2.8-1l-3.3,0.9l-1.9,0.2l-3.8,2.6l-5.2,0.5l-0.9-1.3l-0.5-2.9l-3.3-0.9l-4.3,1l-5.2,2.3l-6.6,2.1l-3.8,0.1l-1.9-0.9l1.4-2.9l-0.4-2.1l-3.3-2.3l3.8-2.1l8-9.9l3.8-0.5l2.3-1.9l5.2-1.6l3.8-3.1l7.1-1.8l4.7,0.5l4.3,0.2l7.1-1.8l4.2-1.3l7.1-1.8l9.4-1.3l0.9-0.5l-0.5-1.6l1.9-0.2l3.8-0.5l8-1.3l9,0.2l4.2-1.3h4.3l5.2-2.6h4.3l5.2-1.6l3.8-2.1l4.3-2.6l5.6-1.8l4.3-1.6l3.8-2.9l5.2-1.6l5.6-2.6l3.3-2.3l3.8-2.9l5.7-2.1l4.2-1.6l5.7-2.1l5.6-1.8l0.5-1.6l-0.9-1.3l1.4-1.9l4.3-0.
