@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { ArrowDown, ArrowUp } from 'lucide-react';
+import { ArrowDown, ArrowUp, MapPin, Navigation } from 'lucide-react';
 
 export const KPICards: React.FC = () => {
   // Mock data for KPIs
@@ -11,14 +11,16 @@ export const KPICards: React.FC = () => {
       value: "4,265",
       change: "+12.5%",
       trend: "up",
-      description: "vs. last period"
+      description: "vs. last period",
+      icon: MapPin
     },
     {
       title: "Average Claims per Region",
       value: "142",
       change: "-3.2%",
       trend: "down",
-      description: "vs. last period"
+      description: "vs. last period",
+      icon: Navigation
     }
   ];
 
@@ -40,9 +42,7 @@ export const KPICards: React.FC = () => {
                 </div>
               </div>
               <div className="h-12 w-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
-                <span className="text-blue-600 dark:text-blue-400 text-sm font-medium">
-                  {index === 0 ? 'Total' : 'Avg'}
-                </span>
+                {React.createElement(kpi.icon, { size: 20, className: "text-blue-600 dark:text-blue-400" })}
               </div>
             </div>
           </CardContent>
