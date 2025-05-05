@@ -54,10 +54,32 @@ export function AIChatSheet({ children, initialQuery }: AIChatSheetProps) {
     }
   }, [initialQuery]);
 
+  // Extract search query if children is an input element
+  useEffect(() => {
+    if (React.isValidElement(children) && children.type === 'input') {
+      const inputElement = children as React.ReactElement<any>;
+      if (inputElement.props.value) {
+        setInitialMessage(inputElement.props.value);
+      }
+    }
+  }, [children]);
+
   const handleOpenChange = (open: boolean) => {
     setOpen(open);
     if (open) {
       setMinimized(false);
+      
+      // If there's an initial query, start a new chat
+      if (initialMessage) {
+        setResetConversation(true);
+        setTimeout(() => setResetConversation(false), 100);
+      } else {
+        toast({
+          title: "AI Assistant Activated",
+          description: "Ask questions about your warranty data and get insights",
+          duration: 3000,
+        });
+      }
     }
   };
 
@@ -96,33 +118,25 @@ export function AIChatSheet({ children, initialQuery }: AIChatSheetProps) {
 
   // Extract search query if it's an input element
   const getSearchQuery = (): string | undefined => {
-    if (React.isValidElement(children)) {
-      if (children.type === 'input' || children.type === Input) {
-        const inputProps = (children as React.ReactElement<any>).props;
-        return inputProps.value;
-      }
+    if (React.isValidElement(children) && children.type === 'input') {
+      const inputProps = (children as React.ReactElement<any>).props;
+      return inputProps.value;
     }
     return undefined;
   };
 
   const handleClick = () => {
     const query = getSearchQuery();
-    
     if (query && query.trim() !== '') {
       setInitialMessage(query);
       
-      // Start a new chat with the query
-      setResetConversation(true);
-      setTimeout(() => setResetConversation(false), 100);
-      
-      // Open chat
+      // Start new chat if there's a query
       if (!open) {
-        handleOpenChange(true);
+        setResetConversation(true);
+        setTimeout(() => setResetConversation(false), 100);
       }
-    } else {
-      // Normal behavior for non-input elements or empty query
-      toggleChat();
     }
+    toggleChat();
   };
 
   return (
@@ -199,6 +213,3 @@ export function AIChatSheet({ children, initialQuery }: AIChatSheetProps) {
     </>
   );
 }
-
-// Import from components/ui/input
-import { Input } from '@/components/ui/input';
