@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -31,6 +30,7 @@ interface AIChatAssistantProps {
   onChatChange?: (chatId: string) => void;
   showThreads?: boolean;
   onToggleThreads?: () => void;
+  initialMessage?: string;
 }
 
 // Create a chat storage for persisting chats
@@ -119,7 +119,8 @@ export const AIChatAssistant: React.FC<AIChatAssistantProps> = ({
   onNewChat,
   onChatChange,
   showThreads = true,
-  onToggleThreads
+  onToggleThreads,
+  initialMessage
 }) => {
   const location = useLocation();
   const pageName = getPageNameFromPath(location.pathname);

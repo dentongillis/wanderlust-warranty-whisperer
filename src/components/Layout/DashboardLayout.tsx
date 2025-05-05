@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Sidebar } from '../Sidebar/Sidebar';
-import { Menu, Search } from 'lucide-react';
+import { Menu, Search, Filter } from 'lucide-react'; // Added Filter import
 import { Button } from '@/components/ui/button';
 import { FiltersSheet } from '../Filters/FiltersSheet';
 import { AIChatSheet } from '../Dashboard/AIChatSheet';
