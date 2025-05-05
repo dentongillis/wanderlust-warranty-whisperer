@@ -26,7 +26,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
       
       <div className="flex flex-col flex-1 w-full min-w-0 transition-all duration-300 ease-in-out">
         <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm z-20">
-          {/* Top header with toggle and title */}
+          {/* Top header with toggle and title - reduced padding */}
           <div className="flex items-center justify-between p-2 sm:p-3">
             <div className="flex items-center">
               <Button 
@@ -49,13 +49,13 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
             </div>
             <div className="flex items-center gap-2 sm:gap-3">
               <AIChatSheet>
-                <Button variant="outline" className="text-sm py-1 px-3 h-auto">
+                <Button variant="outline" className="text-sm py-1 px-3 h-auto bg-blue-600 text-white hover:bg-blue-700 border-blue-600">
                   Ask AI
                 </Button>
               </AIChatSheet>
               
               <FiltersSheet>
-                <Button variant="outline" className="text-sm py-1 px-3 h-auto flex items-center">
+                <Button variant="outline" className="text-sm py-1 px-3 h-auto flex items-center bg-blue-600 text-white hover:bg-blue-700 border-blue-600">
                   <Filter size={14} className="mr-1" />
                   Filter
                 </Button>
@@ -63,8 +63,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
             </div>
           </div>
           
-          {/* Date filters only - with reduced padding and size */}
-          <div className="px-3 pb-1">
+          {/* Date filters - with reduced padding */}
+          <div className="px-3 pb-0">
             <DateRangeSelector className="scale-90 origin-left" />
           </div>
         </header>

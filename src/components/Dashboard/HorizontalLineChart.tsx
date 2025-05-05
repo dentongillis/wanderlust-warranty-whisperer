@@ -121,44 +121,44 @@ export const HorizontalLineChart: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Chart Header - with tabs below title */}
-      <div className="mb-2">
-        <h3 className="text-sm font-medium">Claims Analysis</h3>
-        <div className="flex justify-between items-center">
+      {/* Chart Header - with tabs in the same row */}
+      <div className="flex justify-between items-center mb-2">
+        <div>
+          <h3 className="text-sm font-medium">Claims Analysis</h3>
           <p className="text-xs text-muted-foreground">By Category</p>
-          <Tabs 
-            value={activeTab} 
-            onValueChange={(val) => setActiveTab(val as TabType)}
-            className="h-8"
-          >
-            <TabsList className="h-8 bg-gray-50 dark:bg-gray-800 p-0.5">
-              <TabsTrigger 
-                value="dealer" 
-                className="text-xs h-7 px-3 data-[state=active]:bg-black data-[state=active]:text-white"
-              >
-                Dealer
-              </TabsTrigger>
-              <TabsTrigger 
-                value="floorplan" 
-                className="text-xs h-7 px-3 data-[state=active]:bg-black data-[state=active]:text-white"
-              >
-                Floorplan
-              </TabsTrigger>
-              <TabsTrigger 
-                value="component" 
-                className="text-xs h-7 px-3 data-[state=active]:bg-black data-[state=active]:text-white"
-              >
-                Component
-              </TabsTrigger>
-              <TabsTrigger 
-                value="issue" 
-                className="text-xs h-7 px-3 data-[state=active]:bg-black data-[state=active]:text-white"
-              >
-                Issue
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
         </div>
+        <Tabs 
+          value={activeTab} 
+          onValueChange={(val) => setActiveTab(val as TabType)}
+          className="h-6"
+        >
+          <TabsList className="h-6 bg-gray-50 dark:bg-gray-800 p-0.5">
+            <TabsTrigger 
+              value="dealer" 
+              className="text-[10px] h-5 px-2 data-[state=active]:bg-black data-[state=active]:text-white"
+            >
+              Dealer
+            </TabsTrigger>
+            <TabsTrigger 
+              value="floorplan" 
+              className="text-[10px] h-5 px-2 data-[state=active]:bg-black data-[state=active]:text-white"
+            >
+              Floorplan
+            </TabsTrigger>
+            <TabsTrigger 
+              value="component" 
+              className="text-[10px] h-5 px-2 data-[state=active]:bg-black data-[state=active]:text-white"
+            >
+              Component
+            </TabsTrigger>
+            <TabsTrigger 
+              value="issue" 
+              className="text-[10px] h-5 px-2 data-[state=active]:bg-black data-[state=active]:text-white"
+            >
+              Issue
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
 
       {/* Scrollable chart container */}

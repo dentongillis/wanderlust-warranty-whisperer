@@ -3,7 +3,7 @@ import React from 'react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface WideBarChartProps {
-  data: { name: string; value: number; color?: string }[];
+  data: { name: string; value: number; color?: string; floorplans?: Array<{name: string, value: number}> }[];
   colorScheme?: 'blue' | 'green' | 'purple';
   showLabels?: boolean;
   useCustomColors?: boolean;
@@ -56,9 +56,9 @@ export const WideBarChart: React.FC<WideBarChartProps> = ({
                     className={`${color} relative transition-all duration-300 ease-in-out hover:opacity-90`} 
                     style={style}
                   >
-                    {/* Model name and value in center of each segment */}
+                    {/* Model name and value in center of each segment - increased font size */}
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-                      <span className="truncate whitespace-nowrap text-xs font-medium">{item.name}</span>
+                      <span className="truncate whitespace-nowrap text-sm font-medium">{item.name}</span>
                       <div className="flex items-center text-xs">
                         <span className="font-semibold">{item.value}</span>
                         <span className="ml-1 opacity-75 text-[10px]">({percentage.toFixed(1)}%)</span>
@@ -67,17 +67,42 @@ export const WideBarChart: React.FC<WideBarChartProps> = ({
                   </div>
                 </TooltipTrigger>
                 <TooltipContent className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg p-2 rounded-lg">
-                  <div className="text-xs font-medium">
-                    <div>{item.name}</div>
-                    <div className="flex justify-between gap-2">
-                      <span>Claims:</span>
-                      <span className="font-bold">{item.value}</span>
+                  {item.floorplans ? (
+                    <div className="text-xs font-medium w-64">
+                      <div className="mb-2">{item.name}: {item.value} claims</div>
+                      <div className="font-medium mb-1">Claims by Floorplan:</div>
+                      <div className="space-y-1.5">
+                        {item.floorplans.map(fp => (
+                          <div key={fp.name} className="flex flex-col">
+                            <div className="flex justify-between text-xs">
+                              <span>{fp.name}</span>
+                              <span>{fp.value}</span>
+                            </div>
+                            <div className="mt-0.5 h-2 bg-gray-100 dark:bg-gray-700 w-full rounded">
+                              <div 
+                                className="h-2 bg-blue-500 rounded" 
+                                style={{
+                                  width: `${(fp.value / Math.max(...item.floorplans!.map(f => f.value))) * 100}%`
+                                }}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                    <div className="flex justify-between gap-2">
-                      <span>Share:</span>
-                      <span className="font-bold">{percentage.toFixed(1)}%</span>
+                  ) : (
+                    <div className="text-xs font-medium">
+                      <div>{item.name}</div>
+                      <div className="flex justify-between gap-2">
+                        <span>Claims:</span>
+                        <span className="font-bold">{item.value}</span>
+                      </div>
+                      <div className="flex justify-between gap-2">
+                        <span>Share:</span>
+                        <span className="font-bold">{percentage.toFixed(1)}%</span>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </TooltipContent>
               </Tooltip>
             );
