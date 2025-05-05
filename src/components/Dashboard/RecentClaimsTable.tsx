@@ -11,8 +11,17 @@ import {
   SheetContent,
   SheetDescription,
   SheetHeader,
-  SheetTitle
+  SheetTitle,
+  SheetClose
 } from '@/components/ui/sheet';
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableCell
+} from '@/components/ui/table';
 
 // Sample data - in a real app this would come from an API
 const initialClaimsData = [
@@ -168,11 +177,11 @@ export const RecentClaimsTable: React.FC = () => {
 
   const getClassNamesFor = (name: string) => {
     if (!sortConfig) {
-      return 'cursor-pointer hover:text-blue-600 dark:hover:text-blue-400';
+      return 'sortable hover:text-blue-600 dark:hover:text-blue-400';
     }
     return sortConfig.key === name 
-      ? `cursor-pointer sorted-${sortConfig.direction} text-blue-600 dark:text-blue-400` 
-      : 'cursor-pointer hover:text-blue-600 dark:hover:text-blue-400';
+      ? `sorted-${sortConfig.direction} text-blue-600 dark:text-blue-400 sortable` 
+      : 'sortable hover:text-blue-600 dark:hover:text-blue-400';
   };
 
   const handleViewDetails = (claim: any) => {
@@ -186,162 +195,197 @@ export const RecentClaimsTable: React.FC = () => {
 
   return (
     <>
-      <div className="mb-2 px-2 flex items-center justify-between">
-        <div className="flex-1 max-w-[180px]">
+      <div className="px-3 flex items-center justify-between">
+        <div className="flex-1">
           <Input
             placeholder="Search claims..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="text-xs h-7"
+            className="text-xs h-6 max-w-full"
           />
         </div>
       </div>
-      <ScrollArea className="h-full">
-        <div className="min-w-full">
-          <table className="w-full text-xs">
-            <thead className="sticky top-0 z-10 bg-gray-50 dark:bg-gray-800">
-              <tr>
-                <th 
-                  className={`px-2 py-2 text-left font-medium text-gray-600 dark:text-gray-300 transition-colors ${getClassNamesFor('date')}`}
-                  onClick={() => requestSort('date')}
-                >
-                  Date
-                </th>
-                <th 
-                  className={`px-2 py-2 text-left font-medium text-gray-600 dark:text-gray-300 transition-colors ${getClassNamesFor('claimId')}`}
-                  onClick={() => requestSort('claimId')}
-                >
-                  Claim ID
-                </th>
-                <th 
-                  className={`px-2 py-2 text-left font-medium text-gray-600 dark:text-gray-300 transition-colors ${getClassNamesFor('model')}`}
-                  onClick={() => requestSort('model')}
-                >
-                  Model
-                </th>
-                <th 
-                  className={`px-2 py-2 text-left font-medium text-gray-600 dark:text-gray-300 transition-colors ${getClassNamesFor('dealer')}`}
-                  onClick={() => requestSort('dealer')}
-                >
-                  Dealer
-                </th>
-                <th 
-                  className={`px-2 py-2 text-center font-medium text-gray-600 dark:text-gray-300 transition-colors ${getClassNamesFor('status')}`}
-                  onClick={() => requestSort('status')}
-                >
-                  Status
-                </th>
-                <th 
-                  className={`px-2 py-2 text-left font-medium text-gray-600 dark:text-gray-300 transition-colors ${getClassNamesFor('total')}`}
-                  onClick={() => requestSort('total')}
-                >
-                  Total
-                </th>
-                <th className="px-2 py-2 text-right font-medium text-gray-600 dark:text-gray-300">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {claimsData.map((claim, index) => (
-                <tr key={index} className="border-t border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
-                  <td className="px-2 py-1.5 text-gray-600 dark:text-gray-300">{claim.date}</td>
-                  <td className="px-2 py-1.5 font-medium text-gray-800 dark:text-gray-200">{claim.claimId}</td>
-                  <td className="px-2 py-1.5 text-gray-600 dark:text-gray-300">{claim.model}</td>
-                  <td className="px-2 py-1.5 text-gray-600 dark:text-gray-300">{claim.dealer}</td>
-                  <td className="px-2 py-1.5 text-center">
-                    {claim.status === 'approved' && (
-                      <Badge variant="outline" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 border-green-200 dark:border-green-800 text-[9px] px-1 py-0">
-                        Approved
-                      </Badge>
-                    )}
-                    {claim.status === 'pending' && (
-                      <Badge variant="outline" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 border-yellow-200 dark:border-yellow-800 text-[9px] px-1 py-0">
-                        Pending
-                      </Badge>
-                    )}
-                    {claim.status === 'denied' && (
-                      <Badge variant="outline" className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 border-red-200 dark:border-red-800 text-[9px] px-1 py-0">
-                        Denied
-                      </Badge>
-                    )}
-                    {claim.status === 'in-progress' && (
-                      <Badge variant="outline" className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 border-blue-200 dark:border-blue-800 text-[9px] px-1 py-0">
-                        In Progress
-                      </Badge>
-                    )}
-                  </td>
-                  <td className="px-2 py-1.5 font-medium text-gray-800 dark:text-gray-200">{claim.total}</td>
-                  <td className="px-2 py-1.5 text-right">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="text-blue-600 dark:text-blue-400 h-6 px-1 py-0 text-xs"
-                      onClick={() => handleViewDetails(claim)}
-                    >
-                      <Eye size={12} className="mr-1" /> View
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      <ScrollArea className="h-full mt-2">
+        <Table>
+          <TableHeader className="sticky top-0 z-10 bg-gray-50 dark:bg-gray-800">
+            <TableRow>
+              <TableHead className={getClassNamesFor('date')} onClick={() => requestSort('date')}>
+                Date
+              </TableHead>
+              <TableHead className={getClassNamesFor('claimId')} onClick={() => requestSort('claimId')}>
+                Claim ID
+              </TableHead>
+              <TableHead className={getClassNamesFor('model')} onClick={() => requestSort('model')}>
+                Model
+              </TableHead>
+              <TableHead className={getClassNamesFor('dealer')} onClick={() => requestSort('dealer')}>
+                Dealer
+              </TableHead>
+              <TableHead className={`text-center ${getClassNamesFor('status')}`} onClick={() => requestSort('status')}>
+                Status
+              </TableHead>
+              <TableHead className={getClassNamesFor('total')} onClick={() => requestSort('total')}>
+                Total
+              </TableHead>
+              <TableHead className="text-right">
+                Actions
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {claimsData.map((claim, index) => (
+              <TableRow key={index} className="hover:bg-gray-50 dark:hover:bg-gray-800">
+                <TableCell className="text-gray-600 dark:text-gray-300">{claim.date}</TableCell>
+                <TableCell className="font-medium text-gray-800 dark:text-gray-200">{claim.claimId}</TableCell>
+                <TableCell className="text-gray-600 dark:text-gray-300">{claim.model}</TableCell>
+                <TableCell className="text-gray-600 dark:text-gray-300">{claim.dealer}</TableCell>
+                <TableCell className="text-center">
+                  {claim.status === 'approved' && (
+                    <Badge variant="outline" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 border-green-200 dark:border-green-800 text-[8px] px-1 py-0">
+                      Approved
+                    </Badge>
+                  )}
+                  {claim.status === 'pending' && (
+                    <Badge variant="outline" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 border-yellow-200 dark:border-yellow-800 text-[8px] px-1 py-0">
+                      Pending
+                    </Badge>
+                  )}
+                  {claim.status === 'denied' && (
+                    <Badge variant="outline" className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 border-red-200 dark:border-red-800 text-[8px] px-1 py-0">
+                      Denied
+                    </Badge>
+                  )}
+                  {claim.status === 'in-progress' && (
+                    <Badge variant="outline" className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 border-blue-200 dark:border-blue-800 text-[8px] px-1 py-0">
+                      In Progress
+                    </Badge>
+                  )}
+                </TableCell>
+                <TableCell className="font-medium text-gray-800 dark:text-gray-200">{claim.total}</TableCell>
+                <TableCell className="text-right">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-blue-600 dark:text-blue-400 h-6 px-1 py-0 text-xs"
+                    onClick={() => handleViewDetails(claim)}
+                  >
+                    <Eye size={12} className="mr-1" /> View
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </ScrollArea>
 
-      {/* Claim Details Sheet */}
+      {/* Claim Details Sheet - Redesigned to be more compact */}
       <Sheet open={isDetailOpen} onOpenChange={setIsDetailOpen}>
-        <SheetContent side="bottom" className="h-[70vh] p-0 rounded-t-xl">
-          <SheetHeader className="p-6 pb-2">
-            <SheetTitle>{selectedClaim?.claimId} - {selectedClaim?.model}</SheetTitle>
-            <SheetDescription>
-              Filed on {selectedClaim?.date}
-            </SheetDescription>
-          </SheetHeader>
-          <div className="px-6 pb-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <SheetContent side="bottom" className="h-[50vh] p-0 rounded-t-xl">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+            <div>
+              <h3 className="text-base font-semibold">{selectedClaim?.claimId} - {selectedClaim?.model}</h3>
+              <p className="text-xs text-gray-500">Filed on {selectedClaim?.date}</p>
+            </div>
+            <SheetClose className="rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-700">
+              <span className="sr-only">Close</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </SheetClose>
+          </div>
+          
+          <div className="p-4">
+            <div className="grid grid-cols-3 gap-4">
               <div>
-                <h3 className="text-sm font-semibold mb-2">Claim Details</h3>
-                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-md space-y-2">
-                  <p className="text-xs"><span className="font-medium">Issue:</span> {selectedClaim?.issue}</p>
-                  <p className="text-xs"><span className="font-medium">Warranty:</span> {selectedClaim?.warranty}</p>
-                  <p className="text-xs"><span className="font-medium">Status:</span> <Badge 
-                    variant="outline" 
-                    className={`ml-1 ${selectedClaim?.status === 'approved' 
-                        ? 'bg-green-100 text-green-800' 
-                        : selectedClaim?.status === 'denied' 
-                        ? 'bg-red-100 text-red-800'
-                        : selectedClaim?.status === 'in-progress'
-                        ? 'bg-blue-100 text-blue-800'
-                        : 'bg-yellow-100 text-yellow-800'}`}
-                  >
-                    {selectedClaim?.status.charAt(0).toUpperCase() + selectedClaim?.status.slice(1)}
-                  </Badge></p>
-                  <p className="text-xs"><span className="font-medium">Total Amount:</span> {selectedClaim?.total}</p>
+                <h4 className="text-xs font-semibold uppercase text-gray-500 mb-2">Claim Details</h4>
+                <div className="bg-gray-50 dark:bg-gray-800 rounded-md p-3">
+                  <div className="grid grid-cols-1 gap-2">
+                    <div>
+                      <span className="text-xs text-gray-500">Issue</span>
+                      <p className="text-sm">{selectedClaim?.issue}</p>
+                    </div>
+                    <div>
+                      <span className="text-xs text-gray-500">Warranty</span>
+                      <p className="text-sm">{selectedClaim?.warranty}</p>
+                    </div>
+                    <div>
+                      <span className="text-xs text-gray-500">Status</span>
+                      <div className="mt-1">
+                        {selectedClaim?.status === 'approved' && (
+                          <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200 text-xs">
+                            Approved
+                          </Badge>
+                        )}
+                        {selectedClaim?.status === 'pending' && (
+                          <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-200 text-xs">
+                            Pending
+                          </Badge>
+                        )}
+                        {selectedClaim?.status === 'denied' && (
+                          <Badge variant="outline" className="bg-red-100 text-red-800 border-red-200 text-xs">
+                            Denied
+                          </Badge>
+                        )}
+                        {selectedClaim?.status === 'in-progress' && (
+                          <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200 text-xs">
+                            In Progress
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-xs text-gray-500">Total Amount</span>
+                      <p className="text-sm font-semibold">{selectedClaim?.total}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
               
               <div>
-                <h3 className="text-sm font-semibold mb-2">Dealer Information</h3>
-                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-md space-y-2">
-                  <p className="text-xs"><span className="font-medium">Name:</span> {selectedClaim?.dealer}</p>
-                  <p className="text-xs"><span className="font-medium">Address:</span> {selectedClaim?.dealerAddress}</p>
-                  <p className="text-xs"><span className="font-medium">Contact:</span> {selectedClaim?.dealerContact}</p>
+                <h4 className="text-xs font-semibold uppercase text-gray-500 mb-2">Dealer Information</h4>
+                <div className="bg-gray-50 dark:bg-gray-800 rounded-md p-3">
+                  <div className="grid grid-cols-1 gap-2">
+                    <div>
+                      <span className="text-xs text-gray-500">Name</span>
+                      <p className="text-sm">{selectedClaim?.dealer}</p>
+                    </div>
+                    <div>
+                      <span className="text-xs text-gray-500">Address</span>
+                      <p className="text-sm">{selectedClaim?.dealerAddress}</p>
+                    </div>
+                    <div>
+                      <span className="text-xs text-gray-500">Contact</span>
+                      <p className="text-sm">{selectedClaim?.dealerContact}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
               
               <div>
-                <h3 className="text-sm font-semibold mb-2">Customer Information</h3>
-                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-md space-y-2">
-                  <p className="text-xs"><span className="font-medium">Name:</span> {selectedClaim?.customerName}</p>
-                  <p className="text-xs"><span className="font-medium">Email:</span> {selectedClaim?.customerEmail}</p>
-                  <p className="text-xs"><span className="font-medium">Phone:</span> {selectedClaim?.customerPhone}</p>
+                <h4 className="text-xs font-semibold uppercase text-gray-500 mb-2">Customer Information</h4>
+                <div className="bg-gray-50 dark:bg-gray-800 rounded-md p-3">
+                  <div className="grid grid-cols-1 gap-2">
+                    <div>
+                      <span className="text-xs text-gray-500">Name</span>
+                      <p className="text-sm">{selectedClaim?.customerName}</p>
+                    </div>
+                    <div>
+                      <span className="text-xs text-gray-500">Email</span>
+                      <p className="text-sm">{selectedClaim?.customerEmail}</p>
+                    </div>
+                    <div>
+                      <span className="text-xs text-gray-500">Phone</span>
+                      <p className="text-sm">{selectedClaim?.customerPhone}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
             
-            <div className="mt-6 flex justify-end">
-              <Button size="sm" onClick={() => navigate('/claims-report')}>
+            <div className="flex justify-end mt-4">
+              <Button 
+                size="sm" 
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+                onClick={() => navigate('/claims-report')}
+              >
                 View Full Claim Report
               </Button>
             </div>

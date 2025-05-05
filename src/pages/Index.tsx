@@ -47,10 +47,10 @@ const Index = () => {
             
             {/* Recent claims table */}
             <Card className="border border-gray-200 dark:border-gray-700 shadow-sm flex-grow min-h-0 mb-3 lg:mb-0 flex flex-col">
-              <CardHeader className="py-2 px-3 flex-shrink-0">
+              <CardHeader className="py-2 px-3 flex-shrink-0 pb-0">
                 <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <CardTitle className="text-base font-medium">Recent Claims</CardTitle>
+                  <div className="flex-1">
+                    <CardTitle className="text-base font-medium mb-2">Recent Claims</CardTitle>
                   </div>
                   <Button 
                     className="text-blue-600 dark:text-blue-400 text-xs hover:underline"
