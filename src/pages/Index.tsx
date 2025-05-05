@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { DashboardLayout } from '@/components/Layout/DashboardLayout';
 import { TopStats } from '@/components/Dashboard/TopStats';
 import { WarrantyTrendsChart } from '@/components/Dashboard/WarrantyTrendsChart';
@@ -10,9 +10,11 @@ import { HorizontalLineChart } from '@/components/Dashboard/HorizontalLineChart'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 const Index = () => {
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Function to navigate to claims report page
   const navigateToClaimsReport = () => {
@@ -38,8 +40,8 @@ const Index = () => {
               <ClaimsByModelBarChart />
             </div>
             
-            {/* Warranty Trends Chart - properly contained with more height */}
-            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm mb-3 min-h-0 h-[320px]">
+            {/* Warranty Trends Chart - make it taller */}
+            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm mb-3 min-h-0 h-[350px]">
               <CardContent className="p-4 h-full">
                 <WarrantyTrendsChart />
               </CardContent>
@@ -48,18 +50,16 @@ const Index = () => {
             {/* Recent claims table */}
             <Card className="border border-gray-200 dark:border-gray-700 shadow-sm flex-grow min-h-0 mb-3 lg:mb-0 flex flex-col">
               <CardHeader className="py-2 px-3 flex-shrink-0 pb-0">
-                <div className="flex justify-between items-center">
-                  <div className="flex-1">
-                    <CardTitle className="text-base font-medium mb-2">Recent Claims</CardTitle>
+                <div className="flex items-center space-x-3">
+                  <CardTitle className="text-xs font-medium">Recent Claims</CardTitle>
+                  <div className="flex-1 max-w-xs">
+                    <Input
+                      placeholder="Search claims..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="text-xs h-6 max-w-full"
+                    />
                   </div>
-                  <Button 
-                    className="text-blue-600 dark:text-blue-400 text-xs hover:underline"
-                    variant="ghost"
-                    size="sm"
-                    onClick={navigateToClaimsReport}
-                  >
-                    View All Claims
-                  </Button>
                 </div>
               </CardHeader>
               <CardContent className="p-0 flex-grow overflow-hidden">
@@ -74,7 +74,7 @@ const Index = () => {
               {/* Models Table */}
               <Card className="border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col">
                 <CardHeader className="py-2 px-3 flex-shrink-0">
-                  <CardTitle className="text-base font-medium">Model Overview</CardTitle>
+                  <CardTitle className="text-xs font-medium">Model Overview</CardTitle>
                 </CardHeader>
                 <CardContent className="p-0 overflow-auto flex-grow">
                   <ModelsTable />

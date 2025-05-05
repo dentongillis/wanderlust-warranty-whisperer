@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Eye } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -194,16 +193,6 @@ export const RecentClaimsTable: React.FC = () => {
 
   return (
     <>
-      <div className="px-3 flex items-center justify-between">
-        <div className="flex-1">
-          <Input
-            placeholder="Search claims..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="text-xs h-6 max-w-full"
-          />
-        </div>
-      </div>
       <div className="h-full overflow-auto">
         <Table>
           <TableHeader className="sticky top-0 z-10 bg-gray-50 dark:bg-gray-800">
