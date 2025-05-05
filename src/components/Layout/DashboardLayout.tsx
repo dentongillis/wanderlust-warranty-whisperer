@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Sidebar } from '../Sidebar/Sidebar';
-import { Menu, Search, Filter } from 'lucide-react'; // Added Filter import
+import { Menu, Search, Filter } from 'lucide-react'; 
 import { Button } from '@/components/ui/button';
 import { FiltersSheet } from '../Filters/FiltersSheet';
 import { AIChatSheet } from '../Dashboard/AIChatSheet';
@@ -26,7 +26,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
       </div>
       
       <div className="flex flex-col flex-1 w-full min-w-0 transition-all duration-300 ease-in-out">
-        <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm z-10 flex-shrink-0">
+        <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm z-20">
           {/* Top header with toggle and title */}
           <div className="flex items-center justify-between p-2 sm:p-3">
             <div className="flex items-center">
@@ -64,11 +64,11 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
             </div>
           </div>
           
-          {/* Search bar section */}
-          <div className="px-3 pb-2">
-            <div className="relative w-full mb-2">
+          {/* Search bar and date filters in same row */}
+          <div className="px-3 pb-2 flex flex-wrap items-center gap-3">
+            <div className="relative flex-grow max-w-md">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400" />
-              <AIChatSheet>
+              <AIChatSheet initialQuery={searchQuery}>
                 <input
                   type="search"
                   placeholder="Ask a question about your warranty data..."

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from "@/hooks/use-toast";
@@ -46,10 +47,17 @@ export function AIChatSheet({ children, initialQuery }: AIChatSheetProps) {
   const [initialMessage, setInitialMessage] = useState<string | undefined>(initialQuery);
   const { toast } = useToast();
   
+  // When initialQuery changes externally, update initialMessage
+  useEffect(() => {
+    if (initialQuery) {
+      setInitialMessage(initialQuery);
+    }
+  }, [initialQuery]);
+
   // Extract search query if children is an input element
   useEffect(() => {
     if (React.isValidElement(children) && children.type === 'input') {
-      const inputElement = children as React.ReactElement<HTMLInputElement>;
+      const inputElement = children as React.ReactElement<any>;
       if (inputElement.props.value) {
         setInitialMessage(inputElement.props.value);
       }
@@ -119,8 +127,14 @@ export function AIChatSheet({ children, initialQuery }: AIChatSheetProps) {
 
   const handleClick = () => {
     const query = getSearchQuery();
-    if (query) {
+    if (query && query.trim() !== '') {
       setInitialMessage(query);
+      
+      // Start new chat if there's a query
+      if (!open) {
+        setResetConversation(true);
+        setTimeout(() => setResetConversation(false), 100);
+      }
     }
     toggleChat();
   };
