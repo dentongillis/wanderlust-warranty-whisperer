@@ -63,9 +63,9 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
             </div>
           </div>
           
-          {/* Date filters only */}
-          <div className="px-3 pb-2">
-            <DateRangeSelector />
+          {/* Date filters only - with reduced padding and size */}
+          <div className="px-3 pb-1">
+            <DateRangeSelector className="scale-90 origin-left" />
           </div>
         </header>
         

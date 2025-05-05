@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { format, subDays, subMonths, subYears, isAfter, isBefore, startOfDay } from 'date-fns';
 import { Calendar as CalendarIcon, ChevronDown } from 'lucide-react';
@@ -79,17 +78,17 @@ const DateRangeDropdown = ({ value, onChange }: DateRangeDropdownProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="px-2 h-auto">
+        <Button variant="ghost" size="sm" className="px-2 h-7 text-xs">
           <span className="font-medium text-gray-700 dark:text-gray-300">
             {options.find(option => option.value === value)?.label || 'Select range'}
           </span>
-          <ChevronDown className="ml-1 h-4 w-4 opacity-70" />
+          <ChevronDown className="ml-1 h-3 w-3 opacity-70" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="start">
+      <DropdownMenuContent className="w-48" align="start">
         <DropdownMenuRadioGroup value={value} onValueChange={onChange as (value: string) => void}>
           {options.map((option) => (
-            <DropdownMenuRadioItem key={option.value} value={option.value} className="cursor-pointer">
+            <DropdownMenuRadioItem key={option.value} value={option.value} className="cursor-pointer text-xs">
               {option.label}
             </DropdownMenuRadioItem>
           ))}
@@ -133,38 +132,38 @@ const CustomDateRange = ({ startDate, endDate, onRangeChange, onApply, customRan
           variant="outline" 
           size="sm" 
           className={cn(
-            "border-dashed border-gray-300 dark:border-gray-600 h-9",
+            "border-dashed border-gray-300 dark:border-gray-600 h-7 text-xs",
             customRangeAlwaysVisible ? "flex items-center" : ""
           )}
         >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          <span className="text-sm font-normal">
+          <CalendarIcon className="mr-1 h-3 w-3" />
+          <span className="text-xs font-normal">
             {format(selectedStartDate, 'MMM dd, yyyy')} - {format(selectedEndDate, 'MMM dd, yyyy')}
           </span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
-        <div className="p-3 border-b">
+        <div className="p-2 border-b">
           <div className="flex justify-between items-center mb-2">
-            <div className="text-sm font-medium">
+            <div className="text-xs font-medium">
               {selecting === 'start' ? 'Select start date' : 'Select end date'}
             </div>
             <Button 
               size="sm" 
               variant="outline" 
-              className="h-7 text-xs" 
+              className="h-6 text-xs" 
               onClick={() => {
                 onRangeChange(selectedStartDate, selectedEndDate);
                 onApply();
               }}
             >
-              Apply Range
+              Apply
             </Button>
           </div>
           <div className="flex gap-2 text-xs">
             <div 
               className={cn(
-                "px-2 py-1 rounded cursor-pointer", 
+                "px-2 py-1 rounded cursor-pointer text-xs", 
                 selecting === 'start' 
                   ? "bg-primary text-primary-foreground" 
                   : "bg-muted text-muted-foreground"
@@ -175,7 +174,7 @@ const CustomDateRange = ({ startDate, endDate, onRangeChange, onApply, customRan
             </div>
             <div 
               className={cn(
-                "px-2 py-1 rounded cursor-pointer", 
+                "px-2 py-1 rounded cursor-pointer text-xs", 
                 selecting === 'end' 
                   ? "bg-primary text-primary-foreground" 
                   : "bg-muted text-muted-foreground"
@@ -191,7 +190,7 @@ const CustomDateRange = ({ startDate, endDate, onRangeChange, onApply, customRan
           selected={selecting === 'start' ? selectedStartDate : selectedEndDate}
           onSelect={handleCalendarSelect}
           initialFocus
-          className="p-3 pointer-events-auto"
+          className="p-2 pointer-events-auto text-xs"
         />
       </PopoverContent>
     </Popover>
@@ -277,7 +276,7 @@ export const DateRangeSelector = ({ className }: DateRangeSelectorProps) => {
   };
 
   return (
-    <div className={cn("flex flex-wrap items-center gap-2", className)}>
+    <div className={cn("flex items-center gap-2", className)}>
       <DateRangeDropdown 
         value={dateRangeOption} 
         onChange={handleDateRangeChange} 

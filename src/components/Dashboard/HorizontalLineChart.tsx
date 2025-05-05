@@ -158,20 +158,20 @@ export const HorizontalLineChart: React.FC = () => {
                   <TooltipTrigger asChild>
                     <div className="flex flex-col">
                       {/* Item name above the bar */}
-                      <div className="text-xs font-medium text-gray-600 dark:text-gray-300 mb-0.5">
-                        {item.name}
+                      <div className="text-xs font-medium text-gray-600 dark:text-gray-300 mb-0.5 flex justify-between">
+                        <span>{item.name}</span>
                       </div>
                       <div className="flex items-center group">
                         <div className="h-7 relative w-full bg-gray-100 dark:bg-gray-700 rounded overflow-hidden">
                           <div 
-                            className="h-full transition-all duration-300"
+                            className="h-full transition-all duration-300 flex items-center justify-center"
                             style={{ 
                               width: `${(item.value / maxValue) * 100}%`, 
                               backgroundColor: getBarColor(),
-                              borderRadius: '0 4px 4px 0'
+                              borderRadius: '4px'
                             }}
                           >
-                            <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs text-white font-medium">
+                            <span className="text-xs text-white font-medium">
                               {item.value}
                             </span>
                           </div>

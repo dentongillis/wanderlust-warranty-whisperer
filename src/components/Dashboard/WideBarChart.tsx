@@ -39,24 +39,6 @@ export const WideBarChart: React.FC<WideBarChartProps> = ({
   return (
     <TooltipProvider>
       <div className="flex flex-col h-full">
-        {/* Labels above the bar if showLabels is true */}
-        {showLabels && (
-          <div className="flex mb-1 text-xs">
-            {data.map((item, index) => {
-              const percentage = (item.value / total) * 100;
-              return (
-                <div 
-                  key={`label-${item.name}`} 
-                  className="text-center font-medium truncate" 
-                  style={{ width: `${percentage}%` }}
-                >
-                  {item.name}
-                </div>
-              );
-            })}
-          </div>
-        )}
-        
         {/* The actual bar chart */}
         <div className="flex-1 flex bg-transparent rounded-lg overflow-hidden" style={{ height: `${barHeight}px` }}>
           {data.map((item, index) => {
@@ -74,15 +56,12 @@ export const WideBarChart: React.FC<WideBarChartProps> = ({
                     className={`${color} relative transition-all duration-300 ease-in-out hover:opacity-90`} 
                     style={style}
                   >
-                    {/* Always show model name in the segment with appropriate styling */}
-                    {!showLabels && (
-                      <div className="absolute inset-0 flex items-center justify-center text-white text-xs font-medium">
-                        <span className="truncate px-1 whitespace-nowrap overflow-hidden">{item.name}</span>
+                    {/* Model name and value in center of each segment */}
+                    <div className="absolute inset-0 flex items-center justify-center text-white text-xs font-medium">
+                      <div className="flex items-center space-x-1.5">
+                        <span className="truncate whitespace-nowrap">{item.name}</span>
+                        <span className="font-semibold">{item.value}</span>
                       </div>
-                    )}
-                    {/* Value at end of bar */}
-                    <div className="absolute right-1 inset-y-0 flex items-center">
-                      <span className="text-white text-xs font-semibold">{item.value}</span>
                     </div>
                   </div>
                 </TooltipTrigger>
