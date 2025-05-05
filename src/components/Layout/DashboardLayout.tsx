@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Sidebar } from '../Sidebar/Sidebar';
-import { Menu, Search, Filter } from 'lucide-react'; 
+import { Menu, Filter } from 'lucide-react'; 
 import { Button } from '@/components/ui/button';
 import { FiltersSheet } from '../Filters/FiltersSheet';
 import { AIChatSheet } from '../Dashboard/AIChatSheet';
@@ -16,7 +16,6 @@ interface DashboardLayoutProps {
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title, description }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const location = useLocation();
   
   return (
@@ -64,28 +63,9 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
             </div>
           </div>
           
-          {/* Date filters and search bar in the same row */}
-          <div className="px-3 pb-2 flex items-center justify-between">
+          {/* Date filters only */}
+          <div className="px-3 pb-2">
             <DateRangeSelector />
-            
-            <div className="relative w-64">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400" />
-              <AIChatSheet initialQuery={searchQuery}>
-                <input
-                  type="search"
-                  placeholder="Ask a question about your warranty data..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      // This will trigger the chat opening via AIChatSheet's onClick
-                      e.currentTarget.blur();
-                    }
-                  }}
-                  className="w-full rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 py-2 pl-8 pr-3 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary"
-                />
-              </AIChatSheet>
-            </div>
           </div>
         </header>
         
