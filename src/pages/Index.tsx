@@ -38,8 +38,8 @@ const Index = () => {
               <ClaimsByModelBarChart />
             </div>
             
-            {/* Warranty Trends Chart - increased height from 280px to 340px */}
-            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm mb-3 min-h-0 h-[340px]">
+            {/* Warranty Trends Chart - increased height to 380px for better visualization */}
+            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm mb-3 min-h-0 h-[380px]">
               <CardContent className="p-4 h-full">
                 <WarrantyTrendsChart />
               </CardContent>
