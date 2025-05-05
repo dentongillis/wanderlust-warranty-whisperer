@@ -7,6 +7,7 @@ import { FiltersSheet } from '../Filters/FiltersSheet';
 import { AIChatSheet } from '../Dashboard/AIChatSheet';
 import { useLocation } from 'react-router-dom';
 import { DateRangeSelector } from '../DateFilters/DateRangeSelector';
+import { Input } from '@/components/ui/input';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -64,27 +65,27 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
             </div>
           </div>
           
-          {/* Search bar and date filters in same row */}
-          <div className="px-3 pb-2 flex flex-wrap items-center gap-3">
-            <div className="relative flex-grow max-w-md">
+          {/* Date filters row */}
+          <div className="px-3 pb-2 flex items-center">
+            <div className="ml-10">
+              <DateRangeSelector />
+            </div>
+          </div>
+          
+          {/* Search bar row */}
+          <div className="px-3 pb-2">
+            <div className="relative max-w-md ml-auto">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400" />
               <AIChatSheet initialQuery={searchQuery}>
-                <input
-                  type="search"
+                <Input
+                  type="text"
                   placeholder="Ask a question about your warranty data..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      // This will trigger the chat opening via AIChatSheet's onClick
-                      e.currentTarget.blur();
-                    }
-                  }}
                   className="w-full rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 py-2 pl-8 pr-3 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                 />
               </AIChatSheet>
             </div>
-            <DateRangeSelector />
           </div>
         </header>
         
