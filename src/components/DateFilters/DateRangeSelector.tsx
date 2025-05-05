@@ -38,6 +38,7 @@ export type CompareOption =
 interface DateRangeDisplayProps {
   startDate: Date;
   endDate: Date;
+  onClick?: () => void;
 }
 
 interface DateRangeDropdownProps {
@@ -56,6 +57,7 @@ interface CustomDateRangeProps {
   endDate: Date;
   onRangeChange: (start: Date, end: Date) => void;
   onApply: () => void;
+  customRangeAlwaysVisible?: boolean;
 }
 
 const options: { value: DateRangeOption; label: string }[] = [
@@ -81,9 +83,15 @@ const compareOptions: { value: CompareOption; label: string }[] = [
 ];
 
 // Component to display the date range
-const DateRangeDisplay = ({ startDate, endDate }: DateRangeDisplayProps) => {
+const DateRangeDisplay = ({ startDate, endDate, onClick }: DateRangeDisplayProps) => {
   return (
-    <div className="flex items-center text-sm text-gray-700 dark:text-gray-300">
+    <div 
+      className={cn(
+        "flex items-center text-sm text-gray-700 dark:text-gray-300",
+        onClick ? "cursor-pointer hover:text-gray-900" : ""
+      )}
+      onClick={onClick}
+    >
       {format(startDate, 'MMM d, yyyy')} – {format(endDate, 'MMM d, yyyy')}
     </div>
   );
@@ -140,7 +148,7 @@ const ComparePeriodDropdown = ({ value, onChange, disabled }: ComparePeriodDropd
 };
 
 // Custom date range popover with calendar selection
-const CustomDateRange = ({ startDate, endDate, onRangeChange, onApply }: CustomDateRangeProps) => {
+const CustomDateRange = ({ startDate, endDate, onRangeChange, onApply, customRangeAlwaysVisible }: CustomDateRangeProps) => {
   const [selectedStartDate, setSelectedStartDate] = useState<Date>(startDate);
   const [selectedEndDate, setSelectedEndDate] = useState<Date>(endDate);
   const [selecting, setSelecting] = useState<'start' | 'end'>('start');
@@ -172,7 +180,10 @@ const CustomDateRange = ({ startDate, endDate, onRangeChange, onApply }: CustomD
         <Button 
           variant="outline" 
           size="sm" 
-          className="border-dashed border-gray-300 dark:border-gray-600 h-9"
+          className={cn(
+            "border-dashed border-gray-300 dark:border-gray-600 h-9",
+            customRangeAlwaysVisible ? "flex items-center" : ""
+          )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
           <span className="text-sm font-normal">
@@ -305,6 +316,13 @@ export const DateRangeSelector = ({ className }: DateRangeSelectorProps) => {
   const handleCustomDateChange = (start: Date, end: Date) => {
     setStartDate(start);
     setEndDate(end);
+    if (dateRangeOption !== 'custom') {
+      setDateRangeOption('custom');
+    }
+  };
+
+  const handleDateRangeClick = () => {
+    setIsCalendarOpen(true);
   };
 
   const handleApplyCustomDate = () => {
@@ -318,22 +336,15 @@ export const DateRangeSelector = ({ className }: DateRangeSelectorProps) => {
         onChange={handleDateRangeChange} 
       />
       
-      {dateRangeOption === 'custom' && (
-        <CustomDateRange 
-          startDate={startDate}
-          endDate={endDate}
-          onRangeChange={handleCustomDateChange}
-          onApply={handleApplyCustomDate}
-        />
-      )}
+      {/* Always show Custom Date Range button */}
+      <CustomDateRange 
+        startDate={startDate}
+        endDate={endDate}
+        onRangeChange={handleCustomDateChange}
+        onApply={handleApplyCustomDate}
+        customRangeAlwaysVisible={true}
+      />
       
-      {dateRangeOption !== 'custom' && (
-        <DateRangeDisplay 
-          startDate={startDate} 
-          endDate={endDate} 
-        />
-      )}
-
       <div className="text-gray-400 mx-1">compared to</div>
       
       <ComparePeriodDropdown 
@@ -341,12 +352,6 @@ export const DateRangeSelector = ({ className }: DateRangeSelectorProps) => {
         onChange={setCompareOption} 
         disabled={dateRangeOption === 'alltime'}
       />
-      
-      <div className="ml-auto flex items-center gap-2">
-        <Button size="sm" variant="outline" className="text-xs px-3 py-1 h-7">Daily</Button>
-        <Button size="sm" variant="outline" className="text-xs px-3 py-1 h-7 bg-primary text-primary-foreground hover:bg-primary/90">Monthly</Button>
-        <Button size="sm" variant="outline" className="text-xs px-3 py-1 h-7">Yearly</Button>
-      </div>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from "@/hooks/use-toast";
 import { DraggableAIChat } from './DraggableAIChat';
@@ -13,6 +13,7 @@ import {
 
 interface AIChatSheetProps {
   children: React.ReactNode;
+  initialQuery?: string;
 }
 
 // Create a shared storage key for chat history
@@ -37,23 +38,41 @@ export const getLatestChatId = (): string | undefined => {
   return sortedChats[0]?.id;
 };
 
-export function AIChatSheet({ children }: AIChatSheetProps) {
+export function AIChatSheet({ children, initialQuery }: AIChatSheetProps) {
   const [open, setOpen] = useState(false);
   const [resetConversation, setResetConversation] = useState(false);
   const [minimized, setMinimized] = useState(false);
   const [activeChat, setActiveChat] = useState<string | undefined>(undefined);
   const [showThreads, setShowThreads] = useState(true);
+  const [initialMessage, setInitialMessage] = useState<string | undefined>(initialQuery);
   const { toast } = useToast();
   
+  // Extract search query if children is an input element
+  useEffect(() => {
+    if (React.isValidElement(children) && children.type === 'input') {
+      const inputElement = children as React.ReactElement<HTMLInputElement>;
+      if (inputElement.props.value) {
+        setInitialMessage(inputElement.props.value);
+      }
+    }
+  }, [children]);
+
   const handleOpenChange = (open: boolean) => {
     setOpen(open);
     if (open) {
       setMinimized(false);
-      toast({
-        title: "AI Assistant Activated",
-        description: "Ask questions about your warranty data and get insights",
-        duration: 3000,
-      });
+      
+      // If there's an initial query, start a new chat
+      if (initialMessage) {
+        setResetConversation(true);
+        setTimeout(() => setResetConversation(false), 100);
+      } else {
+        toast({
+          title: "AI Assistant Activated",
+          description: "Ask questions about your warranty data and get insights",
+          duration: 3000,
+        });
+      }
     }
   };
 
@@ -90,9 +109,26 @@ export function AIChatSheet({ children }: AIChatSheetProps) {
     }
   };
 
+  // Extract search query if it's an input element
+  const getSearchQuery = (): string | undefined => {
+    if (React.isValidElement(children) && children.type === 'input') {
+      const inputProps = (children as React.ReactElement<any>).props;
+      return inputProps.value;
+    }
+    return undefined;
+  };
+
+  const handleClick = () => {
+    const query = getSearchQuery();
+    if (query) {
+      setInitialMessage(query);
+    }
+    toggleChat();
+  };
+
   return (
     <>
-      <div onClick={toggleChat}>
+      <div onClick={handleClick}>
         {children}
       </div>
       
@@ -159,6 +195,7 @@ export function AIChatSheet({ children }: AIChatSheetProps) {
         onChatChange={setActiveChat}
         showThreads={showThreads}
         onToggleThreads={() => setShowThreads(!showThreads)}
+        initialMessage={initialMessage}
       />
     </>
   );

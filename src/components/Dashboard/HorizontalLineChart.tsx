@@ -75,15 +75,15 @@ export const HorizontalLineChart: React.FC = () => {
   const getActiveData = () => {
     switch (activeTab) {
       case 'dealer':
-        return dealerData;
+        return [...dealerData].sort((a, b) => b.value - a.value);
       case 'floorplan':
-        return floorplanData;
+        return [...floorplanData].sort((a, b) => b.value - a.value);
       case 'component':
-        return componentData;
+        return [...componentData].sort((a, b) => b.value - a.value);
       case 'issue':
-        return issueData;
+        return [...issueData].sort((a, b) => b.value - a.value);
       default:
-        return dealerData;
+        return [...dealerData].sort((a, b) => b.value - a.value);
     }
   };
 
@@ -156,22 +156,25 @@ export const HorizontalLineChart: React.FC = () => {
               {getActiveData().map((item) => (
                 <Tooltip key={item.name}>
                   <TooltipTrigger asChild>
-                    <div className="flex items-center group">
-                      <div className="w-24 min-w-24 truncate text-xs text-gray-600 dark:text-gray-300 pr-2">
+                    <div className="flex flex-col">
+                      {/* Item name above the bar */}
+                      <div className="text-xs font-medium text-gray-600 dark:text-gray-300 mb-0.5">
                         {item.name}
                       </div>
-                      <div className="h-7 relative w-full bg-gray-100 dark:bg-gray-700 rounded overflow-hidden">
-                        <div 
-                          className="h-full transition-all duration-300"
-                          style={{ 
-                            width: `${(item.value / maxValue) * 100}%`, 
-                            backgroundColor: getBarColor(),
-                            borderRadius: '0 4px 4px 0'
-                          }}
-                        >
-                          <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs text-white font-medium">
-                            {item.value}
-                          </span>
+                      <div className="flex items-center group">
+                        <div className="h-7 relative w-full bg-gray-100 dark:bg-gray-700 rounded overflow-hidden">
+                          <div 
+                            className="h-full transition-all duration-300"
+                            style={{ 
+                              width: `${(item.value / maxValue) * 100}%`, 
+                              backgroundColor: getBarColor(),
+                              borderRadius: '0 4px 4px 0'
+                            }}
+                          >
+                            <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs text-white font-medium">
+                              {item.value}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>

@@ -9,13 +9,14 @@ import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/componen
 interface DraggableAIChatProps {
   isOpen: boolean;
   onClose: () => void;
-  onMinimize?: () => void;
+  onMinimize: () => void;
   resetConversation?: boolean;
   onNewChat?: () => void;
   chatId?: string;
-  onChatChange?: (chatId: string) => void;
+  onChatChange?: (chatId: string | undefined) => void;
   showThreads?: boolean;
   onToggleThreads?: () => void;
+  initialMessage?: string;
 }
 
 export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({ 
@@ -27,7 +28,8 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
   chatId,
   onChatChange,
   showThreads = true,
-  onToggleThreads
+  onToggleThreads,
+  initialMessage
 }) => {
   // Initial position centered in the viewport but with adjusted dimensions
   const [position, setPosition] = useState({ x: window.innerWidth / 2 - 360, y: window.innerHeight / 4 });
@@ -354,6 +356,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
               onChatChange={onChatChange}
               showThreads={showThreads}
               onToggleThreads={onToggleThreads}
+              initialMessage={initialMessage}
             />
           </div>
         </ResizablePanel>

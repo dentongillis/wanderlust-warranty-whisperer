@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Sidebar } from '../Sidebar/Sidebar';
-import { Menu, Search, Filter } from 'lucide-react';
+import { Menu, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { FiltersSheet } from '../Filters/FiltersSheet';
 import { AIChatSheet } from '../Dashboard/AIChatSheet';
@@ -16,6 +16,7 @@ interface DashboardLayoutProps {
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title, description }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const location = useLocation();
   
   return (
@@ -48,15 +49,6 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
               )}
             </div>
             <div className="flex items-center gap-2 sm:gap-3">
-              <div className="relative hidden sm:block">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400" />
-                <input
-                  type="search"
-                  placeholder="Search..."
-                  className="w-48 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 py-1 sm:py-2 pl-8 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary"
-                />
-              </div>
-              
               <AIChatSheet>
                 <Button variant="outline" className="text-sm py-1 px-3 h-auto">
                   Ask AI
@@ -72,8 +64,26 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
             </div>
           </div>
           
-          {/* Date range filter section */}
+          {/* Search bar section */}
           <div className="px-3 pb-2">
+            <div className="relative w-full mb-2">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400" />
+              <AIChatSheet>
+                <input
+                  type="search"
+                  placeholder="Ask a question about your warranty data..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      // This will trigger the chat opening via AIChatSheet's onClick
+                      e.currentTarget.blur();
+                    }
+                  }}
+                  className="w-full rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 py-2 pl-8 pr-3 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                />
+              </AIChatSheet>
+            </div>
             <DateRangeSelector />
           </div>
         </header>
