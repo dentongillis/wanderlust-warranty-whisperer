@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -170,8 +169,8 @@ export const HorizontalLineChart: React.FC = () => {
                 <Tooltip key={item.name}>
                   <TooltipTrigger asChild>
                     <div className="flex flex-col">
-                      {/* Item name above the bar */}
-                      <div className="text-xs font-medium text-gray-600 dark:text-gray-300 mb-0.5 flex justify-between">
+                      {/* Item name above the bar - font size reduced */}
+                      <div className="text-[10px] font-medium text-gray-600 dark:text-gray-300 mb-0.5 flex justify-between">
                         <span>{getDisplayName(item)}</span>
                       </div>
                       <div className="flex items-center group">

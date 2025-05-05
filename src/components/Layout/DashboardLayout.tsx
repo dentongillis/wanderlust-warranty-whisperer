@@ -27,7 +27,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
       <div className="flex flex-col flex-1 w-full min-w-0 transition-all duration-300 ease-in-out">
         <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm z-20">
           {/* Top header with toggle and title - reduced padding */}
-          <div className="flex items-center justify-between p-2 sm:p-3 pb-1">
+          <div className="flex items-center justify-between p-2 sm:p-3 pb-0">
             <div className="flex items-center">
               <Button 
                 variant="ghost" 
@@ -47,26 +47,30 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
                 </div>
               )}
             </div>
-            <div className="flex items-center gap-2 sm:gap-3">
-              <AIChatSheet>
-                <Button variant="outline" className="text-sm py-1 px-3 h-auto bg-blue-600 text-white hover:bg-blue-700 border-blue-600">
-                  Ask AI
-                </Button>
-              </AIChatSheet>
+            <div className="flex flex-col items-end">
+              <div className="flex items-center gap-2 sm:gap-3 mb-1">
+                <AIChatSheet>
+                  <Button variant="outline" className="text-sm py-1 px-3 h-auto bg-blue-600 text-white hover:bg-blue-700 border-blue-600">
+                    Ask AI
+                  </Button>
+                </AIChatSheet>
+                
+                <FiltersSheet>
+                  <Button variant="outline" className="text-sm py-1 px-3 h-auto flex items-center bg-blue-600 text-white hover:bg-blue-700 border-blue-600">
+                    <Filter size={14} className="mr-1" />
+                    Filter
+                  </Button>
+                </FiltersSheet>
+              </div>
               
-              <FiltersSheet>
-                <Button variant="outline" className="text-sm py-1 px-3 h-auto flex items-center bg-blue-600 text-white hover:bg-blue-700 border-blue-600">
-                  <Filter size={14} className="mr-1" />
-                  Filter
-                </Button>
-              </FiltersSheet>
+              {/* Date filters - positioned directly under the buttons */}
+              <div>
+                <DateRangeSelector className="scale-90 origin-right" />
+              </div>
             </div>
           </div>
           
-          {/* Date filters - with reduced padding and moved up */}
-          <div className="px-3 pb-1">
-            <DateRangeSelector className="scale-90 origin-left" />
-          </div>
+          {/* Remove the separate date filters section since we moved it up */}
         </header>
         
         <main className="flex-1 overflow-auto p-2 sm:p-3 flex flex-col min-h-0">
