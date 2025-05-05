@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -85,6 +84,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
         y: e.clientY - rect.top
       });
       setIsDragging(true);
+      document.body.style.cursor = 'grabbing'; // Change cursor to indicate dragging
       document.body.classList.add('select-none'); // Prevent text selection during drag
     }
   };
@@ -105,6 +105,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
 
   const handleMouseUp = () => {
     setIsDragging(false);
+    document.body.style.cursor = ''; // Reset cursor
     document.body.classList.remove('select-none'); // Restore text selection
   };
 
@@ -210,6 +211,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
       document.removeEventListener('mouseup', handleMouseUp);
       document.removeEventListener('touchmove', handleTouchMove);
       document.removeEventListener('touchend', handleTouchEnd);
+      document.body.style.cursor = ''; // Reset cursor on cleanup
       document.body.classList.remove('select-none'); // Clean up
     };
   }, [isDragging]);
@@ -245,7 +247,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
         background: 'rgba(255, 255, 255, 0.85)',
         boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
         border: '1px solid rgba(255, 255, 255, 0.2)',
-        zIndex: 9999 // Added very high z-index to ensure it's on top
+        zIndex: 9999 // Very high z-index to ensure it's on top
       }}
     >
       <ResizablePanelGroup 
@@ -253,7 +255,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
         className="h-full rounded-lg overflow-hidden border-0"
       >
         <div
-          className="p-3 border-b flex flex-row items-center justify-between space-y-0 chat-header-gradient text-white rounded-t-lg"
+          className="p-3 border-b flex flex-row items-center justify-between space-y-0 chat-header-gradient text-white rounded-t-lg cursor-grab"
           onMouseDown={(e) => {
             // Only allow dragging from the header, not the buttons
             if (
@@ -269,6 +271,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
                   y: e.clientY - rect.top
                 });
                 setIsDragging(true);
+                document.body.style.cursor = 'grabbing'; // Change cursor to indicate dragging
                 document.body.classList.add('select-none');
               }
             }
@@ -364,7 +367,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
         </ResizablePanel>
       </ResizablePanelGroup>
       
-      {/* Corner resize handles - invisible but functional, with lower z-index */}
+      {/* Corner resize handles - invisible but functional */}
       {/* Bottom-right corner */}
       <div className="absolute bottom-0 right-0 w-8 h-8 cursor-nwse-resize resize-handle resize-handle-br z-30" 
            onMouseDown={(e) => {
@@ -524,7 +527,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
            }}
       />
 
-      {/* Edge resize handles - only keep the functionality, remove visual indicators */}
+      {/* Edge resize handles - only keep the functionality */}
       {/* Bottom resizing */}
       <div className="absolute bottom-0 left-8 right-8 h-1 cursor-ns-resize resize-handle resize-handle-b z-30"
         onMouseDown={(e) => {
