@@ -1,8 +1,9 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Info } from 'lucide-react';
+import { Info, Filter } from 'lucide-react';
 
 // Mock data for the choropleth map
 const usStatesData = [
@@ -147,7 +148,120 @@ export const ChoroplethMap = () => {
     >
       <g>
         {/* This is where the Canadian provinces SVG paths would go */}
-        {/* The following is just a simplified representation of a few provinces */}
+        {/* For demonstration purposes, we'll use simplified shapes for provinces */}
         <path 
           id="ON" 
-          d="M633.1,288.4l-2.3-5l-8-6l-8.5-3.2l-0.9-5.2l3.3-2.6l-1-3.1l2.5-5.7l-1.3-3.7v-5.2L612,240l-4.2-1.3h-4.3l-0.9-1.6l5.7-2.1l1.4-2.9l-0.5-3.1l1.5-2.1l-3.8-5.2l-2.8-1l-3.3,0.9l-1.9,0.2l-3.8,2.6l-5.2,0.5l-0.9-1.3l-0.5-2.9l-3.3-0.9l-4.3,1l-5.2,2.3l-6.6,2.1l-3.8,0.1l-1.9-0.9l1.4-2.9l-0.4-2.1l-3.3-2.3l3.8-2.1l8-9.9l3.8-0.5l2.3-1.9l5.2-1.6l3.8-3.1l7.1-1.8l4.7,0.5l4.3,0.2l7.1-1.8l4.2-1.3l7.1-1.8l9.4-1.3l0.9-0.5l-0.5-1.6l1.9-0.2l3.8-0.5l8-1.3l9,0.2l4.2-1.3h4.3l5.2-2.6h4.3l5.2-1.6l3.8-2.1l4.3-2.6l5.6-1.8l4.3-1.6l3.8-2.9l5.2-1.6l5.6-2.6l3.3-2.3l3.8-2.9l5.7-2.1l4.2-1.6l5.7-2.1l5.6-1.8l0.5-1.6l-0.9-1.3l1.4-1.9l4.3-0.
+          d="M520,250 L550,220 L600,200 L650,210 L680,240 L670,280 L640,320 L600,330 L560,310 L530,290 L520,250"
+          fill={getColorByValue(320)}
+          stroke="#ffffff"
+          strokeWidth="1"
+          onClick={() => handleRegionClick(canadianProvincesData.find(p => p.id === 'ON'))}
+          className="hover:opacity-80 cursor-pointer"
+        />
+        <path 
+          id="QC" 
+          d="M680,240 L710,220 L750,210 L790,220 L820,250 L830,290 L800,320 L770,330 L730,320 L700,300 L670,280 L680,240"
+          fill={getColorByValue(280)}
+          stroke="#ffffff"
+          strokeWidth="1"
+          onClick={() => handleRegionClick(canadianProvincesData.find(p => p.id === 'QC'))}
+          className="hover:opacity-80 cursor-pointer"
+        />
+        <path 
+          id="BC" 
+          d="M250,200 L290,180 L340,190 L370,230 L360,270 L330,300 L290,310 L260,290 L240,260 L250,200"
+          fill={getColorByValue(240)}
+          stroke="#ffffff"
+          strokeWidth="1"
+          onClick={() => handleRegionClick(canadianProvincesData.find(p => p.id === 'BC'))}
+          className="hover:opacity-80 cursor-pointer"
+        />
+        {/* Add more provinces as needed */}
+        <text x="550" y="280" className="text-xs font-bold">ON</text>
+        <text x="750" y="270" className="text-xs font-bold">QC</text>
+        <text x="290" y="250" className="text-xs font-bold">BC</text>
+      </g>
+    </svg>
+  );
+
+  return (
+    <Card className="h-full shadow border border-gray-200 dark:border-gray-700">
+      <CardHeader className="pb-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <CardTitle className="text-xl">Regional Claim Distribution</CardTitle>
+            <div className="text-muted-foreground">
+              <Info size={16} className="inline ml-1" />
+            </div>
+          </div>
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-auto">
+            <TabsList>
+              <TabsTrigger value="usa" className="text-xs">USA</TabsTrigger>
+              <TabsTrigger value="canada" className="text-xs">Canada</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+      </CardHeader>
+      <CardContent>
+        {selectedRegion && (
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg z-10 border border-gray-200 dark:border-gray-700 min-w-[200px]">
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="font-bold">
+                {selectedRegion.state || selectedRegion.province}
+              </h3>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={handleClosePopup}
+                className="h-6 w-6 p-0"
+              >
+                ×
+              </Button>
+            </div>
+            <p className="text-sm mb-1">Claims: <span className="font-semibold">{selectedRegion.value}</span></p>
+            <p className="text-sm">
+              Change: <span className={`font-semibold ${selectedRegion.change.startsWith('+') ? 'text-green-500' : 'text-red-500'}`}>
+                {selectedRegion.change}
+              </span>
+            </p>
+          </div>
+        )}
+        
+        <div className="relative h-[380px]">
+          <TabsContent value="usa" className="m-0 h-full">
+            <USAMap />
+          </TabsContent>
+          <TabsContent value="canada" className="m-0 h-full">
+            <CanadaMap />
+          </TabsContent>
+        </div>
+        
+        {/* Legend */}
+        <div className="flex justify-center mt-2">
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center">
+              <div className="w-3 h-3 bg-[#0b5394] mr-1"></div>
+              <span className="text-xs">600+</span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-3 h-3 bg-[#3d85c6] mr-1"></div>
+              <span className="text-xs">400-599</span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-3 h-3 bg-[#6fa8dc] mr-1"></div>
+              <span className="text-xs">200-399</span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-3 h-3 bg-[#9fc5e8] mr-1"></div>
+              <span className="text-xs">100-199</span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-3 h-3 bg-[#cfe2f3] mr-1"></div>
+              <span className="text-xs">0-99</span>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
