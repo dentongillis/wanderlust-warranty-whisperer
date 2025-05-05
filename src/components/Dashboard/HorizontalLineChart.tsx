@@ -6,26 +6,26 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 
 // Expanded dealer data for scrolling demonstration
 const dealerData = [
-  { name: 'Camping World Denver', value: 12 },
-  { name: 'RV One Superstores', value: 15 },
-  { name: 'Lazydays Tampa', value: 10 },
-  { name: 'General RV Wixom', value: 17 },
-  { name: 'Motor Home Specialist', value: 14 },
-  { name: 'Bill Plemmons RV', value: 16 },
-  { name: 'Dixie RV Superstores', value: 9 },
-  { name: 'Campers Inn RV', value: 13 },
-  { name: 'Giant RV', value: 11 },
-  { name: 'PleasureLand RV', value: 8 },
-  { name: 'Happy Camper RV', value: 18 },
-  { name: 'Sunshine RV Center', value: 14 },
-  { name: 'Mountain View RV', value: 12 },
-  { name: 'Adventure Motors', value: 19 },
-  { name: 'Freedom RV Sales', value: 15 },
-  { name: 'Valley RV Center', value: 11 },
-  { name: 'Roadtrek Paradise', value: 16 },
-  { name: 'Traveler\'s Corner', value: 14 },
-  { name: 'Highway Haven RV', value: 17 },
-  { name: 'Frontier Motors', value: 13 }
+  { name: 'Camping World Denver', city: 'Denver', state: 'CO', value: 12 },
+  { name: 'RV One Superstores', city: 'Tampa', state: 'FL', value: 15 },
+  { name: 'Lazydays Tampa', city: 'Tampa', state: 'FL', value: 10 },
+  { name: 'General RV Wixom', city: 'Wixom', state: 'MI', value: 17 },
+  { name: 'Motor Home Specialist', city: 'Alvarado', state: 'TX', value: 14 },
+  { name: 'Bill Plemmons RV', city: 'Rural Hall', state: 'NC', value: 16 },
+  { name: 'Dixie RV Superstores', city: 'Hammond', state: 'LA', value: 9 },
+  { name: 'Campers Inn RV', city: 'Jacksonville', state: 'FL', value: 13 },
+  { name: 'Giant RV', city: 'Montclair', state: 'CA', value: 11 },
+  { name: 'PleasureLand RV', city: 'St. Cloud', state: 'MN', value: 8 },
+  { name: 'Happy Camper RV', city: 'Charlotte', state: 'NC', value: 18 },
+  { name: 'Sunshine RV Center', city: 'Phoenix', state: 'AZ', value: 14 },
+  { name: 'Mountain View RV', city: 'Denver', state: 'CO', value: 12 },
+  { name: 'Adventure Motors', city: 'Charlotte', state: 'NC', value: 19 },
+  { name: 'Freedom RV Sales', city: 'Las Vegas', state: 'NV', value: 15 },
+  { name: 'Valley RV Center', city: 'Sacramento', state: 'CA', value: 11 },
+  { name: 'Roadtrek Paradise', city: 'Austin', state: 'TX', value: 16 },
+  { name: 'Traveler\'s Corner', city: 'Portland', state: 'OR', value: 14 },
+  { name: 'Highway Haven RV', city: 'Seattle', state: 'WA', value: 17 },
+  { name: 'Frontier Motors', city: 'Nashville', state: 'TN', value: 13 }
 ];
 
 const floorplanData = [
@@ -103,8 +103,21 @@ export const HorizontalLineChart: React.FC = () => {
     }
   };
 
+  const data = getActiveData();
+  
+  // Calculate total values for percentage calculation
+  const totalValue = data.reduce((acc, item) => acc + item.value, 0);
+
   // Find the maximum value for scaling the bars
-  const maxValue = Math.max(...getActiveData().map(item => item.value));
+  const maxValue = Math.max(...data.map(item => item.value));
+
+  // Format the display name for dealers to include city and state
+  const getDisplayName = (item: any) => {
+    if (activeTab === 'dealer' && item.city && item.state) {
+      return `${item.name} - ${item.city}, ${item.state}`;
+    }
+    return item.name;
+  };
 
   return (
     <div className="flex flex-col h-full">
@@ -153,13 +166,13 @@ export const HorizontalLineChart: React.FC = () => {
         <div className="min-h-[400px] pr-2">
           <TooltipProvider>
             <div className="flex flex-col space-y-2">
-              {getActiveData().map((item) => (
+              {data.map((item) => (
                 <Tooltip key={item.name}>
                   <TooltipTrigger asChild>
                     <div className="flex flex-col">
                       {/* Item name above the bar */}
                       <div className="text-xs font-medium text-gray-600 dark:text-gray-300 mb-0.5 flex justify-between">
-                        <span>{item.name}</span>
+                        <span>{getDisplayName(item)}</span>
                       </div>
                       <div className="flex items-center group">
                         <div className="h-7 relative w-full bg-gray-100 dark:bg-gray-700 rounded overflow-hidden">
@@ -181,14 +194,14 @@ export const HorizontalLineChart: React.FC = () => {
                   </TooltipTrigger>
                   <TooltipContent className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg p-2 rounded-lg">
                     <div className="text-xs font-medium">
-                      <div className="font-medium mb-1">{item.name}</div>
+                      <div className="font-medium mb-1">{getDisplayName(item)}</div>
                       <div className="flex justify-between gap-2">
                         <span className="text-gray-500">Count:</span>
                         <span>{item.value}</span>
                       </div>
                       <div className="flex justify-between gap-2">
                         <span className="text-gray-500">Share:</span>
-                        <span>{((item.value / maxValue) * 100).toFixed(1)}%</span>
+                        <span>{((item.value / totalValue) * 100).toFixed(1)}%</span>
                       </div>
                     </div>
                   </TooltipContent>

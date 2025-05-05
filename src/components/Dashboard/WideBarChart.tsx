@@ -57,10 +57,11 @@ export const WideBarChart: React.FC<WideBarChartProps> = ({
                     style={style}
                   >
                     {/* Model name and value in center of each segment */}
-                    <div className="absolute inset-0 flex items-center justify-center text-white text-xs font-medium">
-                      <div className="flex items-center space-x-1.5">
-                        <span className="truncate whitespace-nowrap">{item.name}</span>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
+                      <span className="truncate whitespace-nowrap text-xs font-medium">{item.name}</span>
+                      <div className="flex items-center text-xs">
                         <span className="font-semibold">{item.value}</span>
+                        <span className="ml-1 opacity-75 text-[10px]">({percentage.toFixed(1)}%)</span>
                       </div>
                     </div>
                   </div>
