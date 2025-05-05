@@ -74,7 +74,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      "h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&.sortable]:cursor-pointer [&.sorted-ascending]:after:content-['↑'] [&.sorted-descending]:after:content-['↓'] [&.sorted-ascending]:after:ml-1 [&.sorted-descending]:after:ml-1",
+      "h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&.sortable]:cursor-pointer [&.sorted-ascending]:after:content-['↑'] [&.sorted-descending]:after:content-['↓'] [&.sorted-ascending]:after:ml-1 [&.sorted-descending]:after:ml-1 [&.sortable]:hover:text-blue-600 [&.sortable]:transition-colors",
       className
     )}
     {...props}

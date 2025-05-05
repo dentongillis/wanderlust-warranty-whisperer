@@ -168,11 +168,11 @@ export const RecentClaimsTable: React.FC = () => {
 
   const getClassNamesFor = (name: string) => {
     if (!sortConfig) {
-      return 'cursor-pointer';
+      return 'cursor-pointer hover:text-blue-600 dark:hover:text-blue-400';
     }
     return sortConfig.key === name 
-      ? `cursor-pointer sorted-${sortConfig.direction}` 
-      : 'cursor-pointer';
+      ? `cursor-pointer sorted-${sortConfig.direction} text-blue-600 dark:text-blue-400` 
+      : 'cursor-pointer hover:text-blue-600 dark:hover:text-blue-400';
   };
 
   const handleViewDetails = (claim: any) => {
@@ -186,13 +186,15 @@ export const RecentClaimsTable: React.FC = () => {
 
   return (
     <>
-      <div className="mb-2 px-2">
-        <Input
-          placeholder="Search claims by ID, model, dealer, status..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="text-xs"
-        />
+      <div className="mb-2 px-2 flex items-center justify-between">
+        <div className="flex-1 max-w-[180px]">
+          <Input
+            placeholder="Search claims..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="text-xs h-7"
+          />
+        </div>
       </div>
       <ScrollArea className="h-full">
         <div className="min-w-full">
@@ -200,37 +202,37 @@ export const RecentClaimsTable: React.FC = () => {
             <thead className="sticky top-0 z-10 bg-gray-50 dark:bg-gray-800">
               <tr>
                 <th 
-                  className={`px-2 py-2 text-left font-medium text-gray-600 dark:text-gray-300 ${getClassNamesFor('date')}`}
+                  className={`px-2 py-2 text-left font-medium text-gray-600 dark:text-gray-300 transition-colors ${getClassNamesFor('date')}`}
                   onClick={() => requestSort('date')}
                 >
                   Date
                 </th>
                 <th 
-                  className={`px-2 py-2 text-left font-medium text-gray-600 dark:text-gray-300 ${getClassNamesFor('claimId')}`}
+                  className={`px-2 py-2 text-left font-medium text-gray-600 dark:text-gray-300 transition-colors ${getClassNamesFor('claimId')}`}
                   onClick={() => requestSort('claimId')}
                 >
                   Claim ID
                 </th>
                 <th 
-                  className={`px-2 py-2 text-left font-medium text-gray-600 dark:text-gray-300 ${getClassNamesFor('model')}`}
+                  className={`px-2 py-2 text-left font-medium text-gray-600 dark:text-gray-300 transition-colors ${getClassNamesFor('model')}`}
                   onClick={() => requestSort('model')}
                 >
                   Model
                 </th>
                 <th 
-                  className={`px-2 py-2 text-left font-medium text-gray-600 dark:text-gray-300 ${getClassNamesFor('dealer')}`}
+                  className={`px-2 py-2 text-left font-medium text-gray-600 dark:text-gray-300 transition-colors ${getClassNamesFor('dealer')}`}
                   onClick={() => requestSort('dealer')}
                 >
                   Dealer
                 </th>
                 <th 
-                  className={`px-2 py-2 text-center font-medium text-gray-600 dark:text-gray-300 ${getClassNamesFor('status')}`}
+                  className={`px-2 py-2 text-center font-medium text-gray-600 dark:text-gray-300 transition-colors ${getClassNamesFor('status')}`}
                   onClick={() => requestSort('status')}
                 >
                   Status
                 </th>
                 <th 
-                  className={`px-2 py-2 text-left font-medium text-gray-600 dark:text-gray-300 ${getClassNamesFor('total')}`}
+                  className={`px-2 py-2 text-left font-medium text-gray-600 dark:text-gray-300 transition-colors ${getClassNamesFor('total')}`}
                   onClick={() => requestSort('total')}
                 >
                   Total
@@ -249,22 +251,22 @@ export const RecentClaimsTable: React.FC = () => {
                   <td className="px-2 py-1.5 text-gray-600 dark:text-gray-300">{claim.dealer}</td>
                   <td className="px-2 py-1.5 text-center">
                     {claim.status === 'approved' && (
-                      <Badge variant="outline" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 border-green-200 dark:border-green-800 text-[10px] px-1 py-0">
+                      <Badge variant="outline" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 border-green-200 dark:border-green-800 text-[9px] px-1 py-0">
                         Approved
                       </Badge>
                     )}
                     {claim.status === 'pending' && (
-                      <Badge variant="outline" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 border-yellow-200 dark:border-yellow-800 text-[10px] px-1 py-0">
+                      <Badge variant="outline" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 border-yellow-200 dark:border-yellow-800 text-[9px] px-1 py-0">
                         Pending
                       </Badge>
                     )}
                     {claim.status === 'denied' && (
-                      <Badge variant="outline" className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 border-red-200 dark:border-red-800 text-[10px] px-1 py-0">
+                      <Badge variant="outline" className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 border-red-200 dark:border-red-800 text-[9px] px-1 py-0">
                         Denied
                       </Badge>
                     )}
                     {claim.status === 'in-progress' && (
-                      <Badge variant="outline" className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 border-blue-200 dark:border-blue-800 text-[10px] px-1 py-0">
+                      <Badge variant="outline" className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 border-blue-200 dark:border-blue-800 text-[9px] px-1 py-0">
                         In Progress
                       </Badge>
                     )}
