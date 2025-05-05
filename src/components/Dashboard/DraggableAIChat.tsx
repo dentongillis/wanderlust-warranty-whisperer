@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -229,7 +230,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
   return (
     <div 
       ref={chatRef}
-      className="absolute shadow-lg dark:shadow-blue-900/20 rounded-lg z-40 transition-opacity duration-300 resize-chat"
+      className="absolute shadow-lg dark:shadow-blue-900/20 rounded-lg transition-opacity duration-300 resize-chat"
       style={{ 
         left: `${position.x}px`, 
         top: `${position.y}px`,
@@ -243,7 +244,8 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
         WebkitBackdropFilter: 'blur(8px)',
         background: 'rgba(255, 255, 255, 0.85)',
         boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-        border: '1px solid rgba(255, 255, 255, 0.2)'
+        border: '1px solid rgba(255, 255, 255, 0.2)',
+        zIndex: 9999 // Added very high z-index to ensure it's on top
       }}
     >
       <ResizablePanelGroup 

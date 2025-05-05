@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from "@/hooks/use-toast";
@@ -134,7 +133,7 @@ export function AIChatSheet({ children, initialQuery }: AIChatSheetProps) {
       
       {/* Minimized Chat Bubble */}
       {minimized && (
-        <div className="fixed bottom-4 right-4 flex space-x-2 z-50">
+        <div className="fixed bottom-4 right-4 flex space-x-2" style={{ zIndex: 9998 }}>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
