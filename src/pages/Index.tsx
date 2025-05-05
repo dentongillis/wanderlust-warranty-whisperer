@@ -39,7 +39,7 @@ const Index = () => {
             </div>
             
             {/* Warranty Trends Chart - properly contained with more height */}
-            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm mb-3 min-h-0 h-[280px]">
+            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm mb-3 min-h-0 h-[320px]">
               <CardContent className="p-4 h-full">
                 <WarrantyTrendsChart />
               </CardContent>
@@ -62,7 +62,7 @@ const Index = () => {
                   </Button>
                 </div>
               </CardHeader>
-              <CardContent className="p-0 flex-grow overflow-auto">
+              <CardContent className="p-0 flex-grow overflow-hidden">
                 <RecentClaimsTable />
               </CardContent>
             </Card>

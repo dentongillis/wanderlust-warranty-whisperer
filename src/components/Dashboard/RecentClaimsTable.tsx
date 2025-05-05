@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { Eye } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Input } from '@/components/ui/input';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -205,7 +204,7 @@ export const RecentClaimsTable: React.FC = () => {
           />
         </div>
       </div>
-      <ScrollArea className="h-full mt-2">
+      <div className="h-full overflow-auto">
         <Table>
           <TableHeader className="sticky top-0 z-10 bg-gray-50 dark:bg-gray-800">
             <TableRow>
@@ -235,10 +234,10 @@ export const RecentClaimsTable: React.FC = () => {
           <TableBody>
             {claimsData.map((claim, index) => (
               <TableRow key={index} className="hover:bg-gray-50 dark:hover:bg-gray-800">
-                <TableCell className="text-gray-600 dark:text-gray-300">{claim.date}</TableCell>
-                <TableCell className="font-medium text-gray-800 dark:text-gray-200">{claim.claimId}</TableCell>
-                <TableCell className="text-gray-600 dark:text-gray-300">{claim.model}</TableCell>
-                <TableCell className="text-gray-600 dark:text-gray-300">{claim.dealer}</TableCell>
+                <TableCell className="text-gray-600 dark:text-gray-300 text-xs">{claim.date}</TableCell>
+                <TableCell className="font-medium text-gray-800 dark:text-gray-200 text-xs">{claim.claimId}</TableCell>
+                <TableCell className="text-gray-600 dark:text-gray-300 text-xs">{claim.model}</TableCell>
+                <TableCell className="text-gray-600 dark:text-gray-300 text-xs">{claim.dealer}</TableCell>
                 <TableCell className="text-center">
                   {claim.status === 'approved' && (
                     <Badge variant="outline" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 border-green-200 dark:border-green-800 text-[8px] px-1 py-0">
@@ -261,7 +260,7 @@ export const RecentClaimsTable: React.FC = () => {
                     </Badge>
                   )}
                 </TableCell>
-                <TableCell className="font-medium text-gray-800 dark:text-gray-200">{claim.total}</TableCell>
+                <TableCell className="font-medium text-gray-800 dark:text-gray-200 text-xs">{claim.total}</TableCell>
                 <TableCell className="text-right">
                   <Button 
                     variant="ghost" 
@@ -276,7 +275,7 @@ export const RecentClaimsTable: React.FC = () => {
             ))}
           </TableBody>
         </Table>
-      </ScrollArea>
+      </div>
 
       {/* Claim Details Sheet - Redesigned to be more compact */}
       <Sheet open={isDetailOpen} onOpenChange={setIsDetailOpen}>
@@ -292,7 +291,7 @@ export const RecentClaimsTable: React.FC = () => {
             </SheetClose>
           </div>
           
-          <div className="p-4">
+          <div className="p-4 overflow-y-auto">
             <div className="grid grid-cols-3 gap-4">
               <div>
                 <h4 className="text-xs font-semibold uppercase text-gray-500 mb-2">Claim Details</h4>
@@ -300,11 +299,11 @@ export const RecentClaimsTable: React.FC = () => {
                   <div className="grid grid-cols-1 gap-2">
                     <div>
                       <span className="text-xs text-gray-500">Issue</span>
-                      <p className="text-sm">{selectedClaim?.issue}</p>
+                      <p className="text-xs">{selectedClaim?.issue}</p>
                     </div>
                     <div>
                       <span className="text-xs text-gray-500">Warranty</span>
-                      <p className="text-sm">{selectedClaim?.warranty}</p>
+                      <p className="text-xs">{selectedClaim?.warranty}</p>
                     </div>
                     <div>
                       <span className="text-xs text-gray-500">Status</span>
@@ -333,7 +332,7 @@ export const RecentClaimsTable: React.FC = () => {
                     </div>
                     <div>
                       <span className="text-xs text-gray-500">Total Amount</span>
-                      <p className="text-sm font-semibold">{selectedClaim?.total}</p>
+                      <p className="text-xs font-semibold">{selectedClaim?.total}</p>
                     </div>
                   </div>
                 </div>
@@ -345,15 +344,15 @@ export const RecentClaimsTable: React.FC = () => {
                   <div className="grid grid-cols-1 gap-2">
                     <div>
                       <span className="text-xs text-gray-500">Name</span>
-                      <p className="text-sm">{selectedClaim?.dealer}</p>
+                      <p className="text-xs">{selectedClaim?.dealer}</p>
                     </div>
                     <div>
                       <span className="text-xs text-gray-500">Address</span>
-                      <p className="text-sm">{selectedClaim?.dealerAddress}</p>
+                      <p className="text-xs">{selectedClaim?.dealerAddress}</p>
                     </div>
                     <div>
                       <span className="text-xs text-gray-500">Contact</span>
-                      <p className="text-sm">{selectedClaim?.dealerContact}</p>
+                      <p className="text-xs">{selectedClaim?.dealerContact}</p>
                     </div>
                   </div>
                 </div>
@@ -365,15 +364,15 @@ export const RecentClaimsTable: React.FC = () => {
                   <div className="grid grid-cols-1 gap-2">
                     <div>
                       <span className="text-xs text-gray-500">Name</span>
-                      <p className="text-sm">{selectedClaim?.customerName}</p>
+                      <p className="text-xs">{selectedClaim?.customerName}</p>
                     </div>
                     <div>
                       <span className="text-xs text-gray-500">Email</span>
-                      <p className="text-sm">{selectedClaim?.customerEmail}</p>
+                      <p className="text-xs">{selectedClaim?.customerEmail}</p>
                     </div>
                     <div>
                       <span className="text-xs text-gray-500">Phone</span>
-                      <p className="text-sm">{selectedClaim?.customerPhone}</p>
+                      <p className="text-xs">{selectedClaim?.customerPhone}</p>
                     </div>
                   </div>
                 </div>
@@ -383,8 +382,11 @@ export const RecentClaimsTable: React.FC = () => {
             <div className="flex justify-end mt-4">
               <Button 
                 size="sm" 
-                className="bg-blue-600 hover:bg-blue-700 text-white"
-                onClick={() => navigate('/claims-report')}
+                className="bg-blue-600 hover:bg-blue-700 text-white text-xs"
+                onClick={() => {
+                  setIsDetailOpen(false);
+                  navigate('/claims-report');
+                }}
               >
                 View Full Claim Report
               </Button>
