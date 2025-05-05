@@ -72,11 +72,36 @@ const modelClaimsData = [
   { day: '30 May', "Model I": 38, "Model Z": 25, "Model G": 15 }
 ];
 
-// Colors for model lines - improved with more contrast and brighter colors
+// Enhanced model colors with more professional and distinct color palette
 const modelColors = {
-  "Model I": "#9b87f5", // Purple
-  "Model Z": "#F97316", // Orange
-  "Model G": "#0EA5E9"  // Bright Blue
+  "Model I": "#8B5CF6", // Vivid Purple
+  "Model Z": "#F97316", // Bright Orange
+  "Model G": "#10B981"  // Emerald Green
+};
+
+// Custom line chart tooltip
+const CustomTooltip = ({ active, payload, label, dataView }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-white dark:bg-gray-800 p-3 shadow-lg border border-gray-200 dark:border-gray-700 rounded-md">
+        <p className="font-medium text-sm mb-1">{label}</p>
+        <div className="space-y-2">
+          {payload.map((entry: any, index: number) => (
+            <div key={`item-${index}`} className="flex items-center gap-2">
+              <div 
+                className="h-3 w-3 rounded-full" 
+                style={{ backgroundColor: entry.color }}
+              />
+              <span className="text-xs font-medium">
+                {entry.name}: {entry.value} claims
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+  return null;
 };
 
 export const WarrantyTrendsChart: React.FC = () => {
@@ -84,18 +109,18 @@ export const WarrantyTrendsChart: React.FC = () => {
   
   return (
     <div className="h-full w-full flex flex-col">
-      {/* Header section with title and toggle - repositioned to top */}
-      <div className="flex justify-between items-center mb-2">
+      {/* Enhanced header section with title and toggle */}
+      <div className="flex justify-between items-center mb-3">
         <div className="flex flex-col">
-          <h3 className="text-base font-medium">Warranty Trends</h3>
+          <h3 className="text-base font-medium text-gray-900 dark:text-gray-100">Warranty Trends</h3>
           <div className="flex items-center gap-1">
-            <TrendingUp className="text-green-600 h-3 w-3" />
-            <span className="text-xs font-medium text-green-600">4.8% Growth</span>
+            <TrendingUp className="text-green-600 h-3.5 w-3.5" />
+            <span className="text-xs font-medium text-green-600">4.8% Growth (May 2025)</span>
           </div>
         </div>
         
         <div className="flex items-center gap-2">
-          <span className={`text-xs whitespace-nowrap ${!showModelData ? 'text-gray-900 dark:text-gray-100 font-medium' : 'text-gray-500 dark:text-gray-400'}`}>
+          <span className={`text-xs ${!showModelData ? 'text-gray-900 dark:text-gray-100 font-medium' : 'text-gray-500 dark:text-gray-400'}`}>
             All Claims
           </span>
           
@@ -106,77 +131,102 @@ export const WarrantyTrendsChart: React.FC = () => {
             className="h-4 w-8 mx-1 data-[state=checked]:bg-blue-600"
           />
           
-          <span className={`text-xs whitespace-nowrap ${showModelData ? 'text-gray-900 dark:text-gray-100 font-medium' : 'text-gray-500 dark:text-gray-400'}`}>
+          <span className={`text-xs ${showModelData ? 'text-gray-900 dark:text-gray-100 font-medium' : 'text-gray-500 dark:text-gray-400'}`}>
             Model Claims
           </span>
         </div>
       </div>
       
-      {/* Chart section - expanded with more height */}
+      {/* Model-specific legend that appears only when Model Claims is selected */}
+      {showModelData && (
+        <div className="flex items-center justify-center gap-4 mb-2">
+          {Object.entries(modelColors).map(([model, color]) => (
+            <div key={model} className="flex items-center gap-1.5">
+              <div 
+                className="h-3 w-3 rounded-full" 
+                style={{ backgroundColor: color }}
+              />
+              <span className="text-xs font-medium">{model}</span>
+            </div>
+          ))}
+        </div>
+      )}
+      
+      {/* Enhanced chart section with better styling and clarity */}
       <div className="flex-grow overflow-hidden">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
             data={showModelData ? modelClaimsData : claimsData}
-            margin={{ top: 10, right: 10, left: 0, bottom: 10 }}
+            margin={{ top: 5, right: 10, left: 5, bottom: 20 }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
+            <CartesianGrid 
+              strokeDasharray="3 3" 
+              stroke="#f0f0f0" 
+              vertical={false} 
+              opacity={0.6}
+            />
             <XAxis 
               dataKey="day" 
               axisLine={false}
               tickLine={false}
               tick={{ fontSize: 10, fill: '#6B7280' }}
-              padding={{ left: 10, right: 10 }}
-              height={20}
+              padding={{ left: 15, right: 15 }}
+              height={25}
+              dy={10}
+              interval={"preserveStartEnd"}
+              tickFormatter={(value, index) => {
+                // Only show some dates to avoid overcrowding
+                return index % 5 === 0 ? value : '';
+              }}
             />
             <YAxis 
               axisLine={false}
               tickLine={false}
               tick={{ fontSize: 10, fill: '#6B7280' }}
               domain={['dataMin - 5', 'dataMax + 5']}
-              width={25}
+              width={30}
+              tickFormatter={(value) => `${value}`}
             />
+            
             <Tooltip 
-              contentStyle={{ 
-                fontSize: '12px', 
-                padding: '8px', 
-                borderRadius: '6px',
-                boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
-                border: '1px solid #e2e8f0'
-              }} 
-              formatter={(value) => [`${value}`, showModelData ? '' : 'Claims']}
-              labelFormatter={(label) => `Date: ${label}`}
+              content={<CustomTooltip dataView={showModelData} />}
+              wrapperStyle={{ outline: 'none' }}
             />
+            
             {showModelData ? (
-              <>
-                {Object.keys(modelColors).map((model) => (
-                  <Line 
-                    key={model}
-                    type="monotone" 
-                    dataKey={model} 
-                    name={model}
-                    stroke={modelColors[model as keyof typeof modelColors]} 
-                    strokeWidth={2.5}
-                    dot={false}
-                    activeDot={{ r: 6, stroke: modelColors[model as keyof typeof modelColors], strokeWidth: 2, fill: '#fff' }}
-                  />
-                ))}
-                <Legend 
-                  verticalAlign="top"
-                  height={25}
-                  formatter={(value) => <span className="text-xs">{value}</span>}
-                  iconType="circle"
-                  iconSize={8}
-                  wrapperStyle={{ paddingTop: '5px' }}
+              // Model-specific lines with enhanced styling
+              Object.keys(modelColors).map((model) => (
+                <Line 
+                  key={model}
+                  type="monotone" 
+                  dataKey={model} 
+                  name={model}
+                  stroke={modelColors[model as keyof typeof modelColors]} 
+                  strokeWidth={2.5}
+                  dot={false}
+                  activeDot={{ 
+                    r: 6, 
+                    stroke: modelColors[model as keyof typeof modelColors], 
+                    strokeWidth: 2, 
+                    fill: '#fff' 
+                  }}
                 />
-              </>
+              ))
             ) : (
+              // All claims line with enhanced styling
               <Line 
                 type="monotone" 
                 dataKey="claims" 
+                name="Claims"
                 stroke="#3b82f6" 
                 strokeWidth={3}
                 dot={false}
-                activeDot={{ r: 6, stroke: '#2563eb', strokeWidth: 2, fill: '#fff' }}
+                activeDot={{ 
+                  r: 6, 
+                  stroke: '#2563eb', 
+                  strokeWidth: 2, 
+                  fill: '#fff' 
+                }}
               />
             )}
           </LineChart>
