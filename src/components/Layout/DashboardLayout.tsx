@@ -27,7 +27,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
       <div className="flex flex-col flex-1 w-full min-w-0 transition-all duration-300 ease-in-out">
         <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm z-20">
           {/* Top header with toggle and title - reduced padding */}
-          <div className="flex items-center justify-between p-2 sm:p-3">
+          <div className="flex items-center justify-between p-2 sm:p-3 pb-1">
             <div className="flex items-center">
               <Button 
                 variant="ghost" 
@@ -63,8 +63,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
             </div>
           </div>
           
-          {/* Date filters - with reduced padding */}
-          <div className="px-3 pb-0">
+          {/* Date filters - with reduced padding and moved up */}
+          <div className="px-3 pb-1">
             <DateRangeSelector className="scale-90 origin-left" />
           </div>
         </header>
