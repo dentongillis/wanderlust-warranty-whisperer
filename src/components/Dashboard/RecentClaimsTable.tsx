@@ -89,22 +89,22 @@ export const RecentClaimsTable: React.FC = () => {
                 <td className="px-2 py-1.5 text-gray-600 dark:text-gray-300">{claim.dealer}</td>
                 <td className="px-2 py-1.5">
                   {claim.status === 'approved' && (
-                    <Badge variant="outline" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 border-green-200 dark:border-green-800 text-[9px] px-1 py-0">
+                    <Badge variant="outline" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 border-green-200 dark:border-green-800 text-xs px-1 py-0">
                       Approved
                     </Badge>
                   )}
                   {claim.status === 'pending' && (
-                    <Badge variant="outline" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 border-yellow-200 dark:border-yellow-800 text-[9px] px-1 py-0">
+                    <Badge variant="outline" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 border-yellow-200 dark:border-yellow-800 text-xs px-1 py-0">
                       Pending
                     </Badge>
                   )}
                   {claim.status === 'denied' && (
-                    <Badge variant="outline" className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 border-red-200 dark:border-red-800 text-[9px] px-1 py-0">
+                    <Badge variant="outline" className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 border-red-200 dark:border-red-800 text-xs px-1 py-0">
                       Denied
                     </Badge>
                   )}
                   {claim.status === 'in-progress' && (
-                    <Badge variant="outline" className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 border-blue-200 dark:border-blue-800 text-[9px] px-1 py-0">
+                    <Badge variant="outline" className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 border-blue-200 dark:border-blue-800 text-xs px-1 py-0">
                       In Progress
                     </Badge>
                   )}

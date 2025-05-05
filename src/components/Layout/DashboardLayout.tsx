@@ -48,7 +48,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
               )}
             </div>
             <div className="flex flex-col items-end">
-              <div className="flex items-center gap-2 sm:gap-3 mb-2">
+              <div className="flex items-center gap-2 sm:gap-3 mb-1">
                 <AIChatSheet>
                   <Button variant="outline" className="text-sm py-1 px-3 h-auto bg-blue-600 text-white hover:bg-blue-700 border-blue-600">
                     Ask AI
@@ -63,12 +63,14 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
                 </FiltersSheet>
               </div>
               
-              {/* Date filters - positioned with a bit more space from buttons */}
-              <div className="mb-1">
+              {/* Date filters - positioned directly under the buttons */}
+              <div>
                 <DateRangeSelector className="scale-90 origin-right" />
               </div>
             </div>
           </div>
+          
+          {/* Remove the separate date filters section since we moved it up */}
         </header>
         
         <main className="flex-1 overflow-auto p-2 sm:p-3 flex flex-col min-h-0">
