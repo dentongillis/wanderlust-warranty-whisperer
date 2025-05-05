@@ -27,14 +27,6 @@ export type DateRangeOption =
   | 'alltime'
   | 'custom';
 
-export type CompareOption =
-  | 'previousperiod'
-  | 'previousmonth'
-  | 'previousquarter'
-  | 'previousyear'
-  | 'custom'
-  | 'none';
-
 interface DateRangeDisplayProps {
   startDate: Date;
   endDate: Date;
@@ -44,12 +36,6 @@ interface DateRangeDisplayProps {
 interface DateRangeDropdownProps {
   value: DateRangeOption;
   onChange: (value: DateRangeOption) => void;
-}
-
-interface ComparePeriodDropdownProps {
-  value: CompareOption;
-  onChange: (value: CompareOption) => void;
-  disabled?: boolean;
 }
 
 interface CustomDateRangeProps {
@@ -71,15 +57,6 @@ const options: { value: DateRangeOption; label: string }[] = [
   { value: 'yeartodate', label: 'Year to date' },
   { value: 'alltime', label: 'All time' },
   { value: 'custom', label: 'Custom date range' },
-];
-
-const compareOptions: { value: CompareOption; label: string }[] = [
-  { value: 'previousperiod', label: 'Previous period' },
-  { value: 'previousmonth', label: 'Previous month' },
-  { value: 'previousquarter', label: 'Previous quarter' },
-  { value: 'previousyear', label: 'Previous year' },
-  { value: 'custom', label: 'Custom' },
-  { value: 'none', label: 'No comparison' },
 ];
 
 // Component to display the date range
@@ -112,31 +89,6 @@ const DateRangeDropdown = ({ value, onChange }: DateRangeDropdownProps) => {
       <DropdownMenuContent className="w-56" align="start">
         <DropdownMenuRadioGroup value={value} onValueChange={onChange as (value: string) => void}>
           {options.map((option) => (
-            <DropdownMenuRadioItem key={option.value} value={option.value} className="cursor-pointer">
-              {option.label}
-            </DropdownMenuRadioItem>
-          ))}
-        </DropdownMenuRadioGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-};
-
-// Dropdown for comparison period selection
-const ComparePeriodDropdown = ({ value, onChange, disabled }: ComparePeriodDropdownProps) => {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild disabled={disabled}>
-        <Button variant="ghost" size="sm" className="px-2 h-auto" disabled={disabled}>
-          <span className="font-medium text-gray-700 dark:text-gray-300">
-            {compareOptions.find(option => option.value === value)?.label || 'Compare to'}
-          </span>
-          <ChevronDown className="ml-1 h-4 w-4 opacity-70" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="start">
-        <DropdownMenuRadioGroup value={value} onValueChange={onChange as (value: string) => void}>
-          {compareOptions.map((option) => (
             <DropdownMenuRadioItem key={option.value} value={option.value} className="cursor-pointer">
               {option.label}
             </DropdownMenuRadioItem>
@@ -252,7 +204,6 @@ interface DateRangeSelectorProps {
 
 export const DateRangeSelector = ({ className }: DateRangeSelectorProps) => {
   const [dateRangeOption, setDateRangeOption] = useState<DateRangeOption>('last7days');
-  const [compareOption, setCompareOption] = useState<CompareOption>('previousperiod');
   const [startDate, setStartDate] = useState<Date>(() => subDays(new Date(), 7));
   const [endDate, setEndDate] = useState<Date>(() => new Date());
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
@@ -321,10 +272,6 @@ export const DateRangeSelector = ({ className }: DateRangeSelectorProps) => {
     }
   };
 
-  const handleDateRangeClick = () => {
-    setIsCalendarOpen(true);
-  };
-
   const handleApplyCustomDate = () => {
     setIsCalendarOpen(false);
   };
@@ -343,14 +290,6 @@ export const DateRangeSelector = ({ className }: DateRangeSelectorProps) => {
         onRangeChange={handleCustomDateChange}
         onApply={handleApplyCustomDate}
         customRangeAlwaysVisible={true}
-      />
-      
-      <div className="text-gray-400 mx-1">compared to</div>
-      
-      <ComparePeriodDropdown 
-        value={compareOption} 
-        onChange={setCompareOption} 
-        disabled={dateRangeOption === 'alltime'}
       />
     </div>
   );

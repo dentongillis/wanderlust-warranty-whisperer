@@ -64,8 +64,11 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
             </div>
           </div>
           
-          {/* Search bar and date filters in same row */}
-          <div className="px-3 pb-2 flex flex-wrap items-center gap-3">
+          {/* Date filters and search bar in separate rows */}
+          <div className="px-3 pb-2">
+            <div className="mb-2">
+              <DateRangeSelector />
+            </div>
             <div className="relative flex-grow max-w-md">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400" />
               <AIChatSheet initialQuery={searchQuery}>
@@ -84,7 +87,6 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
                 />
               </AIChatSheet>
             </div>
-            <DateRangeSelector />
           </div>
         </header>
         
