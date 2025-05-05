@@ -8,8 +8,17 @@ import { RecentClaimsTable } from '@/components/Dashboard/RecentClaimsTable';
 import { ClaimsByModelBarChart } from '@/components/Dashboard/ClaimsByModelBarChart';
 import { HorizontalLineChart } from '@/components/Dashboard/HorizontalLineChart';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 const Index = () => {
+  const navigate = useNavigate();
+
+  // Function to navigate to claims report page
+  const navigateToClaimsReport = () => {
+    navigate('/claims-report');
+  };
+
   return (
     <DashboardLayout
       title="Dashboard"
@@ -41,14 +50,14 @@ const Index = () => {
               <CardHeader className="py-2 px-3 flex-shrink-0">
                 <div className="flex justify-between items-center">
                   <CardTitle className="text-base font-medium">Recent Claims</CardTitle>
-                  <div className="flex gap-2">
-                    <input 
-                      type="text" 
-                      placeholder="Search" 
-                      className="border rounded px-2 py-1 text-xs border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200" 
-                    />
-                    <button className="text-blue-600 dark:text-blue-400 text-xs hover:underline">View All Claims</button>
-                  </div>
+                  <Button 
+                    className="text-blue-600 dark:text-blue-400 text-xs hover:underline"
+                    variant="ghost"
+                    size="sm"
+                    onClick={navigateToClaimsReport}
+                  >
+                    View All Claims
+                  </Button>
                 </div>
               </CardHeader>
               <CardContent className="p-0 flex-grow overflow-auto">
