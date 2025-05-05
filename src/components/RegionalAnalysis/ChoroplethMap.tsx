@@ -228,12 +228,15 @@ export const ChoroplethMap = () => {
         )}
         
         <div className="relative h-[380px]">
-          <TabsContent value="usa" className="m-0 h-full">
-            <USAMap />
-          </TabsContent>
-          <TabsContent value="canada" className="m-0 h-full">
-            <CanadaMap />
-          </TabsContent>
+          {/* Wrap content in Tabs component and properly structure TabsContent */}
+          <Tabs value={activeTab} className="h-full">
+            <TabsContent value="usa" className="m-0 h-full">
+              <USAMap />
+            </TabsContent>
+            <TabsContent value="canada" className="m-0 h-full">
+              <CanadaMap />
+            </TabsContent>
+          </Tabs>
         </div>
         
         {/* Legend */}
