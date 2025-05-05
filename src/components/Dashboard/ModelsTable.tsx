@@ -90,15 +90,15 @@ export const ModelsTable: React.FC = () => {
                 </td>
                 <td className="px-2 py-2 text-center">
                   {model.risk === 'high' ? (
-                    <Badge variant="outline" className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 border-red-200 dark:border-red-800 text-xs px-1 py-0">
+                    <Badge variant="outline" className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 border-red-200 dark:border-red-800 text-[9px] px-1 py-0">
                       High
                     </Badge>
                   ) : model.risk === 'normal' ? (
-                    <Badge variant="outline" className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 border-blue-200 dark:border-blue-800 text-xs px-1 py-0">
+                    <Badge variant="outline" className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 border-blue-200 dark:border-blue-800 text-[9px] px-1 py-0">
                       Normal
                     </Badge>
                   ) : (
-                    <Badge variant="outline" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 border-green-200 dark:border-green-800 text-xs px-1 py-0">
+                    <Badge variant="outline" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 border-green-200 dark:border-green-800 text-[9px] px-1 py-0">
                       Low
                     </Badge>
                   )}

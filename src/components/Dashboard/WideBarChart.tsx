@@ -70,14 +70,14 @@ export const WideBarChart: React.FC<WideBarChartProps> = ({
                 <TooltipContent className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg p-0 rounded-lg w-64">
                   {item.floorplans ? (
                     <div className="text-xs">
-                      {/* Header with blue background */}
-                      <div className="bg-blue-600 text-white p-2 font-medium rounded-t-lg">
+                      {/* Header with deeper blue background */}
+                      <div className="bg-blue-700 text-white p-2 font-medium rounded-t-lg">
                         {item.name}: {item.value} claims
                       </div>
                       <div className="p-2">
                         <div className="font-medium mb-1">Claims by Floorplan:</div>
-                        {/* Use ScrollArea to enable scrolling for many floorplans */}
-                        <ScrollArea className="max-h-60">
+                        {/* Fixed height ScrollArea to ensure scrolling with many floorplans */}
+                        <ScrollArea className="h-48 pr-2">
                           <div className="space-y-1.5 pr-2">
                             {item.floorplans.map(fp => (
                               <div key={fp.name} className="flex flex-col">
@@ -101,7 +101,7 @@ export const WideBarChart: React.FC<WideBarChartProps> = ({
                     </div>
                   ) : (
                     <div className="text-xs p-2">
-                      <div className="bg-blue-600 text-white p-2 font-medium rounded-t-lg -mt-2 -mx-2 mb-2">
+                      <div className="bg-blue-700 text-white p-2 font-medium rounded-t-lg -mt-2 -mx-2 mb-2">
                         {item.name}
                       </div>
                       <div className="flex justify-between gap-2">

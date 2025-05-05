@@ -84,18 +84,18 @@ export const WarrantyTrendsChart: React.FC = () => {
   
   return (
     <div className="h-full w-full flex flex-col">
-      {/* Header section with title and toggle - repositioned to top */}
-      <div className="flex justify-between items-center mb-2">
-        <div className="flex flex-col">
-          <h3 className="text-base font-medium">Warranty Trends</h3>
-          <div className="flex items-center gap-1">
-            <TrendingUp className="text-green-600 h-3 w-3" />
-            <span className="text-xs font-medium text-green-600">4.8% Growth</span>
+      {/* Header section with more modern layout */}
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex items-center gap-2">
+          <h3 className="text-base font-medium text-gray-800 dark:text-gray-200">Warranty Trends</h3>
+          <div className="flex items-center gap-1 bg-green-50 dark:bg-green-900/20 px-1.5 py-0.5 rounded-full">
+            <TrendingUp className="text-green-600 dark:text-green-400 h-3 w-3" />
+            <span className="text-xs font-medium text-green-600 dark:text-green-400">4.8%</span>
           </div>
         </div>
         
         <div className="flex items-center gap-2">
-          <span className={`text-xs whitespace-nowrap ${!showModelData ? 'text-gray-900 dark:text-gray-100 font-medium' : 'text-gray-500 dark:text-gray-400'}`}>
+          <span className={`text-[10px] whitespace-nowrap ${!showModelData ? 'text-gray-900 dark:text-gray-100 font-medium' : 'text-gray-500 dark:text-gray-400'}`}>
             All Claims
           </span>
           
@@ -103,21 +103,21 @@ export const WarrantyTrendsChart: React.FC = () => {
             id="claims-toggle"
             checked={showModelData}
             onCheckedChange={setShowModelData}
-            className="h-4 w-8 mx-1 data-[state=checked]:bg-blue-600"
+            className="h-4 w-7 data-[state=checked]:bg-blue-600"
           />
           
-          <span className={`text-xs whitespace-nowrap ${showModelData ? 'text-gray-900 dark:text-gray-100 font-medium' : 'text-gray-500 dark:text-gray-400'}`}>
+          <span className={`text-[10px] whitespace-nowrap ${showModelData ? 'text-gray-900 dark:text-gray-100 font-medium' : 'text-gray-500 dark:text-gray-400'}`}>
             Model Claims
           </span>
         </div>
       </div>
       
-      {/* Chart section - expanded with more height */}
-      <div className="flex-grow overflow-hidden">
+      {/* Chart section with improved styling */}
+      <div className="flex-grow bg-white dark:bg-gray-800/30 rounded-lg p-3 border border-gray-100 dark:border-gray-700 shadow-sm">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
             data={showModelData ? modelClaimsData : claimsData}
-            margin={{ top: 10, right: 10, left: 0, bottom: 10 }}
+            margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
             <XAxis 
@@ -161,12 +161,14 @@ export const WarrantyTrendsChart: React.FC = () => {
                   />
                 ))}
                 <Legend 
+                  layout="horizontal" 
+                  align="center"
                   verticalAlign="top"
-                  height={25}
-                  formatter={(value) => <span className="text-xs">{value}</span>}
+                  height={30}
+                  formatter={(value) => <span className="text-[10px]">{value}</span>}
                   iconType="circle"
                   iconSize={8}
-                  wrapperStyle={{ paddingTop: '5px' }}
+                  wrapperStyle={{ top: -5 }}
                 />
               </>
             ) : (
