@@ -64,12 +64,11 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, titl
             </div>
           </div>
           
-          {/* Date filters and search bar in separate rows */}
-          <div className="px-3 pb-2">
-            <div className="mb-2">
-              <DateRangeSelector />
-            </div>
-            <div className="relative flex-grow max-w-md">
+          {/* Date filters and search bar in the same row */}
+          <div className="px-3 pb-2 flex items-center justify-between">
+            <DateRangeSelector />
+            
+            <div className="relative w-64">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400" />
               <AIChatSheet initialQuery={searchQuery}>
                 <input

@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -93,15 +92,14 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
   const handleMouseMove = (e: MouseEvent) => {
     if (!isDragging) return;
     e.preventDefault(); // Prevent text selection
-    
-    // Calculate new position with boundary constraints
-    // Use dragOffset to maintain the exact position of the mouse relative to the initial click point
+
+    // Calculate new position maintaining the same drag offset
     const newX = e.clientX - dragOffset.x;
     const newY = e.clientY - dragOffset.y;
     
-    // Apply boundary constraints after calculating the position
-    const boundedX = Math.max(0, Math.min(document.documentElement.clientWidth - dimensions.width, newX));
-    const boundedY = Math.max(0, Math.min(document.documentElement.clientHeight - dimensions.height, newY));
+    // Apply boundary constraints to keep the chat window in the viewport
+    const boundedX = Math.max(0, Math.min(window.innerWidth - dimensions.width, newX));
+    const boundedY = Math.max(0, Math.min(window.innerHeight - dimensions.height, newY));
     
     setPosition({
       x: boundedX,
@@ -146,7 +144,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
     
     const touch = e.touches[0];
     
-    // Apply the same direct calculation as with mouse events
+    // Use consistent calculation like mouse events
     const newX = touch.clientX - dragOffset.x;
     const newY = touch.clientY - dragOffset.y;
     
@@ -273,17 +271,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
               !e.target.closest('button') && 
               e.target.tagName !== 'BUTTON'
             ) {
-              if (chatRef.current) {
-                e.preventDefault();
-                const rect = chatRef.current.getBoundingClientRect();
-                setDragOffset({
-                  x: e.clientX - rect.left,
-                  y: e.clientY - rect.top
-                });
-                setIsDragging(true);
-                document.body.style.cursor = 'grabbing'; // Change cursor to indicate dragging
-                document.body.classList.add('select-none');
-              }
+              handleMouseDown(e);
             }
           }}
           onTouchStart={(e) => {
@@ -293,16 +281,7 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
               !e.target.closest('button') && 
               e.target.tagName !== 'BUTTON'
             ) {
-              if (chatRef.current) {
-                const rect = chatRef.current.getBoundingClientRect();
-                const touch = e.touches[0];
-                setDragOffset({
-                  x: touch.clientX - rect.left,
-                  y: touch.clientY - rect.top
-                });
-                setIsDragging(true);
-                document.body.classList.add('select-none');
-              }
+              handleTouchStart(e);
             }
           }}
         >
