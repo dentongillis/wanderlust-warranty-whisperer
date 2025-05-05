@@ -9,9 +9,15 @@ import { ClaimsByModelBarChart } from '@/components/Dashboard/ClaimsByModelBarCh
 import { HorizontalLineChart } from '@/components/Dashboard/HorizontalLineChart';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 const Index = () => {
   const navigate = useNavigate();
+
+  // Function to navigate to claims report page
+  const navigateToClaimsReport = () => {
+    navigate('/claims-report');
+  };
 
   return (
     <DashboardLayout
@@ -32,8 +38,8 @@ const Index = () => {
               <ClaimsByModelBarChart />
             </div>
             
-            {/* Warranty Trends Chart - increased height to 420px for better visualization */}
-            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm mb-3 min-h-0 h-[420px]">
+            {/* Warranty Trends Chart - increased height to 380px for better visualization */}
+            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm mb-3 min-h-0 h-[380px]">
               <CardContent className="p-4 h-full">
                 <WarrantyTrendsChart />
               </CardContent>
@@ -43,7 +49,17 @@ const Index = () => {
             <Card className="border border-gray-200 dark:border-gray-700 shadow-sm flex-grow min-h-0 mb-3 lg:mb-0 flex flex-col">
               <CardHeader className="py-2 px-3 flex-shrink-0 pb-0">
                 <div className="flex justify-between items-center">
-                  <CardTitle className="text-base font-medium">Recent Claims</CardTitle>
+                  <div className="flex-1">
+                    <CardTitle className="text-base font-medium mb-2">Recent Claims</CardTitle>
+                  </div>
+                  <Button 
+                    className="text-blue-600 dark:text-blue-400 text-xs hover:underline"
+                    variant="ghost"
+                    size="sm"
+                    onClick={navigateToClaimsReport}
+                  >
+                    View All Claims
+                  </Button>
                 </div>
               </CardHeader>
               <CardContent className="p-0 flex-grow overflow-auto">
