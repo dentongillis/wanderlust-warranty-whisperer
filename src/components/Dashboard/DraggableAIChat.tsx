@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -94,12 +95,17 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
     e.preventDefault(); // Prevent text selection
     
     // Calculate new position with boundary constraints
-    const newX = Math.max(0, Math.min(document.documentElement.clientWidth - dimensions.width, e.clientX - dragOffset.x));
-    const newY = Math.max(0, Math.min(document.documentElement.clientHeight - dimensions.height, e.clientY - dragOffset.y));
+    // Use dragOffset to maintain the exact position of the mouse relative to the initial click point
+    const newX = e.clientX - dragOffset.x;
+    const newY = e.clientY - dragOffset.y;
+    
+    // Apply boundary constraints after calculating the position
+    const boundedX = Math.max(0, Math.min(document.documentElement.clientWidth - dimensions.width, newX));
+    const boundedY = Math.max(0, Math.min(document.documentElement.clientHeight - dimensions.height, newY));
     
     setPosition({
-      x: newX,
-      y: newY
+      x: boundedX,
+      y: boundedY
     });
   };
 
@@ -140,13 +146,17 @@ export const DraggableAIChat: React.FC<DraggableAIChatProps> = ({
     
     const touch = e.touches[0];
     
-    // Apply boundary constraints for touch as well
-    const newX = Math.max(0, Math.min(document.documentElement.clientWidth - dimensions.width, touch.clientX - dragOffset.x));
-    const newY = Math.max(0, Math.min(document.documentElement.clientHeight - dimensions.height, touch.clientY - dragOffset.y));
+    // Apply the same direct calculation as with mouse events
+    const newX = touch.clientX - dragOffset.x;
+    const newY = touch.clientY - dragOffset.y;
+    
+    // Apply boundary constraints
+    const boundedX = Math.max(0, Math.min(document.documentElement.clientWidth - dimensions.width, newX));
+    const boundedY = Math.max(0, Math.min(document.documentElement.clientHeight - dimensions.height, newY));
     
     setPosition({
-      x: newX,
-      y: newY
+      x: boundedX,
+      y: boundedY
     });
   };
 
